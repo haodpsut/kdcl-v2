@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập · KĐCLGD</title>
+<link rel="icon" type="image/png" href="/dau-logo.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--maroon:#990000;--maroon-dark:#5c0000;--gold:#fbae40;--text:#1c1e21;--muted:#606770;--border:#dadde1}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#5c0000,#990000);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--text);padding:20px}
+.card{background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.35);width:100%;max-width:400px;overflow:hidden}
+.head{background:var(--maroon-dark);border-bottom:3px solid var(--gold);padding:24px;text-align:center;color:#fff}
+.head .logo{width:56px;height:56px;border-radius:50%;background:#fff;padding:7px;object-fit:contain;
+  margin:0 auto 12px;box-shadow:0 0 0 2px var(--gold)}
+.head h1{font-size:17px}
+.head p{font-size:12px;opacity:.85;margin-top:4px}
+.body{padding:26px 26px 30px}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:14px 0 6px}
+input{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit}
+input:focus{outline:none;border-color:var(--maroon)}
+.btn{width:100%;margin-top:22px;padding:12px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
+  font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--maroon-dark)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.err{background:rgba(192,57,43,.1);color:#c0392b;border:1px solid #c0392b;border-radius:8px;padding:9px 12px;
+  font-size:12.5px;margin-top:14px;display:none}
+.err.show{display:block}
+.hint{font-size:11px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <img class="logo" src="/dau-logo.png" alt="ĐH Kiến trúc Đà Nẵng">
+    <h1>Hệ thống Minh chứng KĐCLGD</h1>
+    <p>ĐH Kiến trúc Đà Nẵng</p>
+  </div>
+  <div class="body">
+    <form id="f">
+      <label>Tài khoản</label>
+      <input id="u" autocomplete="username" autofocus placeholder="admin / tên đơn vị">
+      <label>Mật khẩu</label>
+      <input id="p" type="password" autocomplete="current-password" placeholder="••••••••">
+      <div class="err" id="err"></div>
+      <button class="btn" id="btn" type="submit">Đăng nhập</button>
+    </form>
+    <div class="hint">Đơn vị đăng nhập bằng tài khoản do P.ĐBCL cấp.<br>Quên mật khẩu? Liên hệ Phòng Đảm bảo chất lượng.</div>
+  </div>
+</div>
+<script>
+const f=document.getElementById('f'),err=document.getElementById('err'),btn=document.getElementById('btn');
+// Nếu đã đăng nhập → về trang chủ
+fetch('/api/me').then(r=>r.json()).then(me=>{ if(me) location.href='/'; });
+f.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  err.classList.remove('show');
+  btn.disabled=true; btn.textContent='Đang đăng nhập...';
+  try{
+    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:document.getElementById('u').value,password:document.getElementById('p').value})});
+    const d=await r.json();
+    if(!r.ok){ err.textContent=d.error||'Đăng nhập thất bại'; err.classList.add('show'); btn.disabled=false; btn.textContent='Đăng nhập'; return; }
+    location.href='/';
+  }catch(e){ err.textContent='Lỗi kết nối máy chủ'; err.classList.add('show'); btn.disabled=false; btn.textContent='Đăng nhập'; }
+});
+</script>
+</body>
+</html>

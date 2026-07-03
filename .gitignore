@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Dữ liệu runtime (CSDL Postgres + file minh chứng + dữ liệu mẫu) — KHÔNG đưa lên git
+.docker-data/
+uploads/
+db.json
+
+# Bản sao lưu
+kdcl-backup-*.tgz
+
+# Logs / tạm
+*.log
+.env

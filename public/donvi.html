@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nộp & Duyệt Minh chứng · KĐCLGD</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f6f8;--panel:#fff;--border:#dadde1;--maroon:#990000;--maroon-dark:#5c0000;
+  --maroon-soft:rgba(153,0,0,.08);--gold:#fbae40;--green:#1a7f4b;--green-soft:rgba(26,127,75,.12);
+  --red:#c0392b;--red-soft:rgba(192,57,43,.12);--amber:#b26a00;--amber-soft:rgba(251,174,64,.18);
+  --text:#1c1e21;--muted:#606770;--hover:#f0f1f3}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;font-size:14px}
+.topnav{background:var(--maroon-dark);border-bottom:3px solid var(--gold);padding:0 20px;display:flex;
+  align-items:center;height:52px;flex-shrink:0}
+.topnav .brand{font-size:13px;font-weight:800;color:#fff;margin-right:24px;white-space:nowrap}
+.subbar{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;display:flex;
+  align-items:center;gap:4px;height:48px;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tab{padding:8px 15px;font-size:13px;font-weight:600;color:var(--muted);border-radius:8px;cursor:pointer}
+.tab:hover{color:var(--maroon);background:var(--maroon-soft)}
+.tab.active{color:#fff;background:var(--maroon)}
+.tab.hidden{display:none}
+.subbar .spacer{flex:1}
+.pick{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.pick select{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;
+  font-size:12px;font-weight:600;font-family:inherit}
+.wrap{flex:1;padding:22px 26px;max-width:1200px;margin:0 auto;width:100%}
+.page{display:none}.page.show{display:block}
+h1{font-size:20px;margin-bottom:4px;color:var(--maroon-dark)}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+  border-top:3px solid var(--maroon);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat .value{font-size:26px;font-weight:800;margin-top:4px;color:var(--maroon-dark)}
+.stat.green{border-top-color:var(--green)}.stat.green .value{color:var(--green)}
+.stat.amber{border-top-color:var(--gold)}.stat.amber .value{color:var(--amber)}
+.stat.red{border-top-color:var(--red)}.stat.red .value{color:var(--red)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;
+  margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--maroon);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid var(--maroon-soft)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 9px;
+  border-radius:20px;white-space:nowrap}
+.b-wait{background:var(--amber-soft);color:var(--amber)}.b-ok{background:var(--green-soft);color:var(--green)}
+.b-back{background:var(--red-soft);color:var(--red)}.b-none{background:#e9ebef;color:var(--muted)}
+.code{font-family:'Consolas',monospace;font-size:11px;color:var(--maroon);background:var(--maroon-soft);
+  padding:1px 6px;border-radius:3px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);
+  padding:8px 10px;border-bottom:2px solid var(--border);font-weight:700}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--hover)}
+.file{color:var(--text);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.file:hover{color:var(--maroon)}
+.btn{border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-ok{background:var(--green);color:#fff}.btn-back{background:#fff;color:var(--red);border:1px solid var(--red)}
+.btn-up{background:var(--maroon);color:#fff}.btn-sm{padding:4px 9px;font-size:11px}
+.btn:hover{opacity:.88}
+.filterbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filterbar select,.filterbar input{background:#fff;color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit}
+.crit{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.crit-head{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--maroon-soft)}
+.crit-head .name{font-weight:600;font-size:13px;flex:1;color:var(--maroon-dark)}
+.crit-body{padding:6px 14px 12px}
+.ev-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--border);font-size:12.5px}
+.ev-row .grow{flex:1}.ev-row .rn{font-size:11px;color:var(--red);font-style:italic}
+.empty{color:var(--muted);font-style:italic;font-size:12px;padding:8px 0}
+.heat{display:flex;flex-direction:column;gap:6px}
+.heat-row{display:flex;align-items:center;gap:8px}
+.heat-row .tc-name{width:240px;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cells{display:flex;gap:4px;flex-wrap:wrap}
+.cell{width:26px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;cursor:default}
+.c-du{background:var(--green)}.c-dang_duyet{background:var(--gold);color:var(--maroon-dark)}.c-thieu{background:#e2e4e8;color:var(--muted)}
+.legend{display:flex;gap:16px;font-size:11px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}.dot{width:12px;height:12px;border-radius:3px}
+.barwrap{display:flex;align-items:center;gap:8px}
+.barwrap .bar{flex:1;height:8px;background:#e9ebef;border-radius:4px;overflow:hidden;max-width:180px}
+.barwrap .bar>i{display:block;height:100%;background:var(--maroon)}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:999}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:20px 22px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal h3{color:var(--maroon-dark);font-size:15px;margin-bottom:12px}
+.modal label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px}
+.modal input,.modal textarea,.modal select{width:100%;padding:9px 11px;border:1px solid var(--border);
+  border-radius:8px;font-size:13px;font-family:inherit}
+.modal textarea{resize:vertical;min-height:56px}
+.modal .row{display:flex;gap:8px}.modal .row>*{flex:1}
+.seg{display:flex;gap:6px;margin-top:5px}
+.seg button{flex:1;padding:8px;border:1px solid var(--border);background:#fff;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px}
+.seg button.on{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.mock-note{background:var(--amber-soft);border:1px solid var(--gold);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--amber);margin-bottom:16px}
+#toast{position:fixed;bottom:24px;right:24px;background:#fff;border:1px solid var(--border);border-left:4px solid var(--green);
+  border-radius:8px;padding:12px 18px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.15);display:none;z-index:1000}
+#toast.err{border-left-color:var(--red)}
+</style>
+<script src="/workspace-switcher.js" defer></script>
+<link rel="stylesheet" href="/theme-school.css">
+</head>
+<body>
+<nav class="topnav"><span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span></nav>
+
+<div class="subbar">
+  <div class="tab" data-p="portal" data-role="admin,unit">🏢 Cổng đơn vị</div>
+  <div class="tab" data-p="review" data-role="admin">✅ Bàn duyệt</div>
+  <div class="tab" data-p="matrix" data-role="admin,unit,viewer">🔍 Đối soát theo tiêu chí</div>
+  <div class="tab" data-p="dash" data-role="admin,unit,viewer">📊 Dashboard nộp/duyệt</div>
+  <div class="spacer"></div>
+  <div class="pick" id="unit-pick" style="display:none">
+    Đơn vị: <select id="unit-select"></select>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page" id="p-portal"></div>
+  <div class="page" id="p-review"></div>
+  <div class="page" id="p-matrix"></div>
+  <div class="page" id="p-dash"></div>
+</div>
+
+<!-- Modal upload -->
+<div class="overlay" id="ov-up">
+  <div class="modal">
+    <h3 id="up-title">Tải minh chứng</h3>
+    <label>Hình thức</label>
+    <div class="seg">
+      <button type="button" id="seg-file" class="on" onclick="setSrc('file')">📄 Tải file</button>
+      <button type="button" id="seg-link" onclick="setSrc('link')">🔗 Dán link Drive</button>
+    </div>
+    <div id="up-file-box"><label>Chọn file</label><input type="file" id="up-file"></div>
+    <div id="up-link-box" style="display:none"><label>Đường dẫn (Google Drive/SharePoint)</label><input id="up-link" placeholder="https://drive.google.com/..."></div>
+    <label>Mô tả minh chứng</label>
+    <input id="up-desc" placeholder="Tên/loại văn bản...">
+    <div class="modal-actions">
+      <button class="btn" style="background:#e9ebef;color:var(--muted)" onclick="closeUp()">Hủy</button>
+      <button class="btn btn-up" id="up-submit" onclick="submitUp()">Tải lên</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal return -->
+<div class="overlay" id="ov-ret">
+  <div class="modal">
+    <h3>Trả lại minh chứng</h3>
+    <label>Lý do trả lại (bắt buộc)</label>
+    <textarea id="ret-note" placeholder="Ví dụ: File thiếu chữ ký và dấu..."></textarea>
+    <div class="modal-actions">
+      <button class="btn" style="background:#e9ebef;color:var(--muted)" onclick="closeRet()">Hủy</button>
+      <button class="btn btn-back" id="ret-submit" onclick="submitRet()">↩ Trả lại</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let ME=null, STD=[], CRIT={}, curUnit=null, upCtx={}, retId=null, srcType='file';
+
+const $=s=>document.querySelector(s);
+function toast(msg,isErr){const t=$('#toast');t.textContent=msg;t.className=isErr?'err':'';t.style.display='block';setTimeout(()=>t.style.display='none',2600);}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function api(path,opts){const r=await fetch(path,opts);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Lỗi');return d;}
+function critName(key){const[s,i]=key.split('.').map(Number);const std=STD.find(x=>x.id===s);return std?std.criteria[i-1]:'';}
+const STATUS_BADGE={cho_duyet:'<span class="badge b-wait">⏳ Chờ duyệt</span>',da_xac_nhan:'<span class="badge b-ok">✔ Đã xác nhận</span>',tra_lai:'<span class="badge b-back">↩ Trả lại</span>'};
+
+async function boot(){
+  ME=await api('/api/me'); if(!ME){location.href='/login.html';return;}
+  STD=await api('/api/standards');
+  // Tabs theo vai
+  document.querySelectorAll('.tab').forEach(t=>{
+    const roles=t.dataset.role.split(',');
+    if(!roles.includes(ME.role)) t.classList.add('hidden');
+    else t.onclick=()=>go(t);
+  });
+  // Admin: chọn đơn vị để thao tác ở Cổng đơn vị
+  if(ME.role==='admin'){
+    const units=await api('/api/units');
+    $('#unit-pick').style.display='flex';
+    $('#unit-select').innerHTML='<option value="">— Chọn đơn vị —</option>'+units.map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('');
+    // Mặc định chọn Phòng Đảm bảo chất lượng (P.ĐBCL)
+    const dbcl = units.find(u=>u.code==='PDBCL') || units.find(u=>/đảm bảo chất lượng/i.test(u.name));
+    if(dbcl){ curUnit=dbcl.id; $('#unit-select').value=String(dbcl.id); }
+    $('#unit-select').onchange=e=>{curUnit=e.target.value?parseInt(e.target.value):null;renderPortal();};
+  } else if(ME.role==='unit'){ curUnit=ME.unit_id; }
+  // Mở tab đầu tiên hợp lệ
+  const first=document.querySelector('.tab:not(.hidden)'); if(first) go(first);
+}
+function go(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  $('#p-'+tab.dataset.p).classList.add('show');
+  ({portal:renderPortal,review:renderReview,matrix:renderMatrix,dash:renderDash}[tab.dataset.p])();
+}
+
+// ─── 1. CỔNG ĐƠN VỊ ─────────────────────────────────────────────────────────
+async function renderPortal(){
+  const el=$('#p-portal');
+  if(!curUnit){
+    el.innerHTML='<h1>🏢 Cổng đơn vị</h1><div class="sub">'+
+      (ME.role==='admin'?'Chọn một đơn vị ở góc phải để xem/nộp minh chứng thay đơn vị đó.':'Đơn vị của bạn chưa được gán.')+'</div>';
+    return;
+  }
+  const [assigned,evs]=await Promise.all([
+    api('/api/unit-criteria?unit_id='+curUnit),
+    api('/api/evidence?unit_id='+curUnit)
+  ]);
+  const byTc={}; evs.forEach(e=>(byTc[e.tieu_chi]||=[]).push(e));
+  const nWait=evs.filter(e=>e.status==='cho_duyet').length;
+  const nOk=evs.filter(e=>e.status==='da_xac_nhan').length;
+  const nBack=evs.filter(e=>e.status==='tra_lai').length;
+  let html=`<h1>🏢 Cổng đơn vị</h1><div class="sub">Các tiêu chí được phân công. Tải minh chứng lên; P.ĐBCL sẽ xác nhận hoặc trả lại.</div>
+    <div class="stats">
+      <div class="stat"><div class="label">Tiêu chí được giao</div><div class="value">${assigned.length}</div></div>
+      <div class="stat amber"><div class="label">Chờ duyệt</div><div class="value">${nWait}</div></div>
+      <div class="stat green"><div class="label">Đã xác nhận</div><div class="value">${nOk}</div></div>
+      <div class="stat red"><div class="label">Bị trả lại</div><div class="value">${nBack}</div></div>
+    </div><div class="panel"><h3>📋 Tiêu chí được phân công</h3>`;
+  if(!assigned.length) html+='<div class="empty">Đơn vị chưa được phân công tiêu chí nào. Liên hệ P.ĐBCL để được giao.</div>';
+  for(const a of assigned){
+    const list=byTc[a.tieu_chi]||[];
+    const ok=list.filter(e=>e.status==='da_xac_nhan').length;
+    const badge=ok>0?'<span class="badge b-ok">Đủ minh chứng</span>':list.some(e=>e.status==='cho_duyet')?'<span class="badge b-wait">Đang duyệt</span>':list.some(e=>e.status==='tra_lai')?'<span class="badge b-back">Bị trả lại</span>':'<span class="badge b-none">Chưa nộp</span>';
+    html+=`<div class="crit"><div class="crit-head"><span class="code">TC ${a.tieu_chi}</span>
+      <span class="name">${esc(critName(a.tieu_chi))}</span>${badge}</div><div class="crit-body">`;
+    for(const e of list){
+      html+=`<div class="ev-row"><span class="code">${esc(e.code)}</span>
+        <a class="file grow" href="/api/evidence/${e.id}/download" target="_blank">${e.source_type==='link'?'🔗':'📄'} ${esc(e.mo_ta||e.file_name||e.link_url)}</a>
+        ${STATUS_BADGE[e.status]}
+        ${(ME.role==='unit'&&e.status!=='da_xac_nhan')||ME.role==='admin'?`<button class="btn btn-sm" style="background:#e9ebef;color:var(--muted)" onclick="delEv(${e.id})">✕</button>`:''}</div>`;
+      if(e.status==='tra_lai'&&e.review_note) html+=`<div class="ev-row" style="border:none;padding-top:0"><span class="rn">↳ Lý do trả lại: "${esc(e.review_note)}"</span></div>`;
+    }
+    html+=`<div class="ev-row"><span class="grow"></span><button class="btn btn-up btn-sm" onclick="openUp('${a.tieu_chi}')">＋ Tải minh chứng</button></div></div></div>`;
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+// ─── 2. BÀN DUYỆT ───────────────────────────────────────────────────────────
+async function renderReview(){
+  const el=$('#p-review');
+  const [q,units]=await Promise.all([api('/api/evidence?status=cho_duyet'),api('/api/units')]);
+  el.innerHTML=`<h1>✅ Bàn duyệt minh chứng — P.ĐBCL</h1>
+    <div class="sub">Minh chứng các đơn vị vừa nộp. Xác nhận nếu đạt, hoặc trả lại kèm lý do.</div>
+    <div class="panel"><h3>⏳ Hàng đợi chờ duyệt (${q.length})</h3>
+    ${q.length?`<table><thead><tr><th>Mã MC</th><th>Tiêu chí</th><th>Đơn vị</th><th>Văn bản</th><th>Ngày nộp</th><th style="text-align:right">Thao tác</th></tr></thead><tbody>
+    ${q.map(e=>`<tr><td><span class="code">${esc(e.code)}</span></td>
+      <td>TC ${e.tieu_chi} · ${esc(critName(e.tieu_chi))}</td>
+      <td>${esc(e.unit_name||'—')}</td>
+      <td><a class="file" href="/api/evidence/${e.id}/download" target="_blank">${e.source_type==='link'?'🔗':'📄'} ${esc(e.mo_ta||e.file_name||e.link_url)}</a></td>
+      <td>${esc(e.created_at)}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="btn btn-ok btn-sm" onclick="review(${e.id},'confirm')">✔ Xác nhận</button>
+        <button class="btn btn-back btn-sm" onclick="openRet(${e.id})">↩ Trả lại</button></td></tr>`).join('')}
+    </tbody></table>`:'<div class="empty">Không có minh chứng nào đang chờ duyệt. 🎉</div>'}</div>`;
+}
+async function review(id,action){try{await api('/api/evidence/'+id+'/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action})});toast('Đã xác nhận');renderReview();}catch(e){toast(e.message,true);}}
+function openRet(id){retId=id;$('#ret-note').value='';$('#ov-ret').classList.add('show');}
+function closeRet(){$('#ov-ret').classList.remove('show');}
+async function submitRet(){const note=$('#ret-note').value.trim();if(!note){toast('Nhập lý do trả lại',true);return;}try{await api('/api/evidence/'+retId+'/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'return',note})});closeRet();toast('Đã trả lại');renderReview();}catch(e){toast(e.message,true);}}
+
+// ─── 3. ĐỐI SOÁT THEO TIÊU CHÍ ──────────────────────────────────────────────
+async function renderMatrix(){
+  const el=$('#p-matrix');
+  const {standards}=await api('/api/submission/coverage');
+  let html=`<h1>🔍 Đối soát minh chứng theo tiêu chí</h1>
+    <div class="sub">Mỗi tiêu chí hiển thị số minh chứng <b>đã xác nhận</b> và đơn vị phụ trách. Bấm dòng để xem văn bản.</div>`;
+  for(const std of standards){
+    html+=`<div class="panel"><h3>🗺 Tiêu chuẩn ${std.id} — ${esc(std.name)}</h3>
+      <table><thead><tr><th style="width:60px">TC</th><th>Nội dung</th><th style="width:90px;text-align:center">MC xác nhận</th><th style="width:160px">Đơn vị phụ trách</th><th style="width:110px;text-align:center">Trạng thái</th></tr></thead><tbody>
+      ${std.criteria.map(c=>`<tr style="cursor:pointer" onclick="showCrit('${c.key}',this)">
+        <td><span class="code">${c.key}</span></td><td>${esc(c.name)}</td>
+        <td style="text-align:center">${c.confirmed}${c.pending?` <span style="color:var(--amber)">(+${c.pending} chờ)</span>`:''}</td>
+        <td>${c.units.map(esc).join(', ')||'<span style="color:var(--muted)">—</span>'}</td>
+        <td style="text-align:center">${c.status==='du'?'<span class="badge b-ok">Đủ</span>':c.status==='dang_duyet'?'<span class="badge b-wait">Đang duyệt</span>':'<span class="badge b-none">Thiếu</span>'}</td></tr>`).join('')}
+      </tbody></table><div class="crit-detail"></div></div>`;
+  }
+  el.innerHTML=html;
+}
+async function showCrit(key,row){
+  const box=row.closest('.panel').querySelector('.crit-detail');
+  const evs=await api('/api/submission/criteria/'+key+'/evidence');
+  box.innerHTML=`<div style="margin-top:14px;padding:12px 14px;background:var(--green-soft);border-radius:6px;border-left:3px solid var(--green)">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">📄 Minh chứng đã xác nhận cho TC ${key} — ${esc(critName(key))}</div>
+    ${evs.length?evs.map(e=>`<div class="ev-row" style="border:none;padding:5px 0"><span class="code">${esc(e.code)}</span>
+      <a class="file grow" href="/api/evidence/${e.id}/download" target="_blank">${e.source_type==='link'?'🔗':'📄'} ${esc(e.mo_ta||e.file_name||e.link_url)}</a>
+      <span style="font-size:11px;color:var(--muted)">${esc(e.unit_name||'')} · ${esc(e.reviewed_at||'')}</span></div>`).join(''):'<div class="empty">Chưa có minh chứng xác nhận.</div>'}</div>`;
+}
+
+// ─── 4. DASHBOARD ───────────────────────────────────────────────────────────
+async function renderDash(){
+  const el=$('#p-dash');
+  const [d,cov]=await Promise.all([api('/api/submission/dashboard'),api('/api/submission/coverage')]);
+  const t=d.totals;
+  let html=`<h1>📊 Dashboard nộp & duyệt minh chứng</h1>
+    <div class="sub">Độ sẵn sàng đón đoàn: tiến độ từng đơn vị và độ phủ minh chứng theo tiêu chí.</div>
+    <div class="stats">
+      <div class="stat"><div class="label">Tổng minh chứng</div><div class="value">${t.total}</div></div>
+      <div class="stat green"><div class="label">Đã xác nhận</div><div class="value">${t.da_xac_nhan}</div></div>
+      <div class="stat amber"><div class="label">Chờ duyệt</div><div class="value">${t.cho_duyet}</div></div>
+      <div class="stat red"><div class="label">Bị trả lại</div><div class="value">${t.tra_lai}</div></div>
+    </div>
+    <div class="panel"><h3>🏢 Tiến độ theo đơn vị</h3>
+    <table><thead><tr><th>Đơn vị</th><th style="text-align:center">TC được giao</th><th style="text-align:center">Đã nộp</th><th style="text-align:center">Đã xác nhận</th><th style="width:220px">Tỉ lệ xác nhận/đã nộp</th></tr></thead><tbody>
+    ${d.by_unit.map(u=>{const pct=u.submitted?Math.round(u.confirmed/u.submitted*100):0;return `<tr><td>${esc(u.unit_name)}</td>
+      <td style="text-align:center">${u.assigned}</td><td style="text-align:center">${u.submitted}</td><td style="text-align:center">${u.confirmed}</td>
+      <td><div class="barwrap"><div class="bar"><i style="width:${pct}%;background:${pct>=80?'var(--green)':pct>=50?'var(--gold)':'var(--red)'}"></i></div><span>${pct}%</span></div></td></tr>`;}).join('')}
+    </tbody></table></div>
+    <div class="panel"><h3>🗺 Độ phủ minh chứng theo tiêu chí</h3><div class="heat">
+    ${cov.standards.map(std=>`<div class="heat-row"><div class="tc-name" title="${esc(std.id+'. '+std.name)}">${std.id}. ${esc(std.name)}</div>
+      <div class="cells">${std.criteria.map(c=>`<div class="cell c-${c.status}" title="TC ${c.key}: ${c.confirmed} MC xác nhận">${c.idx}</div>`).join('')}</div></div>`).join('')}
+    </div><div class="legend"><span><i class="dot c-du"></i> Đủ MC xác nhận</span><span><i class="dot c-dang_duyet"></i> Có MC đang duyệt</span><span><i class="dot c-thieu"></i> Thiếu</span></div></div>`;
+  el.innerHTML=html;
+}
+
+// ─── Upload modal ───────────────────────────────────────────────────────────
+function openUp(tc){upCtx={tieu_chi:tc};$('#up-title').textContent='Tải minh chứng — TC '+tc;setSrc('file');$('#up-file').value='';$('#up-link').value='';$('#up-desc').value='';$('#ov-up').classList.add('show');}
+function closeUp(){$('#ov-up').classList.remove('show');}
+function setSrc(s){srcType=s;$('#seg-file').classList.toggle('on',s==='file');$('#seg-link').classList.toggle('on',s==='link');$('#up-file-box').style.display=s==='file'?'block':'none';$('#up-link-box').style.display=s==='link'?'block':'none';}
+async function submitUp(){
+  const tc=upCtx.tieu_chi, std=parseInt(tc.split('.')[0]);
+  const fd=new FormData();
+  fd.append('tieu_chuan',std); fd.append('tieu_chi',tc);
+  fd.append('mo_ta',$('#up-desc').value); fd.append('source_type',srcType);
+  if(curUnit) fd.append('unit_id',curUnit);
+  if(srcType==='file'){const f=$('#up-file').files[0];if(!f){toast('Chọn file',true);return;}fd.append('file',f);}
+  else{const l=$('#up-link').value.trim();if(!l){toast('Nhập link',true);return;}fd.append('link_url',l);}
+  try{await api('/api/evidence',{method:'POST',body:fd});closeUp();toast('Đã tải minh chứng');renderPortal();}catch(e){toast(e.message,true);}
+}
+async function delEv(id){if(!confirm('Xoá minh chứng này?'))return;try{await api('/api/evidence/'+id,{method:'DELETE'});toast('Đã xoá');renderPortal();}catch(e){toast(e.message,true);}}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOCKUP · Nộp & Duyệt Minh chứng theo đơn vị</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* Theme trường (Docusaurus interactive-ebooks): maroon #990000 + gold #fbae40, nền sáng */
+  --bg:#f5f6f8; --panel:#ffffff; --border:#dadde1;
+  --maroon:#990000; --maroon-dark:#5c0000; --maroon-soft:rgba(153,0,0,.08);
+  --gold:#fbae40; --accent:#990000;
+  --green:#1a7f4b; --green-soft:rgba(26,127,75,.12);
+  --red:#c0392b;   --red-soft:rgba(192,57,43,.12);
+  --amber:#b26a00; --amber-soft:rgba(251,174,64,.18);
+  --text:#1c1e21; --muted:#606770; --hover:#f0f1f3;
+}
+body { font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; font-size:14px; }
+
+/* Top nav — maroon với viền vàng như theme trường */
+.topnav { background:var(--maroon-dark); border-bottom:3px solid var(--gold); padding:0 20px; display:flex; align-items:center; height:52px; flex-shrink:0; }
+.topnav .brand { font-size:13px; font-weight:800; color:#fff; margin-right:24px; white-space:nowrap; display:flex; align-items:center; gap:8px; }
+.topnav .brand .logo { width:26px; height:26px; border-radius:50%; background:var(--gold); color:var(--maroon-dark); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; }
+.nav-link { display:flex; align-items:center; gap:6px; height:52px; padding:0 14px; font-size:13px; font-weight:600; color:rgba(255,255,255,.8); text-decoration:none; border-bottom:3px solid transparent; }
+.nav-link:hover { color:var(--gold); }
+.nav-link.active { color:#fff; border-bottom-color:var(--gold); }
+.nav-link.new::after { content:'MỚI'; font-size:8px; background:var(--gold); color:var(--maroon-dark); padding:1px 4px; border-radius:3px; margin-left:4px; letter-spacing:.5px; font-weight:800; }
+
+/* Sub-tab bar */
+.subbar { background:var(--panel); border-bottom:1px solid var(--border); padding:0 20px; display:flex; align-items:center; gap:4px; height:48px; flex-shrink:0; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+.tab { padding:8px 15px; font-size:13px; font-weight:600; color:var(--muted); border-radius:8px; cursor:pointer; }
+.tab:hover { color:var(--maroon); background:var(--maroon-soft); }
+.tab.active { color:#fff; background:var(--maroon); }
+.subbar .spacer { flex:1; }
+.role-pick { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
+.role-pick select { background:#fff; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:12px; font-weight:600; font-family:inherit; }
+
+.wrap { flex:1; overflow-y:auto; padding:22px 26px; }
+.wrap::-webkit-scrollbar { width:8px; } .wrap::-webkit-scrollbar-thumb { background:var(--gold); border-radius:4px; }
+.page { display:none; } .page.show { display:block; }
+h1 { font-size:20px; margin-bottom:4px; color:var(--maroon-dark); }
+.sub { font-size:12.5px; color:var(--muted); margin-bottom:16px; }
+.mock-note { background:var(--amber-soft); border:1px solid var(--gold); border-radius:6px; padding:8px 12px; font-size:11px; color:var(--amber); margin-bottom:18px; }
+
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+.stat { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; border-top:3px solid var(--maroon); box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.stat .label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+.stat .value { font-size:26px; font-weight:800; margin-top:4px; color:var(--maroon-dark); }
+.stat.green { border-top-color:var(--green); } .stat.green .value{color:var(--green);}
+.stat.amber { border-top-color:var(--gold); } .stat.amber .value{color:var(--amber);}
+.stat.red   { border-top-color:var(--red); }   .stat.red .value{color:var(--red);}
+
+.panel { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.panel h3 { font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--maroon); margin-bottom:12px; display:flex; align-items:center; gap:8px; padding-bottom:8px; border-bottom:2px solid var(--maroon-soft); }
+
+.badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+.b-wait { background:var(--amber-soft); color:var(--amber); }
+.b-ok   { background:var(--green-soft); color:var(--green); }
+.b-back { background:var(--red-soft);   color:var(--red); }
+.b-none { background:#e9ebef; color:var(--muted); }
+.code { font-family:'Consolas','SF Mono',monospace; font-size:11px; color:var(--maroon); background:var(--maroon-soft); padding:1px 6px; border-radius:3px; font-weight:600; }
+
+table { width:100%; border-collapse:collapse; font-size:12.5px; }
+th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:8px 10px; border-bottom:2px solid var(--border); font-weight:700; }
+td { padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+tr:hover td { background:var(--hover); }
+.file { color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+.file:hover { color:var(--maroon); }
+.file .ic { opacity:.8; }
+
+.btn { border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
+.btn-ok { background:var(--green); color:#fff; }
+.btn-back { background:#fff; color:var(--red); border:1px solid var(--red); }
+.btn-up { background:var(--maroon); color:#fff; }
+.btn-sm { padding:4px 9px; font-size:11px; }
+.btn:hover { opacity:.88; }
+.filterbar { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.filterbar select, .filterbar input { background:#fff; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:12px; font-family:inherit; }
+
+.crit { border:1px solid var(--border); border-radius:8px; margin-bottom:10px; overflow:hidden; }
+.crit-head { display:flex; align-items:center; gap:10px; padding:11px 14px; background:var(--maroon-soft); }
+.crit-head .name { font-weight:600; font-size:13px; flex:1; color:var(--maroon-dark); }
+.crit-body { padding:6px 14px 12px; }
+.ev-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px dashed var(--border); font-size:12.5px; }
+.ev-row .grow { flex:1; }
+.ev-row .rn { font-size:11px; color:var(--red); font-style:italic; }
+.progress { height:6px; background:#e9ebef; border-radius:3px; overflow:hidden; flex:1; max-width:120px; }
+.progress > div { height:100%; background:var(--green); }
+
+.heat { display:flex; flex-direction:column; gap:6px; }
+.heat-row { display:flex; align-items:center; gap:8px; }
+.heat-row .tc-name { width:230px; font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cells { display:flex; gap:4px; }
+.cell { width:26px; height:22px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; }
+.c-ok{background:var(--green);} .c-wait{background:var(--gold); color:var(--maroon-dark);} .c-none{background:#e2e4e8; color:var(--muted);}
+.legend { display:flex; gap:16px; font-size:11px; color:var(--muted); margin-top:12px; }
+.legend span { display:inline-flex; align-items:center; gap:5px; }
+.dot { width:12px; height:12px; border-radius:3px; }
+
+.unit-row td .barwrap { display:flex; align-items:center; gap:8px; }
+.barwrap .bar { flex:1; height:8px; background:#e9ebef; border-radius:4px; overflow:hidden; max-width:180px; }
+.barwrap .bar > i { display:block; height:100%; background:var(--maroon); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <span class="brand"><span class="logo">Đ</span> KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
+  <a class="nav-link" href="/">📂 Minh chứng</a>
+  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
+  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link active new" href="#">🗂 Nộp & Duyệt MC</a>
+</nav>
+
+<div class="subbar">
+  <div class="tab active" data-p="portal" onclick="go(this)">🏢 Cổng đơn vị</div>
+  <div class="tab" data-p="review" onclick="go(this)">✅ Bàn duyệt (P.ĐBCL)</div>
+  <div class="tab" data-p="matrix" onclick="go(this)">🔍 Đối soát theo tiêu chí</div>
+  <div class="tab" data-p="dash" onclick="go(this)">📊 Dashboard nộp/duyệt</div>
+  <div class="spacer"></div>
+  <div class="role-pick">
+    Đang là:
+    <select id="role" onchange="roleChange()">
+      <option value="Khoa CNTT">Khoa Công nghệ thông tin</option>
+      <option value="Phòng Đào tạo">Phòng Đào tạo</option>
+      <option value="Phòng TC-HC">Phòng Tổ chức - Hành chính</option>
+      <option value="__dbcl__">👤 P.ĐBCL (người duyệt)</option>
+    </select>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════ 1. CỔNG ĐƠN VỊ ══════════ -->
+<div class="page show" id="p-portal">
+  <h1>🏢 Cổng đơn vị — <span id="unit-name">Khoa Công nghệ thông tin</span></h1>
+  <div class="sub">Các tiêu chí đơn vị được phân công. Tải văn bản minh chứng lên; P.ĐBCL sẽ xác nhận hoặc trả lại.</div>
+  <div class="mock-note">🎨 Đây là MOCKUP giao diện — dữ liệu và các nút chỉ để minh hoạ bố cục, chưa hoạt động thật.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Tiêu chí được giao</div><div class="value">6</div></div>
+    <div class="stat amber"><div class="label">Đang chờ duyệt</div><div class="value">3</div></div>
+    <div class="stat green"><div class="label">Đã xác nhận</div><div class="value">8</div></div>
+    <div class="stat red"><div class="label">Bị trả lại</div><div class="value">1</div></div>
+  </div>
+
+  <div class="panel">
+    <h3>📋 Tiêu chí được phân công cho đơn vị</h3>
+
+    <div class="crit">
+      <div class="crit-head">
+        <span class="code">TC 6.3</span>
+        <span class="name">Giảng dạy và học tập</span>
+        <span class="progress"><div style="width:100%"></div></span>
+        <span class="badge b-ok">Đủ minh chứng</span>
+      </div>
+      <div class="crit-body">
+        <div class="ev-row"><span class="code">H6.06.03.01</span><a class="file grow"><span class="ic">📄</span> Đề cương chi tiết học phần 2024-2025.pdf</a><span class="badge b-ok">✔ Đã xác nhận</span></div>
+        <div class="ev-row"><span class="code">H6.06.03.02</span><a class="file grow"><span class="ic">📄</span> Kế hoạch giảng dạy Khoa CNTT.docx</a><span class="badge b-ok">✔ Đã xác nhận</span></div>
+        <div class="ev-row"><span class="grow"></span><button class="btn btn-up btn-sm">＋ Tải thêm minh chứng</button></div>
+      </div>
+    </div>
+
+    <div class="crit">
+      <div class="crit-head">
+        <span class="code">TC 7.4</span>
+        <span class="name">Phát triển năng lực nghiên cứu</span>
+        <span class="progress"><div style="width:50%"></div></span>
+        <span class="badge b-wait">Đang duyệt</span>
+      </div>
+      <div class="crit-body">
+        <div class="ev-row"><span class="code">H7.07.04.01</span><a class="file grow"><span class="ic">📄</span> Danh mục bài báo GV 2024.xlsx</a><span class="badge b-wait">⏳ Chờ duyệt</span></div>
+        <div class="ev-row"><span class="grow"></span><button class="btn btn-up btn-sm">＋ Tải thêm minh chứng</button></div>
+      </div>
+    </div>
+
+    <div class="crit">
+      <div class="crit-head">
+        <span class="code">TC 4.4</span>
+        <span class="name">CNTT và hạ tầng số</span>
+        <span class="progress"><div style="width:0%"></div></span>
+        <span class="badge b-back">Bị trả lại</span>
+      </div>
+      <div class="crit-body">
+        <div class="ev-row">
+          <span class="code">H4.04.04.01</span>
+          <a class="file grow"><span class="ic">📄</span> Báo cáo hạ tầng CNTT.pdf</a>
+          <span class="badge b-back">↩ Trả lại</span>
+        </div>
+        <div class="ev-row"><span class="rn">↳ Lý do P.ĐBCL trả lại: "File thiếu chữ ký và dấu; cần bản có phê duyệt của lãnh đạo."</span></div>
+        <div class="ev-row"><span class="grow"></span><button class="btn btn-up btn-sm">↻ Tải bản thay thế</button></div>
+      </div>
+    </div>
+
+    <div class="crit">
+      <div class="crit-head">
+        <span class="code">TC 6.5</span>
+        <span class="name">Hỗ trợ người học</span>
+        <span class="progress"><div style="width:0%"></div></span>
+        <span class="badge b-none">Chưa nộp</span>
+      </div>
+      <div class="crit-body">
+        <div class="ev-row"><span class="grow" style="color:var(--muted); font-style:italic; font-size:12px;">Chưa có minh chứng nào cho tiêu chí này.</span><button class="btn btn-up btn-sm">＋ Tải minh chứng đầu tiên</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 2. BÀN DUYỆT ══════════ -->
+<div class="page" id="p-review">
+  <h1>✅ Bàn duyệt minh chứng — P.ĐBCL</h1>
+  <div class="sub">Hàng đợi minh chứng các đơn vị vừa nộp. Xác nhận nếu đạt, hoặc trả lại kèm lý do.</div>
+  <div class="mock-note">🎨 MOCKUP — nút Xác nhận / Trả lại chỉ minh hoạ.</div>
+
+  <div class="stats">
+    <div class="stat amber"><div class="label">Chờ duyệt</div><div class="value">7</div></div>
+    <div class="stat green"><div class="label">Đã xác nhận hôm nay</div><div class="value">12</div></div>
+    <div class="stat red"><div class="label">Đã trả lại</div><div class="value">2</div></div>
+    <div class="stat"><div class="label">Đơn vị đang nộp</div><div class="value">9</div></div>
+  </div>
+
+  <div class="filterbar">
+    <select><option>Tất cả đơn vị</option><option>Khoa CNTT</option><option>Phòng Đào tạo</option><option>Phòng TC-HC</option></select>
+    <select><option>Tất cả tiêu chuẩn</option><option>TC1 – Tầm nhìn, sứ mạng…</option><option>TC6 – Chính sách đào tạo</option></select>
+    <select><option>Trạng thái: Chờ duyệt</option><option>Đã xác nhận</option><option>Bị trả lại</option></select>
+    <input placeholder="🔍 Tìm theo tên file / mã MC…">
+  </div>
+
+  <div class="panel">
+    <h3>⏳ Hàng đợi chờ duyệt (7)</h3>
+    <table>
+      <thead><tr><th>Mã MC</th><th>Tiêu chí</th><th>Đơn vị nộp</th><th>Văn bản</th><th>Ngày nộp</th><th style="text-align:right">Thao tác</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="code">H7.07.04.01</span></td>
+          <td>TC 7.4 · Phát triển NL nghiên cứu</td>
+          <td>Khoa CNTT</td>
+          <td><a class="file"><span class="ic">📄</span> Danh mục bài báo GV 2024.xlsx</a></td>
+          <td>03/07/2026</td>
+          <td style="text-align:right; white-space:nowrap"><button class="btn btn-ok btn-sm">✔ Xác nhận</button> <button class="btn btn-back btn-sm">↩ Trả lại</button></td>
+        </tr>
+        <tr>
+          <td><span class="code">H6.06.03.03</span></td>
+          <td>TC 6.3 · Giảng dạy và học tập</td>
+          <td>Phòng Đào tạo</td>
+          <td><a class="file"><span class="ic">📄</span> Quy định kiểm tra đánh giá.pdf</a></td>
+          <td>03/07/2026</td>
+          <td style="text-align:right; white-space:nowrap"><button class="btn btn-ok btn-sm">✔ Xác nhận</button> <button class="btn btn-back btn-sm">↩ Trả lại</button></td>
+        </tr>
+        <tr>
+          <td><span class="code">H3.03.01.02</span></td>
+          <td>TC 3.1 · Quy hoạch & tuyển dụng</td>
+          <td>Phòng TC-HC</td>
+          <td><a class="file"><span class="ic">📄</span> Kế hoạch tuyển dụng GV 2025.docx</a></td>
+          <td>02/07/2026</td>
+          <td style="text-align:right; white-space:nowrap"><button class="btn btn-ok btn-sm">✔ Xác nhận</button> <button class="btn btn-back btn-sm">↩ Trả lại</button></td>
+        </tr>
+        <tr>
+          <td><span class="code">H4.04.01.01</span></td>
+          <td>TC 4.1 · Quản lý tài chính</td>
+          <td>Phòng KH-TC</td>
+          <td><a class="file"><span class="ic">📄</span> Báo cáo tài chính 2024.pdf</a></td>
+          <td>02/07/2026</td>
+          <td style="text-align:right; white-space:nowrap"><button class="btn btn-ok btn-sm">✔ Xác nhận</button> <button class="btn btn-back btn-sm">↩ Trả lại</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ 3. ĐỐI SOÁT THEO TIÊU CHÍ ══════════ -->
+<div class="page" id="p-matrix">
+  <h1>🔍 Đối soát minh chứng theo tiêu chí</h1>
+  <div class="sub">Màn hình cho Hội đồng / đoàn kiểm tra: mỗi tiêu chí hiển thị các văn bản <b>đã xác nhận</b> chứng minh nó.</div>
+  <div class="mock-note">🎨 MOCKUP — minh hoạ cách trình bày minh chứng khi đoàn về kiểm tra.</div>
+
+  <div class="filterbar">
+    <select><option>Tất cả 15 tiêu chuẩn</option><option>TC6 – Chính sách đào tạo</option></select>
+    <select><option>Tất cả trạng thái</option><option>Đủ minh chứng</option><option>Thiếu minh chứng</option></select>
+  </div>
+
+  <div class="panel">
+    <h3>🗺 Tiêu chuẩn 6 — Chính sách về đào tạo</h3>
+    <table>
+      <thead><tr><th style="width:70px">Tiêu chí</th><th>Nội dung</th><th style="width:80px; text-align:center">MC xác nhận</th><th style="width:130px">Đơn vị phụ trách</th><th style="width:120px; text-align:center">Trạng thái</th></tr></thead>
+      <tbody>
+        <tr><td><span class="code">6.1</span></td><td>Tuyển sinh</td><td style="text-align:center">3</td><td>Phòng Đào tạo</td><td style="text-align:center"><span class="badge b-ok">Đủ</span></td></tr>
+        <tr><td><span class="code">6.2</span></td><td>Chương trình đào tạo</td><td style="text-align:center">4</td><td>Phòng Đào tạo</td><td style="text-align:center"><span class="badge b-ok">Đủ</span></td></tr>
+        <tr><td><span class="code">6.3</span></td><td>Giảng dạy và học tập</td><td style="text-align:center">2</td><td>Khoa CNTT</td><td style="text-align:center"><span class="badge b-ok">Đủ</span></td></tr>
+        <tr><td><span class="code">6.4</span></td><td>Kiểm tra đánh giá</td><td style="text-align:center">1</td><td>Phòng Đào tạo</td><td style="text-align:center"><span class="badge b-wait">Đang duyệt</span></td></tr>
+        <tr><td><span class="code">6.5</span></td><td>Hỗ trợ người học</td><td style="text-align:center">0</td><td>Phòng CTSV</td><td style="text-align:center"><span class="badge b-none">Thiếu</span></td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:16px; padding:12px 14px; background:var(--green-soft); border-radius:6px; border-left:3px solid var(--green);">
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:8px;">📄 Văn bản minh chứng cho TC 6.3 — Giảng dạy và học tập</div>
+      <div class="ev-row" style="border:none; padding:5px 0;"><span class="code">H6.06.03.01</span><a class="file grow"><span class="ic">📄</span> Đề cương chi tiết học phần 2024-2025.pdf</a><span style="font-size:11px; color:var(--muted)">Khoa CNTT · xác nhận 28/06/2026</span></div>
+      <div class="ev-row" style="border:none; padding:5px 0;"><span class="code">H6.06.03.02</span><a class="file grow"><span class="ic">📄</span> Kế hoạch giảng dạy Khoa CNTT.docx</a><span style="font-size:11px; color:var(--muted)">Khoa CNTT · xác nhận 28/06/2026</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 4. DASHBOARD ══════════ -->
+<div class="page" id="p-dash">
+  <h1>📊 Dashboard nộp & duyệt minh chứng</h1>
+  <div class="sub">Theo dõi độ sẵn sàng đón đoàn: tiến độ từng đơn vị và độ phủ minh chứng theo tiêu chí.</div>
+  <div class="mock-note">🎨 MOCKUP — số liệu minh hoạ.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Tổng minh chứng</div><div class="value">184</div></div>
+    <div class="stat green"><div class="label">Đã xác nhận</div><div class="value">146</div></div>
+    <div class="stat amber"><div class="label">Chờ duyệt</div><div class="value">31</div></div>
+    <div class="stat red"><div class="label">Bị trả lại</div><div class="value">7</div></div>
+  </div>
+
+  <div class="panel">
+    <h3>🏢 Tiến độ theo đơn vị</h3>
+    <table>
+      <thead><tr><th>Đơn vị</th><th>TC được giao</th><th>Đã nộp</th><th>Đã xác nhận</th><th style="width:240px">Độ hoàn thành</th></tr></thead>
+      <tbody>
+        <tr class="unit-row"><td>Phòng Đào tạo</td><td>14</td><td>41</td><td>38</td><td><div class="barwrap"><div class="bar"><i style="width:90%"></i></div><span>90%</span></div></td></tr>
+        <tr class="unit-row"><td>Khoa CNTT</td><td>6</td><td>11</td><td>8</td><td><div class="barwrap"><div class="bar"><i style="width:73%"></i></div><span>73%</span></div></td></tr>
+        <tr class="unit-row"><td>Phòng TC-HC</td><td>9</td><td>22</td><td>20</td><td><div class="barwrap"><div class="bar"><i style="width:88%"></i></div><span>88%</span></div></td></tr>
+        <tr class="unit-row"><td>Phòng KH-TC</td><td>5</td><td>9</td><td>6</td><td><div class="barwrap"><div class="bar"><i style="width:60%; background:var(--gold)"></i></div><span>60%</span></div></td></tr>
+        <tr class="unit-row"><td>Phòng CTSV</td><td>4</td><td>2</td><td>1</td><td><div class="barwrap"><div class="bar"><i style="width:25%; background:var(--red)"></i></div><span>25%</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h3>🗺 Độ phủ minh chứng theo tiêu chí (15 tiêu chuẩn × tiêu chí)</h3>
+    <div class="heat" id="heat"></div>
+    <div class="legend">
+      <span><i class="dot c-ok"></i> Đủ MC đã xác nhận</span>
+      <span><i class="dot c-wait"></i> Có MC nhưng đang duyệt</span>
+      <span><i class="dot c-none"></i> Chưa có / thiếu</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function go(el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  document.getElementById('p-'+el.dataset.p).classList.add('show');
+}
+function roleChange(){
+  const v = document.getElementById('role').value;
+  const isDbcl = v==='__dbcl__';
+  document.getElementById('unit-name').textContent = isDbcl ? '(chế độ duyệt)' : document.querySelector('#role option:checked').textContent;
+  if(isDbcl){ document.querySelector('.tab[data-p="review"]').click(); }
+}
+
+const TC = [
+  ['1. Tầm nhìn, sứ mạng, văn hoá, quản trị',6],['2. Lãnh đạo và chiến lược',5],
+  ['3. Nguồn nhân lực',5],['4. Nguồn lực tài chính, vật chất',5],
+  ['5. Mạng lưới, quan hệ đối ngoại',2],['6. Chính sách về đào tạo',7],
+  ['7. Chính sách nghiên cứu khoa học',5],['8. Kết nối, phục vụ cộng đồng',3],
+  ['9. Hệ thống bảo đảm chất lượng',4],['10. Hệ thống thông tin BĐCL',2],
+  ['11. Nâng cao chất lượng',2],['12. Kết quả về đào tạo',4],
+  ['13. Kết quả nghiên cứu khoa học',4],['14. Kết quả kết nối cộng đồng',4],
+  ['15. Kết quả tài chính, thị trường',2],
+];
+const pat = ['ok','ok','ok','wait','none','ok','ok','wait','ok','ok','ok','none','wait','ok'];
+let k=0;
+const heat = document.getElementById('heat');
+TC.forEach(([name,n])=>{
+  const row=document.createElement('div'); row.className='heat-row';
+  const lbl=document.createElement('div'); lbl.className='tc-name'; lbl.textContent=name; lbl.title=name;
+  const cells=document.createElement('div'); cells.className='cells';
+  for(let i=1;i<=n;i++){
+    const s=pat[(k++)%pat.length];
+    const c=document.createElement('div'); c.className='cell c-'+s; c.textContent=i;
+    c.title='Tiêu chí '+name.split('.')[0]+'.'+i;
+    cells.appendChild(c);
+  }
+  row.appendChild(lbl); row.appendChild(cells); heat.appendChild(row);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# ─── KĐCLGD v2 — Postgres + App ─────────────────────────────────────────────
+# Cổng Postgres map 5435 (tránh 5432/5433/5434 đã dùng ở project khác + PG native).
+# App map 127.0.0.1:8091 (chỉ localhost — reverse proxy trên VPS trỏ vào đây).
+# Dữ liệu bền trong ./.docker-data (db + uploads) → backup = nén thư mục này.
+#
+#   docker compose up -d           # chạy nền
+#   docker compose logs -f app     # xem log
+#   docker compose down            # dừng (dữ liệu vẫn còn)
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kdcl-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kdcl
+      POSTGRES_PASSWORD: kdcl
+      POSTGRES_DB: kdcl
+    ports:
+      - "127.0.0.1:5435:5432"
+    volumes:
+      - ./.docker-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kdcl -d kdcl"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: kdcl-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://kdcl:kdcl@db:5432/kdcl
+      DATA_DIR: /data
+      PORT: 3001
+      # ADMIN_USER / ADMIN_PASS: đặt để seed tài khoản admin đầu tiên (mặc định admin/admin123)
+    ports:
+      - "127.0.0.1:8091:3001"
+    volumes:
+      - ./.docker-data/app:/data
+    depends_on:
+      db:
+        condition: service_healthy

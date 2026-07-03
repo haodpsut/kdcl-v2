@@ -1,0 +1,10 @@
+node_modules
+.docker-data
+uploads
+db.json
+db.seed.json
+*.log
+.git
+RESUME.md
+vercel.json
+.vercelignore
