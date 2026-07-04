@@ -13,6 +13,25 @@ fs.mkdirSync(UP, { recursive: true });
 
 async function insId(sql, params) { return (await one(sql, params)).id; }
 
+// Tạo thêm 1 kế hoạch đo cho 1 học phần (2 bài + 6 SV + điểm) để M11 phủ nhiều PLO hơn
+async function makeMeasure(ws, courseId, name, cloA, cloB, cloC, scores) {
+  const p = await insId(`INSERT INTO assessment_plans(workspace_id,course_id,name,semester,school_year,threshold_pct,pass_score_pct,status)
+    VALUES ($1,$2,$3,2,'2025-2026',75,50,'active') RETURNING id`, [ws, courseId, name]);
+  const i1 = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
+    VALUES ($1,$2,'Bài kiểm tra giữa kỳ','test',10,$3) RETURNING id`, [ws, p, JSON.stringify([{clo_id:cloA,weight:40},{clo_id:cloB,weight:60}])]);
+  const i2 = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
+    VALUES ($1,$2,'Thi cuối kỳ','test',10,$3) RETURNING id`, [ws, p, JSON.stringify([{clo_id:cloB,weight:50},{clo_id:cloC,weight:50}])]);
+  const sids = [];
+  for (let n = 1; n <= 6; n++)
+    sids.push(await insId("INSERT INTO plan_students(workspace_id,plan_id,code,full_name) VALUES ($1,$2,$3,$4) RETURNING id",
+      [ws, p, 'SV' + String(n).padStart(2,'0'), 'Sinh viên ' + n]));
+  for (let n = 0; n < 6; n++) {
+    await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [ws, i1, sids[n], scores[n][0]]);
+    await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [ws, i2, sids[n], scores[n][1]]);
+  }
+  return p;
+}
+
 let seq = 0;
 function makeFile(code, tc, desc) {
   seq++;
@@ -123,6 +142,14 @@ async function main() {
     ['14.3','PKHCN','Báo cáo hoạt động phục vụ cộng đồng của Trường','cho_duyet','link'],
     ['15.1','PKHTC','Báo cáo hiệu quả sử dụng nguồn lực tài chính','da_xac_nhan','file'],
     ['15.2','PKHTC','Báo cáo uy tín và thương hiệu của Nhà trường','cho_duyet','link'],
+    ['1.3','PTCHC','Tài liệu về giá trị văn hóa và môi trường học thuật','da_xac_nhan','file'],
+    ['2.2','PTCHC','Biên bản rà soát cơ cấu tổ chức định kỳ','cho_duyet','link'],
+    ['4.3','PKHTC','Thống kê thư viện và học liệu điện tử','da_xac_nhan','file'],
+    ['5.2','PKHCN','Báo cáo cải tiến hoạt động hợp tác, đối ngoại','cho_duyet','link'],
+    ['9.4','PDBCL','Báo cáo cải tiến hệ thống bảo đảm chất lượng','da_xac_nhan','file'],
+    ['12.2','PDT','Báo cáo chất lượng sinh viên tốt nghiệp','da_xac_nhan','file'],
+    ['13.2','KCNTT','Danh mục bài báo khoa học của sinh viên','cho_duyet','link'],
+    ['14.2','PKHCN','Báo cáo chuyển giao công nghệ và tư vấn','da_xac_nhan','file'],
   ];
   await assignFrom(csgd, EV_CSGD, [['PDT','12.2'],['PKHCN','5.2'],['PKHTC','4.3'],['PDBCL','9.4']]);
   for (const [tc, u, d, s, src, n] of EV_CSGD) await ev(csgd, tc, u, d, s, src, n);
@@ -137,6 +164,12 @@ async function main() {
     ['7.4','KCNTT','Danh mục nghiên cứu khoa học của sinh viên','cho_duyet','link'],
     ['6.1','PDT','Đề án tuyển sinh ngành Công nghệ thông tin','tra_lai','file','Cập nhật số liệu chỉ tiêu mới nhất.'],
     ['9.1','PDBCL','Quy trình bảo đảm chất lượng chương trình đào tạo','da_xac_nhan','file'],
+    ['1.2','PDT','Quy chế tổ chức và hoạt động liên quan chương trình','da_xac_nhan','file'],
+    ['3.3','PTCHC','Kế hoạch bồi dưỡng giảng viên chuyên ngành CNTT','cho_duyet','link'],
+    ['4.2','PKHTC','Danh mục phòng thực hành, lab phục vụ chương trình','da_xac_nhan','file'],
+    ['6.6','PDT','Quy định quản lý hồ sơ và kết quả học tập người học','da_xac_nhan','file'],
+    ['8.2','PKHCN','Báo cáo hoạt động kết nối doanh nghiệp CNTT','cho_duyet','link'],
+    ['11.1','PDBCL','Kế hoạch cải tiến chương trình theo phản hồi các bên','cho_duyet','file'],
   ];
   await assignFrom(ctdt, EV_CTDT, [['KCNTT','6.5']]);
   for (const [tc, u, d, s, src, n] of EV_CTDT) await ev(ctdt, tc, u, d, s, src, n);
@@ -212,6 +245,8 @@ async function main() {
     await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [ctdt, it1, sid[i], SC[i][0]]);
     await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [ctdt, it2, sid[i], SC[i][1]]);
   }
+  // Đo thêm học phần IT201 để M11 phủ thêm PLO
+  await makeMeasure(ctdt, C['IT201'], 'IT201 — HK2 2025-2026', CL['IT201.CLO1'], CL['IT201.CLO2'], CL['IT201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
 
   // ═══ Thông tin trường (school_info) ═════════════════════════════════════
   const SCHOOL = {
@@ -248,7 +283,7 @@ async function main() {
     ['12.1','DAT','approved'],['12.3','DAT','draft'],['13.1','DAT','draft'],['14.1','DAT','draft'],['15.1','DAT','approved'],
   ];
   for (const [tc, kq, tt] of ASSESS_CSGD) await assess(csgd, tc, kq, tt);
-  for (const [tc, kq, tt] of [['6.2','DAT','approved'],['6.3','DAT','approved'],['7.4','CHUA','draft'],['9.1','DAT','draft']])
+  for (const [tc, kq, tt] of [['6.1','DAT','approved'],['6.2','DAT','approved'],['6.3','DAT','approved'],['6.4','DAT','draft'],['6.6','DAT','draft'],['7.4','CHUA','draft'],['9.1','DAT','draft'],['11.1','DAT','draft']])
     await assess(ctdt, tc, kq, tt);
 
   // ═══ KPI (Biểu 16) — 3 năm học ══════════════════════════════════════════
@@ -356,11 +391,145 @@ async function main() {
     VALUES ($1,'Báo cáo tự đánh giá chương trình đào tạo CNTT','2021-2025','Nhóm chuyên trách CTĐT CNTT',
     'Chương trình đào tạo CNTT đáp ứng chuẩn đầu ra; kết quả đo lường CLO/PLO cho thấy đa số PLO đạt mức cao.')`, [ctdt]);
 
+  // ═══════════════════════════════════════════════════════════════════════
+  //  KTr 2026 — CTĐT ngành KIẾN TRÚC (workspace mới, chọn ở dropdown)
+  // ═══════════════════════════════════════════════════════════════════════
+  let ktr = await one("SELECT id FROM workspaces WHERE name='KTr 2026'");
+  if (!ktr) ktr = await one(`INSERT INTO workspaces(name,type,law,description)
+    VALUES ('KTr 2026','CTDT','TT04/2025 BGDĐT','Kiểm định CTĐT ngành Kiến trúc, khóa 2026') RETURNING id`);
+  const K = ktr.id;
+  // Xoá dữ liệu mẫu cũ của KTr (idempotent)
+  const oldK = await q("SELECT file_stored FROM evidence WHERE workspace_id=$1 AND file_stored LIKE 'sample_%'", [K]);
+  for (const f of oldK) { try { fs.unlinkSync(path.join(UP, f.file_stored)); } catch (e) {} }
+  for (const t of ['evidence','unit_criteria','scores','plan_students','assessment_items','assessment_plans',
+                   'clo_plo_map','course_plo_map','clos','courses','rubrics','plos','peos',
+                   'assessments','kpi_data','tdg_plans','surveys','reports','school_info'])
+    await q(`DELETE FROM ${t} WHERE workspace_id=$1`, [K]);
+
+  await q("INSERT INTO school_info(workspace_id,data) VALUES ($1,$2)", [K, JSON.stringify({ ...SCHOOL, nganh: 'Kiến trúc', khoa: 'Khóa 2026' })]);
+
+  // Minh chứng + phân công
+  const EV_KTR = [
+    ['6.2','PDT','Chương trình đào tạo ngành Kiến trúc khóa 2026 (bản ban hành)','da_xac_nhan','file'],
+    ['6.2','PDT','Ma trận chuẩn đầu ra và học phần ngành Kiến trúc','da_xac_nhan','file'],
+    ['6.3','KKT','Đề cương chi tiết các học phần thiết kế kiến trúc','da_xac_nhan','file'],
+    ['6.3','KKT','Bộ rubric chấm đồ án kiến trúc','cho_duyet','file'],
+    ['6.4','KKT','Kế hoạch và kết quả đo lường CLO đồ án kiến trúc','cho_duyet','link'],
+    ['7.4','KKT','Danh mục đồ án và nghiên cứu của sinh viên kiến trúc','cho_duyet','link'],
+    ['6.1','PDT','Đề án tuyển sinh ngành Kiến trúc','tra_lai','file','Cập nhật chỉ tiêu và tổ hợp xét tuyển mới nhất.'],
+    ['9.1','PDBCL','Quy trình bảo đảm chất lượng chương trình đào tạo Kiến trúc','da_xac_nhan','file'],
+    ['1.2','PDT','Quy chế tổ chức và hoạt động liên quan chương trình Kiến trúc','da_xac_nhan','file'],
+    ['4.2','PKHTC','Danh mục xưởng thiết kế, phòng mô hình phục vụ chương trình','da_xac_nhan','file'],
+    ['4.3','PKHTC','Thư viện tài liệu và mẫu vật kiến trúc','cho_duyet','link'],
+    ['6.6','PDT','Quy định quản lý hồ sơ đồ án và kết quả học tập','da_xac_nhan','file'],
+    ['8.2','PKHCN','Báo cáo hợp tác với công ty tư vấn thiết kế','cho_duyet','link'],
+    ['11.1','PDBCL','Kế hoạch cải tiến chương trình đào tạo Kiến trúc','cho_duyet','file'],
+  ];
+  await assignFrom(K, EV_KTR, [['KKT','6.5']]);
+  for (const [tc, u, d, s, src, n] of EV_KTR) await ev(K, tc, u, d, s, src, n);
+  for (const [tc, kq, tt] of [['6.1','DAT','approved'],['6.2','DAT','approved'],['6.3','DAT','approved'],['6.4','DAT','draft'],['6.6','DAT','draft'],['7.4','CHUA','draft'],['9.1','DAT','draft'],['11.1','DAT','draft']])
+    await assess(K, tc, kq, tt);
+
+  // Khung CĐR ngành Kiến trúc
+  for (const [c, ct] of [
+    ['PEO1','Hành nghề kiến trúc sư, thiết kế công trình đáp ứng công năng, thẩm mỹ và kỹ thuật'],
+    ['PEO2','Làm việc nhóm đa ngành, giao tiếp và quản lý dự án thiết kế'],
+    ['PEO3','Học tập suốt đời, cập nhật kiến trúc bền vững và công nghệ số']])
+    await q("INSERT INTO peos(workspace_id,code,content) VALUES ($1,$2,$3)", [K, c, ct]);
+
+  const Pk = {};
+  for (const [c, ct, bl, ty] of [
+    ['PLO1','Vận dụng kiến thức lịch sử, lý thuyết và nguyên lý thiết kế kiến trúc','apply','knowledge'],
+    ['PLO2','Thiết kế phương án kiến trúc đáp ứng công năng, thẩm mỹ và bối cảnh','apply','skill'],
+    ['PLO3','Thể hiện ý tưởng bằng bản vẽ kỹ thuật, mô hình và công cụ số (CAD/BIM)','apply','skill'],
+    ['PLO4','Tích hợp giải pháp kết cấu, vật liệu và kỹ thuật công trình vào thiết kế','analyze','skill'],
+    ['PLO5','Áp dụng nguyên tắc kiến trúc bền vững và quy chuẩn xây dựng','apply','knowledge'],
+    ['PLO6','Làm việc nhóm, thuyết trình và bảo vệ phương án thiết kế','apply','attitude']])
+    Pk[c] = await insId("INSERT INTO plos(workspace_id,code,content,bloom_level,type) VALUES ($1,$2,$3,$4,$5) RETURNING id", [K, c, ct, bl, ty]);
+
+  const Ck = {}, CLk = {};
+  for (const [code, name, cr, sem, clos] of [
+    ['AR101','Cơ sở tạo hình kiến trúc',3,1,[
+      ['CLO1','Nhận biết nguyên tắc tạo hình và tổ chức không gian','understand','knowledge'],
+      ['CLO2','Vận dụng ngôn ngữ tạo hình vào bài tập thiết kế cơ bản','apply','skill'],
+      ['CLO3','Thể hiện ý tưởng bằng phác thảo và mô hình','apply','skill']]],
+    ['AR201','Nguyên lý thiết kế kiến trúc',3,2,[
+      ['CLO1','Giải thích nguyên lý công năng và dây chuyền sử dụng','understand','knowledge'],
+      ['CLO2','Thiết kế mặt bằng đáp ứng công năng công trình nhỏ','apply','skill'],
+      ['CLO3','Phân tích quan hệ công năng - hình khối - bối cảnh','analyze','skill']]],
+    ['AR301','Đồ án kiến trúc công cộng',4,5,[
+      ['CLO1','Áp dụng quy trình thiết kế cho công trình công cộng','apply','skill'],
+      ['CLO2','Phân tích bối cảnh đô thị và công năng phức hợp','analyze','skill'],
+      ['CLO3','Đề xuất phương án kiến trúc hoàn chỉnh, có tính sáng tạo','create','skill']]]]) {
+    Ck[code] = await insId("INSERT INTO courses(workspace_id,code,name,credits,semester,type) VALUES ($1,$2,$3,$4,$5,'core') RETURNING id", [K, code, name, cr, sem]);
+    for (const [cc, cct, bl, ty] of clos)
+      CLk[code + '.' + cc] = await insId("INSERT INTO clos(workspace_id,course_id,code,content,bloom_level,type) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id", [K, Ck[code], cc, cct, bl, ty]);
+  }
+  await insId(`INSERT INTO rubrics(workspace_id,name,description,scale_type,levels)
+    VALUES ($1,'Rubric chấm đồ án','Thang đánh giá đồ án kiến trúc 4 mức','A_D',$2) RETURNING id`,
+    [K, JSON.stringify([
+      {name:'Yếu',is_pass:false,weight:25,description:'Chưa đạt yêu cầu'},
+      {name:'Trung bình',is_pass:false,weight:25,description:'Đạt một phần'},
+      {name:'Khá',is_pass:true,weight:25,description:'Đạt yêu cầu'},
+      {name:'Giỏi',is_pass:true,weight:25,description:'Vượt yêu cầu'}])]);
+  for (const [c, p, lv] of [['AR101','PLO1','I'],['AR101','PLO3','I'],['AR201','PLO1','R'],['AR201','PLO2','I'],
+                            ['AR301','PLO2','M'],['AR301','PLO4','R'],['AR301','PLO6','R']])
+    await q("INSERT INTO course_plo_map(workspace_id,course_id,plo_id,level) VALUES ($1,$2,$3,$4)", [K, Ck[c], Pk[p], lv]);
+  for (const [cl, p, w] of [['AR101.CLO1','PLO1',1],['AR101.CLO2','PLO3',1],['AR101.CLO3','PLO3',1],
+                            ['AR201.CLO1','PLO1',1],['AR201.CLO2','PLO2',1],['AR201.CLO3','PLO2',1],
+                            ['AR301.CLO1','PLO2',1],['AR301.CLO2','PLO4',1],['AR301.CLO3','PLO2',0.5],['AR301.CLO3','PLO6',1]])
+    await q("INSERT INTO clo_plo_map(workspace_id,clo_id,plo_id,weight) VALUES ($1,$2,$3,$4)", [K, CLk[cl], Pk[p], w]);
+
+  const planK = await insId(`INSERT INTO assessment_plans(workspace_id,course_id,name,semester,school_year,threshold_pct,pass_score_pct,status)
+    VALUES ($1,$2,'AR101 — HK1 2025-2026',1,'2025-2026',75,50,'active') RETURNING id`, [K, Ck['AR101']]);
+  const it1k = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
+    VALUES ($1,$2,'Bài tập giữa kỳ','test',10,$3) RETURNING id`,
+    [K, planK, JSON.stringify([{clo_id:CLk['AR101.CLO1'],weight:40},{clo_id:CLk['AR101.CLO2'],weight:60}])]);
+  const it2k = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
+    VALUES ($1,$2,'Đồ án cuối kỳ','rubric',10,$3) RETURNING id`,
+    [K, planK, JSON.stringify([{clo_id:CLk['AR101.CLO2'],weight:50},{clo_id:CLk['AR101.CLO3'],weight:50}])]);
+  const sidK = [];
+  for (const [code, name] of [['KT2601','Nguyễn Gia Bảo'],['KT2602','Trần Khánh Linh'],['KT2603','Lê Quang Huy'],
+                              ['KT2604','Phạm Ngọc Mai'],['KT2605','Vũ Đình Nam'],['KT2606','Đỗ Thảo Vy']])
+    sidK.push(await insId("INSERT INTO plan_students(workspace_id,plan_id,code,full_name) VALUES ($1,$2,$3,$4) RETURNING id", [K, planK, code, name]));
+  const SCk = [[8,9],[7,7],[6,8],[9,8],[5,6],[7,9]];
+  for (let i = 0; i < sidK.length; i++) {
+    await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [K, it1k, sidK[i], SCk[i][0]]);
+    await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [K, it2k, sidK[i], SCk[i][1]]);
+  }
+  // Đo thêm học phần AR201 để M11 phủ thêm PLO
+  await makeMeasure(K, Ck['AR201'], 'AR201 — HK2 2025-2026', CLk['AR201.CLO1'], CLk['AR201.CLO2'], CLk['AR201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
+
+  for (const [ny, data] of Object.entries({
+    '2023-2024': { so_gv_co_huu:24, so_gv_tien_si:7, so_gv_thac_si:15, pct_gv_ts:29, so_cbql_nv:5, so_nguoi_hoc_dh:480,
+      so_ctdt_dh:1, so_ctdt_kiem_dinh:1, pct_tuyen_sinh:90, pct_nhap_hoc:84, pct_thoi_hoc:5, pct_tot_nghiep:86,
+      pct_viec_lam_6t:72, pct_viec_lam_12t:85, pct_hai_long_sv:82, so_bao_isi_scopus:5, so_bao_sv:4, so_dt_sv:8, so_giai_thuong_sv:6 },
+    '2024-2025': { so_gv_co_huu:27, so_gv_tien_si:9, so_gv_thac_si:16, pct_gv_ts:33, so_cbql_nv:6, so_nguoi_hoc_dh:510,
+      so_ctdt_dh:1, so_ctdt_kiem_dinh:1, pct_tuyen_sinh:94, pct_nhap_hoc:87, pct_thoi_hoc:4, pct_tot_nghiep:88,
+      pct_viec_lam_6t:76, pct_viec_lam_12t:88, pct_hai_long_sv:85, so_bao_isi_scopus:7, so_bao_sv:6, so_dt_sv:11, so_giai_thuong_sv:9 }}))
+    await q("INSERT INTO kpi_data(workspace_id,nam_hoc,data) VALUES ($1,$2,$3)", [K, ny, JSON.stringify(data)]);
+
+  const planKt = await insId("INSERT INTO tdg_plans(workspace_id,name,ngay_bat_dau) VALUES ($1,'Kế hoạch tự đánh giá chương trình đào tạo Kiến trúc','06/01/2026') RETURNING id", [K]);
+  let ordK = 0;
+  for (const t of TASKS)
+    await q(`INSERT INTO tdg_tasks(plan_id,phase,week_start,week_end,title,status,priority,sort_order)
+      VALUES ($1,$2,$3,$4,$5,$6,'normal',$7)`, [planKt, t.p, t.a, t.b, t.t, t.s, ordK++]);
+
+  await makeSurveys(K, [
+    ['bieu09','Khảo sát người học ngành Kiến trúc năm 2025'],
+    ['bieu10','Khảo sát doanh nghiệp thiết kế về sinh viên Kiến trúc năm 2025'],
+    ['bieu11','Khảo sát cựu sinh viên ngành Kiến trúc năm 2025']]);
+  await q(`INSERT INTO reports(workspace_id,title,period,author,tom_tat_ket_qua)
+    VALUES ($1,'Báo cáo tự đánh giá chương trình đào tạo Kiến trúc','2021-2025','Nhóm chuyên trách CTĐT Kiến trúc',
+    'Chương trình đào tạo Kiến trúc đáp ứng chuẩn đầu ra; đồ án và kết quả đo CLO/PLO cho thấy đa số PLO đạt mức cao.')`, [K]);
+  const eK = (await one("SELECT count(*)::int n FROM evidence WHERE workspace_id=$1", [K])).n;
+
   const eC = (await one("SELECT count(*)::int n FROM evidence WHERE workspace_id=$1", [csgd])).n;
   const eD = (await one("SELECT count(*)::int n FROM evidence WHERE workspace_id=$1", [ctdt])).n;
   const files = (await one("SELECT count(*)::int n FROM evidence WHERE source_type='file' AND workspace_id = ANY($1)", [both])).n;
   console.log(`✅ CSGD: ${eC} minh chứng (15/15 tiêu chuẩn) + phân công đơn vị + ${ASSESS_CSGD.length} đánh giá TC + 3 năm KPI + kế hoạch TĐG 24 tuần + 3 khảo sát + báo cáo`);
-  console.log(`✅ CTĐT: ${eD} minh chứng + 3 PEO / 6 PLO / 3 HP / 9 CLO / rubric / kế hoạch đo (2 bài, 6 SV) + đánh giá + báo cáo`);
+  console.log(`✅ CTĐT (CNTT): ${eD} minh chứng + 3 PEO / 6 PLO / 3 HP / 9 CLO / rubric / kế hoạch đo (2 bài, 6 SV) + đánh giá + báo cáo`);
+  console.log(`✅ KTr (Kiến trúc): ${eK} minh chứng + 3 PEO / 6 PLO / 3 HP thiết kế / 9 CLO / rubric đồ án / kế hoạch đo + KPI + TĐG + khảo sát + báo cáo`);
   console.log(`📁 Đã ghi ${files} tệp .txt mẫu vào: ${UP}`);
   await pool.end();
 }
