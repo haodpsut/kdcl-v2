@@ -5,6 +5,7 @@ db.json
 db.seed.json
 *.log
 .git
+docs
 RESUME.md
 vercel.json
 .vercelignore

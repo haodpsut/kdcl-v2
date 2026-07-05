@@ -1158,22 +1158,26 @@ function renderTable() {
   empty.style.display = 'none';
 
   tbody.innerHTML = evidenceList.map(e => {
-    const ext = (e.file_name.split('.').pop() || '').toLowerCase();
-    const extClass = ['pdf'].includes(ext) ? 'ext-pdf'
+    const isLink = e.source_type === 'link';
+    const fn = e.file_name || '';
+    const ext = isLink ? 'link' : (fn.split('.').pop() || '').toLowerCase();
+    const extClass = isLink ? 'ext-other'
+      : ['pdf'].includes(ext) ? 'ext-pdf'
       : ['docx','doc'].includes(ext) ? 'ext-docx'
       : ['xlsx','xls'].includes(ext) ? 'ext-xlsx'
       : ['pptx','ppt'].includes(ext) ? 'ext-pptx'
       : ['jpg','jpeg','png','gif','webp'].includes(ext) ? 'ext-img'
       : 'ext-other';
     const sizeStr = e.file_size ? formatSize(e.file_size) : '';
+    const nameText = isLink ? (e.link_url || 'Liên kết Drive/SharePoint') : fn;
 
     return `<tr>
       <td><span class="code-badge">${e.code}</span></td>
       <td><span class="tc-badge">${e.tieu_chi}</span></td>
       <td class="desc-cell" title="${escHtml(e.mo_ta)}">${escHtml(e.mo_ta) || '<span style="color:var(--muted)">—</span>'}</td>
       <td>
-        <div class="file-name" title="${escHtml(e.file_name)}">
-          ${escHtml(e.file_name)}<span class="ext-badge ${extClass}">${ext}</span>
+        <div class="file-name" title="${escHtml(nameText)}">
+          ${isLink ? '🔗 ' : ''}${escHtml(nameText)}<span class="ext-badge ${extClass}">${ext}</span>
         </div>
         ${sizeStr ? `<div class="file-size">${sizeStr}</div>` : ''}
       </td>
