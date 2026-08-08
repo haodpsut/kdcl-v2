@@ -788,8 +788,13 @@ app.get('/api/surveys', async (req, res) => {
   const wsId = await getWs(req);
   const rows = await q(`SELECT s.*, (SELECT count(*)::int FROM survey_responses r WHERE r.survey_id=s.id) AS response_count
     FROM surveys s WHERE workspace_id=$1 ORDER BY id`, [wsId]);
+  // Token là CHÌA KHOÁ mở đường gửi phản hồi công khai, ai cầm được thì bơm
+  // được số liệu vào Biểu 08-11 và vào chỉ số hài lòng trên Dashboard. Trước
+  // đây mọi vai đăng nhập đều đọc được token qua đây, kể cả tài khoản chỉ xem
+  // cấp cho đoàn đánh giá ngoài. Nay chỉ quản trị mới thấy.
+  const laAdmin = req.user && req.user.role === 'admin';
   res.json(rows.map(s => ({ id: s.id, type: s.type, title: s.title, description: s.description,
-    token: s.token, active: s.active, created_at: s.created_at, response_count: s.response_count })));
+    token: laAdmin ? s.token : undefined, active: s.active, created_at: s.created_at, response_count: s.response_count })));
 });
 app.get('/api/surveys/by-token/:token', async (req, res) => {
   const s = await one('SELECT * FROM surveys WHERE token=$1', [req.params.token]);
@@ -799,12 +804,58 @@ app.get('/api/surveys/by-token/:token', async (req, res) => {
   res.json({ id: s.id, type: s.type, title: s.title, description: s.description, token: s.token,
     created_at: s.created_at, response_count: rc.n, template: SURVEY_TEMPLATES[s.type] || {} });
 });
+// Tuyến này BẮT BUỘC để mở cho người trả lời không có tài khoản, nên không thể
+// đặt sau cổng đăng nhập. Bù lại phải chặn lạm dụng: một máy không được bơm
+// hàng loạt, và không được gửi đi gửi lại cùng một nội dung. Đếm trong bộ nhớ
+// tiến trình là đủ cho quy mô một trường; khởi động lại thì bộ đếm về 0, đây là
+// đánh đổi có ý thức để khỏi thêm bảng và thêm phụ thuộc.
+const NHIP_GUI = new Map();          // khoá: ip|token  →  { moc: [thời điểm], vanCu: Set }
+const TRAN_GIO = 30;                 // tối đa 30 phiếu mỗi giờ từ một máy cho một khảo sát
+setInterval(() => {
+  const nguong = Date.now() - 3600e3;
+  for (const [k, v] of NHIP_GUI) {
+    v.moc = v.moc.filter((t) => t > nguong);
+    if (!v.moc.length) NHIP_GUI.delete(k);
+  }
+}, 600e3).unref();
+
 app.post('/api/surveys/by-token/:token/respond', async (req, res) => {
   const s = await one('SELECT * FROM surveys WHERE token=$1', [req.params.token]);
   if (!s) return res.status(404).json({ error: 'Không tìm thấy' });
   if (!s.active) return res.status(403).json({ error: 'Khảo sát đã đóng' });
-  await q('INSERT INTO survey_responses(survey_id,answers) VALUES ($1,$2)', [s.id, JSON.stringify(req.body.answers || {})]);
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'khong-ro';
+  const khoa = ip + '|' + s.id;
+  const nay = Date.now();
+  const muc = NHIP_GUI.get(khoa) || { moc: [], vanCu: new Set() };
+  muc.moc = muc.moc.filter((t) => t > nay - 3600e3);
+  if (muc.moc.length >= TRAN_GIO) {
+    return res.status(429).json({ error: 'Gửi quá nhiều lần trong một giờ, vui lòng thử lại sau' });
+  }
+  const vanTay = JSON.stringify(req.body.answers || {});
+  if (muc.vanCu.has(vanTay)) {
+    return res.status(409).json({ error: 'Phiếu này đã được gửi, không cần gửi lại' });
+  }
+
+  await q('INSERT INTO survey_responses(survey_id,answers) VALUES ($1,$2)', [s.id, vanTay]);
+  muc.moc.push(nay);
+  muc.vanCu.add(vanTay);
+  if (muc.vanCu.size > 200) muc.vanCu.clear();
+  NHIP_GUI.set(khoa, muc);
   res.json({ message: 'Đã gửi khảo sát thành công' });
+});
+
+// Phải có đường XOÁ phản hồi. Trước đây toàn hệ không có tuyến nào xoá
+// survey_responses, kể cả cho quản trị, nên một phiếu rác lọt vào là nằm vĩnh
+// viễn, chỉ gỡ được bằng cách vào thẳng Postgres.
+app.delete('/api/surveys/:id/responses/:rid', auth.requireRole('admin'), async (req, res) => {
+  const wsId = await getWs(req);
+  const s = await one('SELECT id FROM surveys WHERE id=$1 AND workspace_id=$2', [parseInt(req.params.id), wsId]);
+  if (!s) return res.status(404).json({ error: 'Không tìm thấy khảo sát' });
+  const r = await one('DELETE FROM survey_responses WHERE id=$1 AND survey_id=$2 RETURNING id',
+    [parseInt(req.params.rid), s.id]);
+  if (!r) return res.status(404).json({ error: 'Không tìm thấy phiếu trả lời' });
+  res.json({ message: 'Đã xoá phiếu trả lời' });
 });
 app.get('/api/surveys/:id', async (req, res) => {
   const wsId = await getWs(req);
