@@ -21,6 +21,25 @@ if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 app.use(express.json({ limit: '2mb' }));
 app.use(auth.attachUser());
 
+// ─── Cổng API: mặc định ĐÓNG ───────────────────────────────────────────────
+// Các tuyến ghi đã gắn requireAuth từng cái, nhưng tuyến ĐỌC thì không, nên
+// khách vãng lai đọc được cả danh mục minh chứng và tải file về. Chặn tập
+// trung ở đây để tuyến thêm sau này mặc định đóng thay vì phải nhớ gắn guard.
+// Chỉ mở tường minh những gì buộc phải công khai: màn đăng nhập và link khảo
+// sát gửi cho người trả lời (họ không có tài khoản).
+const PUBLIC_API = [
+  /^\/login$/,
+  /^\/logout$/,
+  /^\/me$/,
+  /^\/surveys\/by-token\/[^/]+$/,
+  /^\/surveys\/by-token\/[^/]+\/respond$/,
+];
+app.use('/api', (req, res, next) => {
+  if (PUBLIC_API.some((rx) => rx.test(req.path))) return next();
+  if (!req.user) return res.status(401).json({ error: 'Chưa đăng nhập' });
+  next();
+});
+
 // ─── Standards / Criteria (hard-code, như v1) ───────────────────────────────
 const STANDARDS = [
   { id: 1,  name: 'Tầm nhìn, sứ mạng, văn hoá và quản trị', criteria: ['Tầm nhìn & sứ mạng','Hệ thống quản trị','Giá trị văn hóa','Truyền đạt tầm nhìn','Trách nhiệm xã hội','Cải tiến quản trị'] },
