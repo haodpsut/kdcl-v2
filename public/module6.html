@@ -42,11 +42,15 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .progress-track { height:18px; background:var(--border); border-radius:9px; overflow:hidden; display:flex; }
 .prog-dat  { background:var(--green); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; transition:flex .5s; }
 .prog-kdat { background:var(--red); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; transition:flex .5s; }
-.prog-draft { background:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; transition:flex .5s; }
+.prog-chuakl { background:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; transition:flex .5s; }
 .prog-none { background:var(--border); flex:1; }
 .prog-legend { display:flex; gap:16px; margin-top:10px; flex-wrap:wrap; }
 .prog-leg { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
 .prog-dot { width:10px; height:10px; border-radius:2px; }
+/* Hàng chú giải chỉ chứa các nhóm TIÊU CHÍ có đoạn trên thanh. Hai chỉ báo dưới đây đơn vị khác
+   (phiếu, tài liệu) và không có đoạn nào tương ứng nên phải nằm ngoài hàng chú giải. */
+.prog-note { font-size:12px; color:var(--muted); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); display:flex; gap:20px; flex-wrap:wrap; }
+.prog-note b { color:var(--text); font-weight:700; }
 
 /* Standard cards */
 .std-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
@@ -169,10 +173,13 @@ let reports = [];
 let reportData = null;
 let activeReportId = null;
 let saveTimer = null;
+// Số phiếu đánh giá còn ở trang_thai='draft'. /api/report/data không trả trường này, mà module2
+// lại hiện nó, nên phải lấy chung một nguồn /api/assess-stats để hai màn không lệch số.
+let draftPhieu = null;
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 (async function init() {
-  await Promise.all([loadReports(), loadReportData()]);
+  await Promise.all([loadReports(), loadReportData(), loadAssessStats()]);
   renderDashboard();
 })();
 
@@ -183,6 +190,15 @@ async function loadReports() {
 
 async function loadReportData() {
   reportData = await fetch('/api/report/data').then(r => r.json());
+}
+
+async function loadAssessStats() {
+  try {
+    const s = await fetch('/api/assess-stats').then(r => r.json());
+    draftPhieu = typeof s.draft === 'number' ? s.draft : null;
+  } catch (e) {
+    draftPhieu = null; // thà để dấu gạch còn hơn in một con số bịa
+  }
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -202,12 +218,15 @@ function renderDashboard() {
   const d = reportData;
   if (!d) return;
   const s = d.stats;
-  const chua  = 60 - s.assessed;
-  const draft = s.assessed - s.dat - s.khong_dat;
+  const chua = 60 - s.assessed;
+  // Nhóm này là tiêu chí ĐÃ CÓ PHIẾU nhưng ket_qua chưa kết luận, nên tên đúng là "Chưa kết luận".
+  // Bản cũ gọi nó là "Nháp" và in ra 3 TC, trong khi module2 gọi "nháp" là trang_thai='draft' và
+  // in ra 15. Hai màn cạnh nhau cho hai con số khác nhau cho cùng một chữ, nên phải tách tên.
+  const chuaKetLuan = s.assessed - s.dat - s.khong_dat;
 
-  const datPct   = Math.round(s.dat / 60 * 100);
-  const kdatPct  = Math.round(s.khong_dat / 60 * 100);
-  const draftPct = Math.round(draft / 60 * 100);
+  const datPct    = Math.round(s.dat / 60 * 100);
+  const kdatPct   = Math.round(s.khong_dat / 60 * 100);
+  const chuaKlPct = Math.round(chuaKetLuan / 60 * 100);
 
   const stdCards = d.standards.map(std => {
     const total = std.criteria.length;
@@ -236,24 +255,32 @@ function renderDashboard() {
     <div class="readiness-bar-wrap">
       <h3>Tiến độ đánh giá 60 tiêu chí</h3>
       <div class="progress-track">
-        <div class="prog-dat"   style="flex:${s.dat}"       title="ĐẠT">${s.dat > 3 ? s.dat : ''}</div>
-        <div class="prog-kdat"  style="flex:${s.khong_dat}" title="KĐ">${s.khong_dat > 2 ? s.khong_dat : ''}</div>
-        <div class="prog-draft" style="flex:${draft}"       title="Nháp">${draft > 2 ? draft : ''}</div>
-        <div class="prog-none"  style="flex:${chua}"        title="Chưa"></div>
+        <div class="prog-dat"    style="flex:${s.dat}"        title="Đạt">${s.dat > 3 ? s.dat : ''}</div>
+        <div class="prog-kdat"   style="flex:${s.khong_dat}"  title="Không đạt">${s.khong_dat > 2 ? s.khong_dat : ''}</div>
+        <div class="prog-chuakl" style="flex:${chuaKetLuan}"  title="Chưa kết luận">${chuaKetLuan > 2 ? chuaKetLuan : ''}</div>
+        <div class="prog-none"   style="flex:${chua}"         title="Chưa đánh giá"></div>
       </div>
       <div class="prog-legend">
-        <div class="prog-leg"><div class="prog-dot" style="background:var(--green)"></div>ĐẠT: ${s.dat} TC (${datPct}%)</div>
-        <div class="prog-leg"><div class="prog-dot" style="background:var(--red)"></div>Không ĐẠT: ${s.khong_dat} TC (${kdatPct}%)</div>
-        <div class="prog-leg"><div class="prog-dot" style="background:var(--yellow)"></div>Nháp: ${draft} TC (${draftPct}%)</div>
+        <div class="prog-leg"><div class="prog-dot" style="background:var(--green)"></div>Đạt: ${s.dat} TC (${datPct}%)</div>
+        <div class="prog-leg"><div class="prog-dot" style="background:var(--red)"></div>Không đạt: ${s.khong_dat} TC (${kdatPct}%)</div>
+        <div class="prog-leg"><div class="prog-dot" style="background:var(--yellow)"></div>Chưa kết luận: ${chuaKetLuan} TC (${chuaKlPct}%)</div>
         <div class="prog-leg"><div class="prog-dot" style="background:var(--border)"></div>Chưa đánh giá: ${chua} TC</div>
-        <div class="prog-leg"><div class="prog-dot" style="background:var(--accent)"></div>Minh chứng: ${s.total_evidence} tài liệu</div>
+      </div>
+      <!-- Hai chỉ báo này đơn vị là phiếu và tài liệu, không phải tiêu chí, nên đứng ngoài chú giải. -->
+      <div class="prog-note">
+        <span>Phiếu nháp (chưa duyệt): <b>${draftPhieu === null ? '–' : draftPhieu}</b> phiếu, đã tính trong các nhóm kết quả ở trên</span>
+        <span>Minh chứng: <b>${s.total_evidence}</b> tài liệu</span>
       </div>
     </div>
 
     <div class="std-grid">${stdCards}</div>
 
     <div class="empty-state" style="padding:20px 0">
-      <div style="margin-bottom:8px">Tạo hồ sơ báo cáo bên trái để bắt đầu soạn Báo cáo TĐG chính thức (Biểu 05).</div>
+      <!-- Trước đây luôn in câu mời TẠO hồ sơ, kể cả khi /api/reports đã trả về hồ sơ và sidebar
+           đang hiện nó, khiến người dùng tưởng chưa có gì. Nay chỉ mời tạo khi danh sách rỗng. -->
+      <div style="margin-bottom:8px">${reports.length
+        ? 'Chọn một hồ sơ báo cáo ở danh sách bên trái để soạn Báo cáo TĐG chính thức (Biểu 05).'
+        : 'Chưa có hồ sơ báo cáo nào. Tạo hồ sơ báo cáo bên trái để bắt đầu soạn Báo cáo TĐG chính thức (Biểu 05).'}</div>
     </div>
   `;
 }
