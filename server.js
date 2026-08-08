@@ -86,16 +86,38 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 // ─── Workspace helper ───────────────────────────────────────────────────────
+// Đơn vị chỉ được vào những đợt kiểm định mà mình ĐƯỢC PHÂN CÔNG tiêu chí.
+// Trả null nghĩa là không giới hạn (admin, viewer). Trả mảng rỗng nghĩa là
+// đơn vị chưa được giao gì, khi đó không mở được đợt nào.
+async function allowedWs(user) {
+  if (!user || user.role !== 'unit' || !user.unit_id) return null;
+  const rows = await q('SELECT DISTINCT workspace_id FROM unit_criteria WHERE unit_id=$1', [user.unit_id]);
+  return rows.map((r) => r.workspace_id);
+}
+
 async function getWs(req) {
   const raw = (req.query && req.query.ws_id) || req.headers['x-workspace-id'] ||
               auth.parseCookies(req).ws_id;
   const id = parseInt(raw);
+  const allow = await allowedWs(req.user);
   if (id) {
     const w = await one('SELECT id FROM workspaces WHERE id=$1', [id]);
-    if (w) return w.id;
+    // Đặt cookie ws_id bằng tay cũng không mở được đợt ngoài phạm vi
+    if (w && (!allow || allow.includes(w.id))) return w.id;
+  }
+  if (allow) {
+    if (!allow.length) return null;
+    const f = await one('SELECT id FROM workspaces WHERE id = ANY($1) ORDER BY id LIMIT 1', [allow]);
+    return f ? f.id : null;
   }
   const first = await one('SELECT id FROM workspaces ORDER BY id LIMIT 1');
   return first ? first.id : null;
+}
+
+// Đơn vị chỉ đọc được minh chứng của chính mình. Dùng cho mọi tuyến trả về
+// minh chứng, không chỉ danh sách chính.
+function unitScope(req) {
+  return req.user && req.user.role === 'unit' ? req.user.unit_id : null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -140,7 +162,10 @@ app.get('/api/criteria', (req, res) => res.json(STANDARDS_DETAIL));
 // ═══════════════════════════════════════════════════════════════════════════
 app.get('/api/workspaces', async (req, res) => {
   const currentId = await getWs(req);
-  const items = await q('SELECT * FROM workspaces ORDER BY id');
+  const allow = await allowedWs(req.user);
+  const items = allow
+    ? await q('SELECT * FROM workspaces WHERE id = ANY($1) ORDER BY id', [allow])
+    : await q('SELECT * FROM workspaces ORDER BY id');
   res.json({ items: items.map(w => ({ ...w, current: w.id === currentId })), current_id: currentId });
 });
 app.get('/api/workspaces/current', async (req, res) => {
@@ -205,6 +230,10 @@ app.get('/api/evidence', async (req, res) => {
   const wsId = await getWs(req);
   const { tieu_chuan, tieu_chi, search, status, unit_id } = req.query;
   const cond = ['e.workspace_id=$1']; const p = [wsId];
+  // Vai unit chỉ thấy minh chứng của chính đơn vị mình, kể cả khi tự truyền
+  // unit_id của đơn vị khác trên URL.
+  const mine = unitScope(req);
+  if (mine) { p.push(mine); cond.push(`e.unit_id=$${p.length}`); }
   if (tieu_chuan) { p.push(parseInt(tieu_chuan)); cond.push(`e.tieu_chuan=$${p.length}`); }
   if (tieu_chi)   { p.push(tieu_chi);             cond.push(`e.tieu_chi=$${p.length}`); }
   if (status)     { p.push(status);               cond.push(`e.status=$${p.length}`); }
@@ -284,6 +313,10 @@ app.get('/api/evidence/:id/download', async (req, res) => {
   const wsId = await getWs(req);
   const ev = await one('SELECT * FROM evidence WHERE id=$1 AND workspace_id=$2', [parseInt(req.params.id), wsId]);
   if (!ev) return res.status(404).json({ error: 'Không tìm thấy' });
+  // Chặn tải tệp của đơn vị khác; nếu không, giấu ở danh sách nhưng vẫn tải
+  // được bằng cách đoán id thì coi như không cách ly gì.
+  const mine = unitScope(req);
+  if (mine && ev.unit_id !== mine) return res.status(403).json({ error: 'Không phải minh chứng của đơn vị bạn' });
   if (ev.source_type === 'link') return res.redirect(ev.link_url);
   res.download(path.join(UPLOADS_DIR, ev.file_stored), ev.file_name);
 });
@@ -356,7 +389,9 @@ app.delete('/api/units/:id', auth.requireRole('admin'), async (req, res) => {
 app.get('/api/unit-criteria', async (req, res) => {
   const wsId = await getWs(req);
   const cond = ['uc.workspace_id=$1']; const p = [wsId];
-  if (req.query.unit_id) { p.push(parseInt(req.query.unit_id)); cond.push(`uc.unit_id=$${p.length}`); }
+  const mine = unitScope(req);
+  if (mine) { p.push(mine); cond.push(`uc.unit_id=$${p.length}`); }
+  else if (req.query.unit_id) { p.push(parseInt(req.query.unit_id)); cond.push(`uc.unit_id=$${p.length}`); }
   const rows = await q(
     `SELECT uc.*, u.name AS unit_name FROM unit_criteria uc
        JOIN units u ON u.id=uc.unit_id WHERE ${cond.join(' AND ')} ORDER BY uc.tieu_chi`, p);
@@ -420,7 +455,11 @@ app.delete('/api/users/:id', auth.requireRole('admin'), async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════
 app.get('/api/submission/dashboard', async (req, res) => {
   const wsId = await getWs(req);
-  const st = await q(`SELECT status, count(*)::int AS n FROM evidence WHERE workspace_id=$1 GROUP BY status`, [wsId]);
+  // Vai unit chỉ thấy số của đơn vị mình, không thấy tiến độ đơn vị khác.
+  const mine = unitScope(req);
+  const st = await q(
+    `SELECT status, count(*)::int AS n FROM evidence
+      WHERE workspace_id=$1 AND ($2::int IS NULL OR unit_id=$2) GROUP BY status`, [wsId, mine]);
   const totals = { cho_duyet: 0, da_xac_nhan: 0, tra_lai: 0, total: 0 };
   for (const r of st) { totals[r.status] = r.n; totals.total += r.n; }
   const byUnit = await q(
@@ -432,18 +471,21 @@ app.get('/api/submission/dashboard', async (req, res) => {
        count(e.id) FILTER (WHERE e.status='tra_lai')::int AS returned
      FROM units u
      LEFT JOIN evidence e ON e.unit_id=u.id AND e.workspace_id=$1
-     GROUP BY u.id, u.name ORDER BY u.name`, [wsId]);
+     WHERE ($2::int IS NULL OR u.id=$2)
+     GROUP BY u.id, u.name ORDER BY u.name`, [wsId, mine]);
   res.json({ totals, by_unit: byUnit });
 });
 
 app.get('/api/submission/coverage', async (req, res) => {
   const wsId = await getWs(req);
+  const mine = unitScope(req);
   const evAll = await q(
     `SELECT tieu_chi,
        count(*) FILTER (WHERE status='da_xac_nhan')::int AS confirmed,
        count(*) FILTER (WHERE status='cho_duyet')::int AS pending,
        count(*)::int AS total
-     FROM evidence WHERE workspace_id=$1 GROUP BY tieu_chi`, [wsId]);
+     FROM evidence WHERE workspace_id=$1 AND ($2::int IS NULL OR unit_id=$2)
+     GROUP BY tieu_chi`, [wsId, mine]);
   const byTc = {}; for (const r of evAll) byTc[r.tieu_chi] = r;
   const assign = await q(
     `SELECT uc.tieu_chi, u.name AS unit_name FROM unit_criteria uc
@@ -466,8 +508,10 @@ app.get('/api/submission/coverage', async (req, res) => {
 
 app.get('/api/submission/criteria/:code/evidence', async (req, res) => {
   const wsId = await getWs(req);
+  const mine = unitScope(req);
   const rows = await q(`${EV_SELECT} WHERE e.workspace_id=$1 AND e.tieu_chi=$2 AND e.status='da_xac_nhan'
-                        ORDER BY e.thu_tu`, [wsId, req.params.code]);
+                          AND ($3::int IS NULL OR e.unit_id=$3)
+                        ORDER BY e.thu_tu`, [wsId, req.params.code, mine]);
   res.json(rows);
 });
 
@@ -784,7 +828,11 @@ app.get('/api/surveys/:id/stats', async (req, res) => {
 app.get('/api/report/data', async (req, res) => {
   const wsId = await getWs(req);
   const wsAssessments = await q('SELECT * FROM assessments WHERE workspace_id=$1', [wsId]);
-  const wsEvidence = await q('SELECT * FROM evidence WHERE workspace_id=$1', [wsId]);
+  // Bản in báo cáo liệt kê mã minh chứng theo tiêu chí; với vai unit thì chỉ
+  // liệt kê phần của đơn vị mình, nếu không thì cách ly ở màn danh sách vô nghĩa.
+  const mine = unitScope(req);
+  const wsEvidence = await q(
+    'SELECT * FROM evidence WHERE workspace_id=$1 AND ($2::int IS NULL OR unit_id=$2)', [wsId, mine]);
   const wsKpi = (await q('SELECT * FROM kpi_data WHERE workspace_id=$1', [wsId])).map(flatKpi);
   const si = await one('SELECT data FROM school_info WHERE workspace_id=$1', [wsId]);
   const assessMap = {}; for (const a of wsAssessments) assessMap[a.tieu_chi] = a;

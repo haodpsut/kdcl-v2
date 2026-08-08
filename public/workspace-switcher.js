@@ -150,11 +150,21 @@
   // Trang dùng chung cho mọi đợt kiểm định, không thuộc menu của workspace nào.
   // Không loại trừ thì trang tài khoản luôn bị gắn nhãn "không thuộc workspace
   // hiện tại", một cảnh báo sai làm người dùng tưởng mình vào nhầm chỗ.
-  const WS_NEUTRAL = ['/users.html'];
+  const WS_NEUTRAL = ['/users.html', '/report-view.html', '/survey-fill.html'];
+
+  // Trang khoan sâu: có thuộc workspace, nhưng cố ý không nằm trên thanh menu
+  // vì chỉ vào được từ một dòng cụ thể. Thiếu danh sách này thì mở chi tiết
+  // một kế hoạch đo lại bị mời "chuyển sang workspace CSGD", thao tác đó làm
+  // người dùng mất luôn ngữ cảnh đang xem.
+  const WS_DRILLDOWN = {
+    CTDT: ['/ctdt-m10-detail.html', '/ctdt-m8-mapping.html'],
+    CSGD: [],
+  };
 
   function showMismatchBannerIfNeeded(type) {
     const here = location.pathname.replace(/\/$/, '') || '/';
     if (WS_NEUTRAL.includes(here)) return;
+    if ((WS_DRILLDOWN[type] || []).includes(here)) return;
     const allowed = (MENUS[type] || []).map(m => m.href);
     if (allowed.includes(here)) return;
     // Pages that exist but are not in current workspace's menu = mismatch
