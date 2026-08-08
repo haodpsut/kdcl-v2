@@ -132,3 +132,43 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
   .topnav .nav-scroll .nav-link { padding-left: 8px !important; padding-right: 8px !important; font-size: 12px !important; }
   .topnav .brand { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* ── Menu gom nhóm ─────────────────────────────────────────────────────────
+   Nhóm là một nút, bấm mới mở danh sách con. Dùng bấm thay vì rê chuột vì rê
+   chuột không dùng được trên máy tính bảng và rất dễ bung nhầm khi kéo chuột
+   ngang qua thanh menu. */
+.topnav .nav-group { position: relative; display: flex; align-items: stretch; flex: 0 0 auto; }
+.topnav .nav-group-btn {
+  font-family: inherit; background: transparent; border: 0; cursor: pointer;
+  border-bottom: 3px solid transparent !important;
+}
+.topnav .nav-group-btn .caret { font-size: 9px; opacity: .75; margin-left: 2px; }
+.topnav .nav-group.active > .nav-group-btn { color: #fff !important; border-bottom-color: #fbae40 !important; }
+.topnav .nav-group.open > .nav-group-btn { color: #fbae40 !important; }
+
+.topnav .nav-drop {
+  display: none; position: absolute; top: 100%; left: 0; z-index: 60;
+  min-width: 260px; padding: 6px;
+  background: #fff; border: 1px solid #d9dce1; border-top: 3px solid #fbae40;
+  border-radius: 0 0 7px 7px; box-shadow: 0 10px 26px rgba(0,0,0,.18);
+}
+.topnav .nav-group.open .nav-drop { display: block; }
+.topnav .nav-drop-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: 5px;
+  color: #1c1e21; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.topnav .nav-drop-item .ic { width: 18px; text-align: center; }
+.topnav .nav-drop-item:hover { background: rgba(153,0,0,.08); color: #990000; }
+.topnav .nav-drop-item.active { background: rgba(153,0,0,.12); color: #990000; }
+/* Nhóm cuối bung ra sát mép phải thì lật hướng để không tràn khỏi màn hình */
+.topnav .nav-group:last-child .nav-drop { left: auto; right: 0; }
+
+/* Biểu tượng vẽ nét trong menu: ăn theo màu chữ nên đổi màu cùng trạng thái */
+.topnav .nav-ic { width: 16px; height: 16px; flex: 0 0 auto; }
+.topnav .nav-link { gap: 7px !important; }
+.topnav .caret { width: 11px; height: 11px; opacity: .7; flex: 0 0 auto; margin-left: 1px; }
+.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: #990000; opacity: .85; }
+
+/* Khung thả xuống định vị theo cửa sổ, để không bị dải menu cuộn ngang cắt mất */
+.topnav .nav-drop { position: fixed !important; top: 52px; left: 0; right: auto !important; }

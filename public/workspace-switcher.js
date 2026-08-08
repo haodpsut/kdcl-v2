@@ -14,29 +14,88 @@
   }
 
   // Menu definitions per workspace type. The current page is highlighted via location.pathname.
+  // ── Bộ biểu tượng vẽ nét ──────────────────────────────────────────────────
+  // Trước đây menu dùng emoji. Emoji do hệ điều hành vẽ nên mỗi máy một kiểu,
+  // luôn nhiều màu, và đứng cạnh bảng màu maroon với vàng của trường thì lạc
+  // hẳn. Bộ này là SVG nét, ăn theo màu chữ hiện hành nên đổi màu cùng menu,
+  // sắc nét ở mọi độ phân giải và nhẹ hơn một phông biểu tượng ngoài.
+  const IC = {
+    dashboard: '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+    folder:    '<path d="M3 7a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.6.8l1 1.2H19a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    inbox:     '<path d="M3 13h4l1.5 3h7L17 13h4"/><path d="M4.5 5.5 3 13v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4l-1.5-7.5A2 2 0 0 0 17.6 4H6.4a2 2 0 0 0-1.9 1.5z"/>',
+    clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="m9 13 2 2 4-4"/>',
+    calendar:  '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 15h3"/>',
+    report:    '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
+    chart:     '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    survey:    '<path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/><path d="M8.5 11h7M8.5 15h4"/>',
+    target:    '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>',
+    map:       '<path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/>',
+    ruler:     '<rect x="2.5" y="8" width="19" height="8" rx="1.5" transform="rotate(-20 12 12)"/><path d="M7.6 8.9l1 2.2M11.1 7.6l.7 1.6M14.6 6.3l1 2.2M18 5l.7 1.6"/>',
+    flask:     '<path d="M10 3h4M11 3v6.2L5.6 18a2 2 0 0 0 1.7 3h9.4a2 2 0 0 0 1.7-3L13 9.2V3"/><path d="M8 15h8"/>',
+    cap:       '<path d="M12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5"/>',
+  };
+  function svgIcon(name, cls) {
+    const d = IC[name];
+    if (!d) return '';
+    return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${d}</svg>`;
+  }
+
+  // Thanh menu gom theo NHÓM VIỆC. Trước đây CSGD bày phẳng 8 mục còn CTĐT 10
+  // mục, chiếm hết bề ngang và đẩy nút đăng xuất ra khỏi màn hình ở laptop.
+  // Gom lại còn 5 mục cấp một, nhóm nào có nhiều màn thì mở ra danh sách con.
+  // Mỗi nhóm ứng với một bước trong quy trình kiểm định, không gom cho vừa chỗ.
   const MENUS = {
     CSGD: [
-      { href: '/',             icon: '📂', label: 'Minh chứng' },
-      { href: '/module2.html', icon: '📋', label: 'Đánh giá TC' },
-      { href: '/module3.html', icon: '📊', label: 'KPI – Biểu 16' },
-      { href: '/module4.html', icon: '📅', label: 'Tiến độ TĐG' },
-      { href: '/module5.html', icon: '📝', label: 'Khảo sát' },
-      { href: '/module6.html', icon: '📄', label: 'Báo cáo TĐG' },
-      { href: '/module7.html', icon: '🏛', label: 'Dashboard' },
-      { href: '/donvi.html',   icon: '🗂', label: 'Nộp & Duyệt MC' },
+      { href: '/module7.html', icon: 'dashboard', label: 'Dashboard' },
+      { icon: 'folder', label: 'Minh chứng', children: [
+        { href: '/',           icon: 'folder', label: 'Danh mục minh chứng' },
+        { href: '/donvi.html', icon: 'inbox', label: 'Nộp & duyệt theo đơn vị' },
+      ] },
+      { icon: 'clipboard', label: 'Tự đánh giá', children: [
+        { href: '/module2.html', icon: 'clipboard', label: 'Đánh giá tiêu chí (Biểu 04)' },
+        { href: '/module4.html', icon: 'calendar', label: 'Tiến độ 24 tuần' },
+        { href: '/module6.html', icon: 'report', label: 'Báo cáo TĐG (Biểu 05)' },
+      ] },
+      { icon: 'chart', label: 'Số liệu', children: [
+        { href: '/module3.html', icon: 'chart', label: 'KPI (Biểu 16)' },
+        { href: '/module5.html', icon: 'survey', label: 'Khảo sát các bên (Biểu 08-11)' },
+      ] },
     ],
     CTDT: [
-      { href: '/ctdt.html',     icon: '🎓', label: 'Tổng quan CTĐT' },
-      { href: '/ctdt-m8.html',         icon: '🧭', label: 'Khung CĐR' },
-      { href: '/ctdt-m8-mapping.html', icon: '🗺', label: 'Ma trận ánh xạ' },
-      { href: '/ctdt-m9.html',  icon: '📐', label: 'Rubric Library' },
-      { href: '/ctdt-m10.html', icon: '🧪', label: 'Đo CLO' },
-      { href: '/ctdt-m11.html', icon: '📊', label: 'Tổng hợp PLO' },
-      { href: '/',              icon: '📂', label: 'Minh chứng' },
-      { href: '/module5.html',  icon: '📝', label: 'Khảo sát' },
-      { href: '/module6.html',  icon: '📄', label: 'Báo cáo' },
-      { href: '/donvi.html',    icon: '🗂', label: 'Nộp & Duyệt MC' },
+      { href: '/ctdt.html', icon: 'cap', label: 'Tổng quan' },
+      { icon: 'target', label: 'Chuẩn đầu ra', children: [
+        { href: '/ctdt-m8.html',         icon: 'target', label: 'Khung CĐR (PEO, PLO, CLO)' },
+        { href: '/ctdt-m8-mapping.html', icon: 'map', label: 'Ma trận ánh xạ' },
+        { href: '/ctdt-m9.html',         icon: 'ruler', label: 'Thư viện rubric' },
+      ] },
+      { icon: 'flask', label: 'Đo lường', children: [
+        { href: '/ctdt-m10.html', icon: 'flask', label: 'Kế hoạch đo CLO' },
+        { href: '/ctdt-m11.html', icon: 'chart', label: 'Tổng hợp PLO' },
+      ] },
+      { icon: 'folder', label: 'Minh chứng', children: [
+        { href: '/',           icon: 'folder', label: 'Danh mục minh chứng' },
+        { href: '/donvi.html', icon: 'inbox', label: 'Nộp & duyệt theo đơn vị' },
+      ] },
+      // Tiến độ 24 tuần là màn dùng chung cho cả hai loại đợt: cả ba workspace
+      // CTĐT đều đã có kế hoạch trong CSDL nhưng menu cũ không có lối vào, nên
+      // dữ liệu nằm đó mà không ai tới được.
+      // Cố ý KHÔNG đưa vào đây: Đánh giá tiêu chí và Dashboard, vì cả hai dựng
+      // theo bộ 15 tiêu chuẩn 60 tiêu chí của TT26, không phải bộ của TT04.
+      { icon: 'clipboard', label: 'Tự đánh giá', children: [
+        { href: '/module4.html', icon: 'calendar', label: 'Tiến độ 24 tuần' },
+        { href: '/module5.html', icon: 'survey', label: 'Khảo sát các bên' },
+        { href: '/module6.html', icon: 'report', label: 'Báo cáo' },
+      ] },
     ],
+  };
+
+  // Trang khoan sâu thuộc về nhóm nào, để nhóm đó vẫn sáng khi đang xem trang
+  // con. Thiếu bảng này thì mở chi tiết một kế hoạch đo là cả thanh menu tắt
+  // hết, người dùng không còn biết mình đang ở đâu.
+  const THUOC_NHOM = {
+    '/ctdt-m10-detail.html': '/ctdt-m10.html',
+    '/report-view.html': '/module6.html',
   };
 
   function injectStyles() {
@@ -122,21 +181,71 @@
     return r.json();
   }
 
+  function closeAllNavGroups() {
+    document.querySelectorAll('.nav-group.open').forEach((g) => {
+      g.classList.remove('open');
+      const b = g.querySelector('.nav-group-btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    });
+  }
+  // Bấm ra ngoài hoặc nhấn Esc thì đóng, để menu không dính lại che nội dung.
+  document.addEventListener('click', closeAllNavGroups);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllNavGroups(); });
+
   function rebuildNav(nav, type) {
     // Remove existing nav-link anchors (keep .brand and #ws-switcher)
     nav.querySelectorAll('a.nav-link').forEach(el => el.remove());
     const switcher = nav.querySelector('#ws-switcher');
     const items = MENUS[type] || MENUS.CSGD;
     const here = normPath();
+    const hereEff = THUOC_NHOM[here] || here;   // trang con tính như trang cha
     const frag = document.createDocumentFragment();
     for (const it of items) {
+      if (it.children) {
+        const con = it.children.some((c) => c.href === hereEff);
+        const wrap = document.createElement('div');
+        wrap.className = 'nav-group' + (con ? ' active' : '');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nav-link nav-group-btn';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.innerHTML = `${svgIcon(it.icon, 'nav-ic')}<span>${it.label}</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
+        const drop = document.createElement('div');
+        drop.className = 'nav-drop';
+        for (const c of it.children) {
+          const a = document.createElement('a');
+          a.className = 'nav-drop-item' + (c.href === hereEff ? ' active' : '');
+          a.href = c.href;
+          a.innerHTML = `${svgIcon(c.icon, 'drop-ic')}<span>${c.label}</span>`;
+          drop.appendChild(a);
+        }
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const dangMo = wrap.classList.contains('open');
+          closeAllNavGroups();
+          if (dangMo) return;
+          wrap.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+          // Khung thả xuống phải định vị theo cửa sổ chứ không theo nhóm cha.
+          // Dải menu có overflow-x:auto để cuộn ngang, mà overflow cắt luôn mọi
+          // thứ tràn ra ngoài, nên nếu để khung nằm trong dải thì nó mở ra rồi
+          // bị cắt sạch: DOM báo đang hiện nhưng người dùng không thấy gì.
+          const r = btn.getBoundingClientRect();
+          drop.style.top = Math.round(r.bottom) + 'px';
+          const rong = drop.offsetWidth || 260;
+          drop.style.left = Math.round(Math.min(r.left, window.innerWidth - rong - 8)) + 'px';
+        });
+        wrap.appendChild(btn); wrap.appendChild(drop);
+        frag.appendChild(wrap);
+        continue;
+      }
       const a = document.createElement('a');
       a.className = 'nav-link';
-      const isActive = (here === it.href) || (here === '' && it.href === '/');
+      const isActive = (hereEff === it.href) || (hereEff === '' && it.href === '/');
       if (isActive) a.classList.add('active');
       if (it.soon)  a.classList.add('ws-soon');
       a.href = it.soon ? '#' : it.href;
-      a.innerHTML = `${it.icon} ${it.label}`;
+      a.innerHTML = `${svgIcon(it.icon, 'nav-ic')}<span>${it.label}</span>`;
       if (it.soon) a.addEventListener('click', (e) => {
         e.preventDefault();
         alert('Module này sắp có. Đang được triển khai trong các Increment kế tiếp.');
@@ -187,7 +296,14 @@
     const here = normPath();
     if (WS_NEUTRAL.includes(here)) return;
     if ((WS_DRILLDOWN[type] || []).includes(here)) return;
-    const allowed = (MENUS[type] || []).map(m => m.href);
+    // Phải trải phẳng cả mục con. Sau khi gom nhóm, mục cấp một là NHÓM và
+    // không có href, nên nếu chỉ lấy href cấp một thì mọi trang nằm trong
+    // nhóm đều bị coi là lạc workspace và trang nào cũng mọc banner.
+    const allowed = [];
+    for (const m of MENUS[type] || []) {
+      if (m.href) allowed.push(m.href);
+      for (const c of m.children || []) if (c.href) allowed.push(c.href);
+    }
     if (allowed.includes(here)) return;
     // Pages that exist but are not in current workspace's menu = mismatch
     const banner = document.createElement('div');
