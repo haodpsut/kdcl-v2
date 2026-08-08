@@ -24,8 +24,12 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 #sidebar { width:var(--sidebar); background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
 .sidebar-header { padding:14px 16px 10px; border-bottom:1px solid var(--border); flex-shrink:0; }
 .sidebar-header h2 { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
-.type-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; border-bottom:1px solid var(--border); flex-shrink:0; }
-.type-tab { flex:1; min-width:56px; padding:5px 4px; background:var(--hover); border:1px solid var(--border); border-radius:6px; font-size:11px; font-weight:700; color:var(--muted); cursor:pointer; text-align:center; transition:all .15s; }
+/* Lưới cột đều thay cho flex-wrap. Với `flex:1`, viên bị đẩy xuống hàng dưới sẽ
+   giãn chiếm trọn hàng: 4 viên hàng trên rộng 57px còn "B.11" rơi xuống dưới và
+   phình 245px, trông như một nút riêng chứ không cùng nhóm. Grid giữ mọi viên
+   đúng một bề rộng cột dù nằm ở hàng nào. */
+.type-tabs { display:grid; grid-template-columns:repeat(auto-fit,minmax(56px,1fr)); gap:6px; padding:10px 12px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.type-tab { padding:5px 4px; background:var(--hover); border:1px solid var(--border); border-radius:6px; font-size:11px; font-weight:700; color:var(--muted); cursor:pointer; text-align:center; transition:all .15s; }
 .type-tab:hover { color:var(--text); }
 .type-tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 .survey-list { flex:1; overflow-y:auto; padding:8px; }
@@ -104,11 +108,15 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .dist-section h3 { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:14px; }
 .dist-row { margin-bottom:10px; }
 .dist-label { font-size:11px; color:var(--muted); margin-bottom:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.dist-bars { display:flex; height:16px; border-radius:8px; overflow:hidden; gap:1px; }
+/* Khe trắng 2px giữa các đoạn: tín hiệu tách biệt không phụ thuộc màu, bù cho
+   việc 5 màu liền kề không thể cùng đạt 3:1 (xem ghi chú tại DIST_COLORS). */
+.dist-bars { display:flex; height:16px; border-radius:8px; overflow:hidden; gap:2px; }
 .dist-seg { display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#fff; transition:flex .4s; min-width:0; }
 .dist-legend { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
 .dist-leg-item { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted); }
-.dist-dot { width:10px; height:10px; border-radius:2px; }
+/* Viền chấm chú giải: mức 1 và 2 của thang mới rất nhạt (1,36:1 và 2,41:1 so với
+   nền trắng) nên chấm không viền sẽ gần như biến mất. Viền này đo được 3,41:1. */
+.dist-dot { width:10px; height:10px; border-radius:2px; border:1px solid rgba(0,0,0,.45); }
 
 /* Comments */
 .comments-section { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; }
@@ -217,7 +225,26 @@ const TYPE_DEFAULTS = {
   bieu11: 'Phiếu khảo sát Cựu sinh viên',
 };
 const TYPE_COLORS = { bieu08:'#990000', bieu09:'#1a7f4b', bieu10:'#b26a00', bieu11:'#7c3aed' };
-const DIST_COLORS = ['#c0392b','#b26a00','#606770','#990000','#1a7f4b'];
+
+// Thang màu Likert 5 mức, ĐƠN ĐIỆU theo độ sáng: mức 1 (tiêu cực) nhạt nhất,
+// mức 5 (tích cực) đậm nhất, sắc đi từ đỏ nhạt sang lục đậm.
+// Bảng cũ ['#c0392b','#b26a00','#606770','#990000','#1a7f4b'] đặt đỏ #c0392b cho
+// mức 1 "Rất không đồng ý" và đỏ #990000 cho mức 4 "Đồng ý"; hai màu này chỉ cách
+// nhau 1,64:1 nên nhìn như nhau, mà mức 4 lại là đoạn dài nhất của mỗi câu
+// (35–50%), khiến biểu đồ bị đọc ngược thành bất mãn.
+//
+// Số đo bảng mới (tỉ lệ tương phản WCAG, đã trộn alpha):
+//   liền kề: 1↔2 = 1,77  2↔3 = 1,80  3↔4 = 1,76  4↔5 = 1,77
+//   cách 2 bậc trở lên: thấp nhất 3,12  (cặp bị báo lỗi 1↔4 lên 5,62 từ 1,64)
+// GIỚI HẠN: tỉ lệ tương phản WCAG chỉ phụ thuộc độ sáng và trần là 21:1 (đen trên
+// trắng). Muốn cả 4 khoảng liền kề đều đạt 3:1 thì cần dải 3^4 = 81:1, tức BẤT KHẢ
+// với 5 màu; mức đều tối đa về lý thuyết là 21^(1/4) ≈ 2,14. Ở đây lấy dải đều lớn
+// nhất còn dùng được (1,76) rồi bù bằng hai tín hiệu KHÔNG phụ thuộc màu:
+// khe trắng 2px giữa các đoạn và thuộc tính title ghi rõ tên mức trên từng đoạn.
+const DIST_COLORS = ['#fbd4cf','#e79440','#717a87','#165f3f','#093525'];
+// Chữ % in trên đoạn: nền sáng dùng chữ đen, nền tối dùng chữ trắng.
+// Đo được lần lượt 15,42 · 8,71 · 4,84 · 7,66 · 13,57 : 1.
+const DIST_TEXT   = ['#000000','#000000','#000000','#ffffff','#ffffff'];
 
 function typeBadge(type) {
   const m = { bieu08:'badge-b08', bieu09:'badge-b09', bieu10:'badge-b10', bieu11:'badge-b11' };
@@ -327,8 +354,11 @@ function renderDetail(s, stats) {
     const total = d.reduce((a,b) => a+b, 0) || 1;
     const segs = d.map((v, vi) => {
       const pct = Math.round(v/total*100);
+      // title trên từng đoạn: tín hiệu không phụ thuộc màu, giúp phân biệt hai
+      // mức cạnh nhau ngay cả khi tương phản màu chưa đạt 3:1.
       return pct > 0
-        ? `<div class="dist-seg" style="flex:${pct};background:${DIST_COLORS[vi]}">${pct >= 8 ? pct+'%' : ''}</div>`
+        ? `<div class="dist-seg" style="flex:${pct};background:${DIST_COLORS[vi]};color:${DIST_TEXT[vi]}"
+             title="Mức ${vi+1} – ${escHtml(scale[vi] || '')}: ${v}/${total} phản hồi (${pct}%)">${pct >= 8 ? pct+'%' : ''}</div>`
         : '';
     }).join('');
     return `<div class="dist-row">

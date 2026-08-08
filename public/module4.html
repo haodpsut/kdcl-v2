@@ -8,10 +8,25 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #eef1f4; --panel: #ffffff; --border: #d9dce1;
-  --accent: #990000; --accent2: #5c0000; --green: #1a7f4b;
-  --red: #c0392b; --yellow: #b26a00; --orange: #e07847;
+  --accent: #990000; --accent2: #5c0000;
+  /* Bảng màu TRẠNG THÁI (chữ nhỏ trên nền sáng, tối thiểu 4.5:1 với nền #eef1f4).
+     Trước đây --green 4.43:1 và --yellow 3.74:1 nên chữ mờ dưới ngưỡng AA. */
+  --green: #15703f;   /* hoàn thành, 5.41:1 trên #eef1f4 */
+  --red: #c0392b;     /* trễ hạn, 4.80:1 trên #eef1f4 */
+  --yellow: #6b3f00;  /* đang làm, 7.93:1 trên #eef1f4; nâu hổ phách đậm để tách khỏi màu GĐ3 */
+  --orange: #e07847;
   --text: #1c1e21; --muted: #64748b; --hover: #eef1f4;
-  --p1: #5c0000; --p2: #2563eb; --p3: #d97706; --p4: #059669; --p5: #dc2626;
+  /* Bảng màu NHẬN DIỆN GIAI ĐOẠN. Phải khác hẳn bảng màu trạng thái ở trên,
+     nếu không một giai đoạn chưa làm gì lại trông như đã xong hoặc đã trễ.
+     Vì vậy GĐ4 đổi từ xanh lục sang tím, GĐ5 đổi từ đỏ sang xanh cyan.
+     GĐ3 giữ sắc cam hổ phách nhưng sáng hơn hẳn --yellow để hai nghĩa không lẫn nhau. */
+  --p1: #5c0000; /* 12.73:1 */
+  --p2: #1d4ed8; /* 5.91:1 */
+  --p3: #9a5800; /* 4.91:1, cách --yellow 1.76 lần độ sáng */
+  --p4: #6d28d9; /* 6.27:1 */
+  --p5: #0e7490; /* 4.73:1 */
+  /* Màu KHỐI cho thanh Gantt. Khối không cần 4.5:1, chỉ cần phân biệt nhau. */
+  --bar-done: #1a7f4b; --bar-prog: #e8971a; --bar-late: #c0392b; --bar-todo: #c3cad3;
 }
 body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; font-size: 14px; }
 
@@ -86,7 +101,16 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .gantt-week-hdr { padding: 4px 2px; color: var(--muted); text-align: center; border-left: 1px solid var(--border); font-size: 10px; }
 .gantt-phase-label { padding: 5px 8px; font-size: 11px; font-weight: 700; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
 .gantt-cell { border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 28px; position: relative; }
-.gantt-bar { position: absolute; top: 4px; bottom: 4px; border-radius: 3px; opacity: .85; left: 0; right: 0; }
+/* Không giảm opacity: màu mờ đi làm ô "chưa làm" xám nhạt gần như biến mất
+   và làm màu hiển thị lệch khỏi màu quy ước, khó đối chiếu. */
+.gantt-bar { position: absolute; top: 4px; bottom: 4px; border-radius: 3px; left: 0; right: 0; }
+.gantt-bar.b-todo { border: 1px solid #aab3bf; } /* thêm viền để ô xám nhạt vẫn thấy được trên nền trắng */
+
+/* Chú giải màu thanh Gantt: nói rõ màu thanh chỉ mang nghĩa TRẠNG THÁI,
+   không phải màu nhận diện giai đoạn. */
+.gantt-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; font-size: 11px; color: var(--muted); align-items: center; }
+.gantt-legend .lg { display: flex; align-items: center; gap: 5px; }
+.gantt-legend .sw { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
 
 /* Phase colors */
 .ph-1 { background: var(--p1); }
@@ -302,13 +326,49 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <div class="toast" id="toast"></div>
 
 <script>
+// Màu ở đây phải trùng với --p1..--p5 trong khối :root, và phải nằm ngoài
+// bảng màu trạng thái (xanh lục hoàn thành, hổ phách đang làm, đỏ trễ hạn).
 const PHASES = [
   { id: 1, name: 'Chuẩn bị',         weeks: '1–4',   color: '#5c0000' },
-  { id: 2, name: 'Thu thập MC',       weeks: '5–12',  color: '#2563eb' },
-  { id: 3, name: 'Đánh giá TC',       weeks: '13–18', color: '#d97706' },
-  { id: 4, name: 'Viết báo cáo',      weeks: '19–22', color: '#059669' },
-  { id: 5, name: 'Hoàn thiện & Nộp', weeks: '23–24', color: '#dc2626' },
+  { id: 2, name: 'Thu thập MC',       weeks: '5–12',  color: '#1d4ed8' },
+  { id: 3, name: 'Đánh giá TC',       weeks: '13–18', color: '#9a5800' },
+  { id: 4, name: 'Viết báo cáo',      weeks: '19–22', color: '#6d28d9' },
+  { id: 5, name: 'Hoàn thiện & Nộp', weeks: '23–24', color: '#0e7490' },
 ];
+
+// ── Ngày tháng ──────────────────────────────────────────────────────
+// API trả ngay_bat_dau dạng chuỗi tự do: dữ liệu cũ là ngày/tháng/năm ("06/01/2026"
+// = mùng 6 tháng 1), dữ liệu mới do <input type="date"> sinh ra là năm-tháng-ngày.
+// KHÔNG được đưa thẳng vào new Date(): trình duyệt đọc "06/01/2026" theo kiểu Mỹ
+// thành 1 tháng 6, và trả Invalid Date với mọi ngày lớn hơn 12 như "15/11/2026".
+// Vì vậy tự tách chuỗi rồi dựng Date bằng new Date(năm, tháng-1, ngày).
+function parseNgay(s) {
+  if (typeof s !== 'string') return null;
+  const t = s.trim();
+  if (!t) return null;
+  let y, m, d;
+  let mt = t.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/); // ngày/tháng/năm
+  if (mt) { d = +mt[1]; m = +mt[2]; y = +mt[3]; }
+  else {
+    mt = t.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);    // năm-tháng-ngày (ISO)
+    if (!mt) return null;
+    y = +mt[1]; m = +mt[2]; d = +mt[3];
+  }
+  if (m < 1 || m > 12 || d < 1 || d > 31) return null;
+  const dt = new Date(y, m - 1, d);
+  // Chặn ngày không tồn tại như 31/02: Date sẽ tự trôi sang tháng sau.
+  if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return null;
+  return dt;
+}
+
+// Đổi sang năm-tháng-ngày cho <input type="date">. Nếu không đổi, ô ngày hiện
+// trống khi sửa kế hoạch có ngày kiểu ngày/tháng/năm, bấm lưu là xoá mất ngày.
+function toIsoForInput(s) {
+  const d = parseNgay(s);
+  if (!d) return '';
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
 
 let plans = [];
 let activePlanId = null;
@@ -327,14 +387,21 @@ async function loadPlans() {
   renderPlanList();
 }
 
+// Số việc trễ tính theo lịch cho từng kế hoạch, do renderPlan điền vào.
+const LATE_EFF = {};
+
 function renderPlanList() {
   const el = document.getElementById('plan-list');
   const items = plans.map(p => {
     const pct = p.total ? Math.round(p.done / p.total * 100) : 0;
+    // Số việc trễ tính theo lịch (lớp phủ autoMarkLate) chứ không phải số đang
+    // lưu trong hồ sơ. Trước đây thanh thống kê dùng số tính theo lịch còn cột
+    // này dùng số trong hồ sơ, nên cùng một kế hoạch hiện 7 chỗ này 1 chỗ kia.
+    const lateShow = (LATE_EFF[p.id] !== undefined) ? LATE_EFF[p.id] : p.late;
     return `<button class="plan-btn ${p.id === activePlanId ? 'active' : ''}" onclick="selectPlan(${p.id})">
       <div class="plan-info">
         <div class="plan-name">${p.name}</div>
-        <div class="plan-meta">${p.done}/${p.total} hoàn thành · ${pct}%${p.late ? ` · <span style="color:var(--red)">${p.late} trễ</span>` : ''}</div>
+        <div class="plan-meta">${p.done}/${p.total} hoàn thành · ${pct}%${lateShow ? ` · <span style="color:var(--red)">${lateShow} trễ</span>` : ''}</div>
       </div>
       <span class="del-plan" onclick="event.stopPropagation();deletePlan(${p.id},'${escHtml(p.name)}')">✕</span>
     </button>`;
@@ -361,10 +428,13 @@ function renderPlanContent() {
 
   // Date info
   let dateInfo = '';
-  if (p.ngay_bat_dau) {
-    const start = new Date(p.ngay_bat_dau);
+  const start = parseNgay(p.ngay_bat_dau);
+  if (start) {
     const end = new Date(start); end.setDate(end.getDate() + 167); // 24 weeks
     dateInfo = `${fmt(start)} — ${fmt(end)}`;
+  } else if ((p.ngay_bat_dau || '').trim()) {
+    // Báo rõ chuỗi hỏng thay vì để màn hình hiện "Invalid Date".
+    dateInfo = `⚠ Ngày bắt đầu không hợp lệ: "${p.ngay_bat_dau}"`;
   }
   document.getElementById('plan-date-info').textContent = dateInfo;
 
@@ -375,6 +445,12 @@ function renderPlanContent() {
   const done  = p.tasks.filter(t => t.status === 'done').length;
   const prog  = p.tasks.filter(t => t.status === 'in_progress').length;
   const late  = p.tasks.filter(t => t.status === 'late').length;
+  LATE_EFF[p.id] = late;
+  // Số đang lưu trong hồ sơ lấy từ danh sách kế hoạch, vì đối tượng chi tiết
+  // của một kế hoạch không mang trường tổng hợp `late`; lấy nhầm chỗ sẽ ra 0.
+  const lateDb = (plans.find(x => x.id === p.id) || {}).late || 0;
+  // Vẽ lại cột trái để hai nơi cùng lấy một con số, không còn cảnh 7 bên này 1 bên kia.
+  setTimeout(renderPlanList, 0);
   const todo  = p.tasks.filter(t => t.status === 'todo').length;
   const pct   = total ? Math.round(done / total * 100) : 0;
 
@@ -384,7 +460,8 @@ function renderPlanContent() {
   html += `<div class="stats-bar">
     <span class="stat-pill done"><span class="dot"></span>Hoàn thành: ${done}</span>
     <span class="stat-pill prog"><span class="dot"></span>Đang làm: ${prog}</span>
-    <span class="stat-pill late"><span class="dot"></span>Trễ hạn: ${late}</span>
+    <span class="stat-pill late" title="Đếm theo lịch: việc chưa làm mà đã quá tuần kết thúc thì tính là trễ. Trạng thái này chỉ được ghi vào hồ sơ khi bạn lưu việc đó.">
+      <span class="dot"></span>Trễ hạn: ${late}${late > lateDb ? ` <span style="font-weight:600;color:var(--muted)">(${lateDb} đã ghi hồ sơ)</span>` : ''}</span>
     <span class="stat-pill todo"><span class="dot"></span>Chưa làm: ${todo}</span>
     <span class="overall-pct">${pct}% hoàn thành</span>
   </div>`;
@@ -426,7 +503,10 @@ function renderPlanContent() {
 
 function renderTaskCard(t, phase) {
   const statusLabel = { todo: 'Chưa làm', in_progress: 'Đang làm', done: 'Hoàn thành', late: 'Trễ hạn' };
-  const dueText = activePlan.ngay_bat_dau ? `Hạn: T${t.week_end} (${weekToDate(t.week_end)})` : `Tuần ${t.week_start}–${t.week_end}`;
+  // Chỉ in ngày khi ngày bắt đầu đọc được, nếu không thì lùi về số tuần
+  // thay vì in "Hạn: T12 (Invalid Date)".
+  const dueDate = weekToDate(t.week_end);
+  const dueText = dueDate ? `Hạn: T${t.week_end} (${dueDate})` : `Tuần ${t.week_start}–${t.week_end}`;
   const isLate = t.status === 'late';
   return `<div class="task-card ${isLate ? 'late' : ''}" id="task-${t.id}">
     <span class="task-week-badge ph-color-${phase.id}" style="color:${phase.color}">T${t.week_start}${t.week_end > t.week_start ? '–'+t.week_end : ''}</span>
@@ -474,15 +554,30 @@ function renderGantt(p) {
       const allDone = tasks.filter(t => w >= t.week_start && w <= t.week_end).every(t => t.status === 'done');
       const anyLate = tasks.filter(t => w >= t.week_start && w <= t.week_end).some(t => t.status === 'late');
       const anyProg = tasks.filter(t => w >= t.week_start && w <= t.week_end).some(t => t.status === 'in_progress');
+      // Màu thanh CHỈ mang nghĩa trạng thái. Trước đây nhánh cuối rơi về
+      // phase.color, nên GĐ4 (xanh lục) trông như đã xong và GĐ5 (đỏ) trông như
+      // đã trễ dù cả hai chưa làm gì. Nay tuần chưa có việc nào nhúc nhích
+      // dùng xám trung tính, tách hẳn khỏi màu nhận diện giai đoạn.
       let barStyle = '';
       if (inPhase) {
-        const bg = anyLate ? 'var(--red)' : allDone ? 'var(--green)' : anyProg ? 'var(--yellow)' : phase.color;
-        barStyle = `<div class="gantt-bar" style="background:${bg};opacity:.75"></div>`;
+        const bg = anyLate ? 'var(--bar-late)' : allDone ? 'var(--bar-done)' : anyProg ? 'var(--bar-prog)' : 'var(--bar-todo)';
+        const cls = anyLate ? 'b-late' : allDone ? 'b-done' : anyProg ? 'b-prog' : 'b-todo';
+        barStyle = `<div class="gantt-bar ${cls}" style="background:${bg}"></div>`;
       }
       html += `<div class="gantt-cell ${w === currentWeek ? 'current-week' : ''}">${barStyle}</div>`;
     }
   }
-  html += `</div></div></div>`;
+  html += `</div></div>`;
+  // Chú giải: người xem cần biết màu thanh đọc theo trạng thái, còn màu chữ
+  // bên trái là màu nhận diện giai đoạn, hai hệ nghĩa khác nhau.
+  html += `<div class="gantt-legend">
+    <span>Màu thanh = trạng thái công việc trong tuần:</span>
+    <span class="lg"><span class="sw" style="background:var(--bar-done)"></span>Hoàn thành</span>
+    <span class="lg"><span class="sw" style="background:var(--bar-prog)"></span>Đang làm</span>
+    <span class="lg"><span class="sw" style="background:var(--bar-late)"></span>Trễ hạn</span>
+    <span class="lg"><span class="sw b-todo" style="background:var(--bar-todo);border:1px solid #aab3bf"></span>Chưa làm</span>
+  </div>`;
+  html += `</div>`;
   return html;
 }
 
@@ -499,7 +594,8 @@ function autoMarkLate() {
 }
 
 function getCurrentWeek(startDateStr) {
-  const start = new Date(startDateStr);
+  const start = parseNgay(startDateStr);
+  if (!start) return -1; // ngày hỏng thì không đánh dấu tuần hiện tại, không tự gắn cờ trễ
   const now = new Date();
   const diffMs = now - start;
   if (diffMs < 0) return 0;
@@ -507,8 +603,8 @@ function getCurrentWeek(startDateStr) {
 }
 
 function weekToDate(weekNum) {
-  if (!activePlan?.ngay_bat_dau) return '';
-  const start = new Date(activePlan.ngay_bat_dau);
+  const start = parseNgay(activePlan?.ngay_bat_dau);
+  if (!start) return '';
   start.setDate(start.getDate() + (weekNum - 1) * 7);
   return fmt(start);
 }
@@ -576,7 +672,8 @@ function openEditPlan() {
   editingPlanId = activePlan.id;
   document.getElementById('modal-plan-title').textContent = 'Sửa kế hoạch TĐG';
   document.getElementById('inp-plan-name').value = activePlan.name;
-  document.getElementById('inp-plan-date').value = activePlan.ngay_bat_dau || '';
+  // Phải đổi sang năm-tháng-ngày, <input type="date"> không nhận ngày/tháng/năm.
+  document.getElementById('inp-plan-date').value = toIsoForInput(activePlan.ngay_bat_dau);
   document.getElementById('defaults-check-row').style.display = 'none';
   document.getElementById('modal-plan').classList.add('open');
 }

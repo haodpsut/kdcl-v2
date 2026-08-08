@@ -42,7 +42,8 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .metric-card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; flex-direction:column; gap:4px; }
 .metric-label { font-size:11px; color:var(--muted); font-weight:600; }
 .metric-value { font-size:26px; font-weight:900; line-height:1; }
-.metric-sub { font-size:11px; color:var(--muted); }
+/* Dòng phụ cũng để CSS cắt kèm dấu ba chấm, không cắt bằng JS. */
+.metric-sub { font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .metric-bar { height:4px; background:var(--border); border-radius:2px; margin-top:6px; overflow:hidden; }
 .metric-bar-fill { height:100%; border-radius:2px; transition:width .6s; }
 
@@ -72,6 +73,9 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
 /* Chart containers */
 .kpi-chart-wrap { height:220px; }
+/* Ghi chú trục: bắt buộc hiện khi trục dọc không bắt đầu từ 0. */
+.axis-note { font-size:10px; color:var(--muted); margin-top:8px; line-height:1.4; }
+.axis-note:empty { display:none; }
 .survey-wrap { display:flex; flex-direction:column; gap:8px; }
 .survey-type-row { display:flex; align-items:center; gap:10px; }
 .stype-label { font-size:12px; font-weight:600; width:72px; flex-shrink:0; }
@@ -94,6 +98,11 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .tdg-ph-row:last-child { border-bottom:none; }
 .phase-name { color:var(--muted); }
 .phase-prog { font-weight:700; }
+/* Tên kế hoạch: để CSS lo việc cắt, KHÔNG cắt chuỗi bằng JS. Cắt bằng
+   slice() làm mất đuôi mà không có dấu ba chấm, nên "…chu kỳ 2026" hiện
+   thành "…chu kỳ 20" và bị đọc nhầm thành năm. */
+.tdg-plan-name { width:100%; font-size:12px; font-weight:600; text-align:center; margin-top:2px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* Action items */
 .action-list { display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; }
@@ -179,6 +188,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
     <div class="card">
       <div class="card-title">📈 Xu hướng KPI theo năm <a href="/module3.html">→ Biểu 16</a></div>
       <div class="kpi-chart-wrap"><canvas id="chart-kpi"></canvas></div>
+      <div class="axis-note" id="kpi-axis-note"></div>
     </div>
     <div class="card">
       <div class="card-title">📝 Tổng hợp Khảo sát (Biểu 08–11) <a href="/module5.html">→ Chi tiết</a></div>
@@ -231,7 +241,7 @@ async function loadAll() {
     renderHeatmap(rData);
     renderKpiChart(kpiList);
     renderSurveys(surveyList);
-    renderTdg(tdgList);
+    await renderTdg(tdgList); // async: còn phải lấy task của kế hoạch để tính % giai đoạn
     renderActions(rData);
 
     const si = rData.school_info || {};
@@ -267,14 +277,16 @@ function renderMetrics(rData, tdgList, surveyList, kpiList) {
     { label:'Phản hồi KS',    value:totalResp, sub:`${surveyList.length} khảo sát`, pct:null, color:'#7c3aed' },
     tnPct != null
       ? { label:'Tỉ lệ tốt nghiệp', value:`${tnPct}%`, sub:latestKpi.nam_hoc, pct:parseFloat(tnPct), color:'#1a7f4b' }
-      : { label:'Tiến độ TĐG', value:`${tdgPct}%`, sub:latestPlan ? latestPlan.name.slice(0,22) : 'Chưa có KH', pct:tdgPct, color:'#990000' },
+      // Không cắt tên bằng slice(): CSS .metric-sub đã lo cắt kèm dấu ba chấm,
+      // còn thuộc tính title giữ tên đầy đủ để rê chuột vẫn đọc được.
+      : { label:'Tiến độ TĐG', value:`${tdgPct}%`, sub:latestPlan ? latestPlan.name : 'Chưa có KH', pct:tdgPct, color:'#990000' },
   ];
 
   document.getElementById('metrics-row').innerHTML = metrics.map(m => `
     <div class="metric-card">
       <div class="metric-label">${m.label}</div>
       <div class="metric-value" style="color:${m.color}">${m.value}</div>
-      <div class="metric-sub">${m.sub}</div>
+      <div class="metric-sub" title="${escAttr(m.sub)}">${m.sub}</div>
       ${m.pct != null ? `
         <div class="metric-bar">
           <div class="metric-bar-fill" style="width:${Math.min(m.pct,100)}%;background:${m.color}"></div>
@@ -367,8 +379,10 @@ function renderKpiChart(kpiList) {
 
   if (kpiChart) kpiChart.destroy();
   const ctx = document.getElementById('chart-kpi').getContext('2d');
+  const noteEl = document.getElementById('kpi-axis-note');
 
   if (sorted.length === 0) {
+    if (noteEl) noteEl.textContent = '';
     ctx.fillStyle = '#64748b'; ctx.font = '13px Segoe UI';
     ctx.textAlign = 'center';
     ctx.fillText('Chưa có dữ liệu KPI. Nhập tại Biểu 16.', ctx.canvas.width/2, 80);
@@ -381,6 +395,25 @@ function renderKpiChart(kpiList) {
     { label:'GV có TS (%)', data: sorted.map(r=>r.pct_gv_ts??null), borderColor:'#b26a00', backgroundColor:'#b26a0022', tension:.3 },
   ].filter(d => d.data.some(v => v != null));
 
+  // Trục dọc bám dải dữ liệu thật. Trục 0–100 cố định làm các đường KPI (thường
+  // nằm gọn trong khoảng 85–92) dính vào nhau, không đọc được xu hướng.
+  // Đệm 2 điểm phần trăm mỗi đầu rồi làm tròn về bội số của 5, kẹp trong [0,100].
+  const vals = datasets.flatMap(d => d.data).filter(v => v != null).map(Number).filter(v => !isNaN(v));
+  let yMin = 0, yMax = 100;
+  if (vals.length) {
+    yMin = Math.max(0,   Math.floor((Math.min(...vals) - 2) / 5) * 5);
+    yMax = Math.min(100, Math.ceil ((Math.max(...vals) + 2) / 5) * 5);
+    // Dải quá hẹp (mọi năm cùng một giá trị) sẽ làm trục vô nghĩa, nên nới tối thiểu 10 điểm.
+    if (yMax - yMin < 10) { yMax = Math.min(100, yMin + 10); yMin = Math.max(0, yMax - 10); }
+  }
+  // Cắt gốc trục thì BẮT BUỘC nói ra, nếu không người đọc sẽ hiểu chênh lệch
+  // giữa các đường lớn hơn thực tế.
+  if (noteEl) {
+    noteEl.textContent = yMin > 0
+      ? `⚠️ Trục dọc bắt đầu từ ${yMin}% chứ không phải 0%, để thấy được xu hướng. Khoảng cách giữa các đường trên hình vì thế lớn hơn chênh lệch thực tế.`
+      : '';
+  }
+
   kpiChart = new Chart(ctx, {
     type:'line',
     data:{ labels, datasets: datasets.map(d => ({ ...d, fill:false, pointRadius:4, borderWidth:2 })) },
@@ -388,7 +421,8 @@ function renderKpiChart(kpiList) {
       responsive:true, maintainAspectRatio:false,
       scales:{
         x:{ ticks:{ color:'#64748b', font:{size:11} }, grid:{ color:'#d9dce1' } },
-        y:{ min:0, max:100, ticks:{ color:'#64748b', font:{size:11}, callback: v=>v+'%' }, grid:{ color:'#d9dce1' } },
+        y:{ min:yMin, max:yMax, ticks:{ color:'#64748b', font:{size:11}, callback: v=>v+'%' }, grid:{ color:'#d9dce1' },
+            title:{ display: yMin > 0, text:`Trục bắt đầu từ ${yMin}%, không phải 0%`, color:'#64748b', font:{size:10} } },
       },
       plugins:{
         legend:{ labels:{ color:'#606770', font:{size:11}, boxWidth:12 } },
@@ -429,13 +463,44 @@ function renderSurveys(surveyList) {
 }
 
 // ── TĐG progress ring ─────────────────────────────────────────────────────────
-function renderTdg(tdgList) {
+// 5 giai đoạn của kế hoạch TĐG. `id` phải trùng cột `phase` trong bảng tdg_tasks
+// và trùng mảng PHASES của module4, nếu không hai màn hình sẽ ra số khác nhau.
+const TDG_PHASES = [
+  { id:1, label:'Chuẩn bị' },
+  { id:2, label:'Thu thập MC' },
+  { id:3, label:'Đánh giá TC' },
+  { id:4, label:'Viết BC' },
+  { id:5, label:'Hoàn thiện' },
+];
+
+async function renderTdg(tdgList) {
   const el = document.getElementById('tdg-wrap');
   if (!tdgList.length) {
     el.innerHTML = `<div class="empty-msg" style="color:var(--muted)">Chưa có kế hoạch TĐG.<br>Tạo tại <a href="/module4.html" style="color:var(--accent)">Module 4</a>.</div>`;
     return;
   }
   const p = tdgList[0]; // latest plan (already sorted by creation on server)
+
+  // /api/tdg chỉ trả số đếm tổng của cả kế hoạch, KHÔNG trả danh sách task, nên
+  // muốn có % từng giai đoạn phải gọi thêm /api/tdg/:id để lấy tasks.
+  // Trước đây khối này gõ cứng dấu "–" cho cả 5 dòng nên vĩnh viễn vô nghĩa.
+  let tasks = [];
+  try {
+    const detail = await fetch(`/api/tdg/${p.id}`).then(r => r.json());
+    if (Array.isArray(detail.tasks)) tasks = detail.tasks;
+  } catch (e) { tasks = []; }
+
+  // Công thức lấy NGUYÊN của module4 (hàm renderPlanContent):
+  //   % giai đoạn = (số task có status 'done' của giai đoạn) / (tổng task của giai đoạn), làm tròn.
+  // Ba trạng thái còn lại (in_progress, late, todo) đều tính là chưa xong.
+  // module4 có gọi autoMarkLate() trước khi tính, nhưng hàm đó chỉ đổi todo → late
+  // nên không đụng tới số 'done'; hai màn hình vì thế luôn ra cùng con số.
+  const phaseRows = TDG_PHASES.map(ph => {
+    const list = tasks.filter(t => Number(t.phase) === ph.id);
+    const done = list.filter(t => t.status === 'done').length;
+    return { ...ph, n: list.length, done, pct: list.length ? Math.round(done / list.length * 100) : null };
+  });
+
   const pct    = p.total ? Math.round(p.done / p.total * 100) : 0;
   const radius = 44;
   const circ   = 2 * Math.PI * radius;
@@ -454,18 +519,13 @@ function renderTdg(tdgList) {
         <span class="ring-lbl">hoàn thành</span>
       </div>
     </div>
-    <div style="font-size:12px;font-weight:600;text-align:center;margin-top:2px">${escHtml(p.name.slice(0,30))}</div>
+    <div class="tdg-plan-name" title="${escAttr(p.name)}">${escHtml(p.name)}</div>
     <div class="tdg-phases">
-      ${[
-        { ph:'Chuẩn bị', total: p.total > 0 ? 4 : 0 },
-        { ph:'Thu thập MC', total: p.total > 0 ? 6 : 0 },
-        { ph:'Đánh giá TC', total: p.total > 0 ? 4 : 0 },
-        { ph:'Viết BC', total: p.total > 0 ? 3 : 0 },
-        { ph:'Hoàn thiện', total: p.total > 0 ? 3 : 0 },
-      ].map(({ ph }) => `
+      ${phaseRows.map(r => `
         <div class="tdg-ph-row">
-          <span class="phase-name">${ph}</span>
-          <span class="phase-prog" style="color:var(--muted)">–</span>
+          <span class="phase-name">${r.label}</span>
+          <span class="phase-prog" style="color:${r.pct == null ? 'var(--muted)' : r.pct >= 100 ? 'var(--green)' : r.pct > 0 ? 'var(--accent)' : 'var(--muted)'}"
+            title="${r.pct == null ? 'Giai đoạn chưa có công việc nào' : `${r.done}/${r.n} công việc đã hoàn thành`}">${r.pct == null ? '–' : r.pct + '%'}</span>
         </div>`).join('')}
       <div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
         ${p.done} xong · ${p.in_progress} đang làm · ${p.late} trễ · ${p.total - p.done - p.in_progress - p.late} chờ
@@ -527,6 +587,8 @@ function renderActions(rData) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// Dùng cho giá trị nằm trong thuộc tính HTML (title=...): phải chặn thêm dấu nháy kép.
+function escAttr(s) { return escHtml(s).replace(/"/g,'&quot;'); }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 loadAll();
