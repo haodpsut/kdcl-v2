@@ -175,3 +175,35 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
 
 /* Khung thả xuống định vị theo cửa sổ, để không bị dải menu cuộn ngang cắt mất */
 .topnav .nav-drop { position: fixed !important; top: 52px; left: 0; right: auto !important; }
+
+/* ── Đánh dấu mục đang xem bằng VIÊN NỀN thay cho gạch chân ─────────────────
+   Gạch chân vàng của mục đang xem nằm sát ngay trên viền vàng 3px của chính
+   thanh menu, hai vạch cùng màu chồng nhau nên trông như một vệt thừa rơi
+   dưới chữ. Viên nền tách hẳn khỏi viền, đọc ra ngay mục nào đang mở, và còn
+   chỗ thở ở trên dưới. */
+.topnav .nav-link,
+.topnav .nav-group-btn {
+  align-self: center !important;
+  height: auto !important;
+  padding: 7px 12px !important;
+  margin: 0 1px !important;
+  border-radius: 7px !important;
+  border-bottom: 0 !important;
+  line-height: 1.2 !important;
+}
+.topnav .nav-link:hover,
+.topnav .nav-group-btn:hover {
+  background: rgba(255,255,255,.10) !important;
+  color: #fbae40 !important;
+}
+.topnav .nav-link.active,
+.topnav .nav-group.active > .nav-group-btn {
+  background: rgba(255,255,255,.15) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 -2px 0 #fbae40;      /* vạch vàng nằm TRONG viên, không đụng viền thanh */
+}
+.topnav .nav-group.open > .nav-group-btn {
+  background: rgba(255,255,255,.15) !important;
+  color: #fbae40 !important;
+}
