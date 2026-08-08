@@ -13,7 +13,11 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: kdcl
-      POSTGRES_PASSWORD: kdcl
+      # Đặt POSTGRES_PASSWORD trong tệp .env cạnh docker-compose.yml khi chạy
+      # thật. Mặc định kdcl chỉ dùng cho máy cá nhân. Lưu ý: biến này chỉ có
+      # tác dụng lúc CSDL khởi tạo lần đầu; nếu .docker-data/postgres đã có sẵn
+      # thì phải đổi bằng ALTER USER trong psql.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kdcl}
       POSTGRES_DB: kdcl
     ports:
       - "127.0.0.1:5435:5432"
@@ -30,10 +34,14 @@ services:
     container_name: kdcl-app
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgres://kdcl:kdcl@db:5432/kdcl
+      DATABASE_URL: postgres://kdcl:${POSTGRES_PASSWORD:-kdcl}@db:5432/kdcl
       DATA_DIR: /data
       PORT: 3001
-      # ADMIN_USER / ADMIN_PASS: đặt để seed tài khoản admin đầu tiên (mặc định admin/admin123)
+      # ADMIN_USER / ADMIN_PASS: seed tài khoản admin đầu tiên, chỉ chạy khi
+      # bảng users còn rỗng. Nếu phục hồi từ bản dump đã có tài khoản thì phải
+      # đổi mật khẩu bằng API sau khi chạy.
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASS: ${ADMIN_PASS:-admin123}
     ports:
       - "127.0.0.1:8091:3001"
     volumes:
