@@ -287,6 +287,8 @@
     }
     scroll.innerHTML = '';
     scroll.appendChild(frag);
+    // Dựng xong mới cho hiện, để không thấy menu phẳng cũ nhấp nháy trước.
+    document.documentElement.classList.remove('nav-dang-dung');
   }
 
   // Trang dùng chung cho mọi đợt kiểm định, không thuộc menu của workspace nào.

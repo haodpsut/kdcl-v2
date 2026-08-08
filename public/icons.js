@@ -110,6 +110,22 @@
 h1 .k-ic, h2 .k-ic, h3 .k-ic { margin-right: 7px; }
 button .k-ic, .btn .k-ic { margin-right: 5px; }
 `;
+  // ── Chống nháy thanh menu ────────────────────────────────────────────────
+  // Mỗi trang có sẵn thanh menu PHẲNG trong HTML, trình duyệt vẽ ngay khi nhận
+  // được; mãi sau workspace-switcher.js (nạp kèm defer) mới dựng lại thành các
+  // nhóm. Đo trên bản thật với mạng chậm: 7 mục hiện suốt 750ms rồi tụt còn 4,
+  // người dùng thấy menu load ra nhiều rồi thu lại.
+  // Giấu menu tĩnh ngay từ đầu, script dựng xong thì mở. Có hẹn giờ an toàn:
+  // script hỏng hay tải không về thì sau 2,5 giây menu cũ vẫn hiện lại, thà
+  // menu cũ còn hơn không có menu nào.
+  const cssNhay = 'html.nav-dang-dung .topnav a.nav-link { display: none !important; }';
+  const stNhay = document.createElement('style');
+  stNhay.id = 'k-nav-chong-nhay';
+  stNhay.textContent = cssNhay;
+  (document.head || document.documentElement).appendChild(stNhay);
+  document.documentElement.classList.add('nav-dang-dung');
+  setTimeout(() => document.documentElement.classList.remove('nav-dang-dung'), 2500);
+
   const st = document.createElement('style');
   st.id = 'k-icons-style';
   st.textContent = css;
