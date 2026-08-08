@@ -94,8 +94,10 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
    chiều cao 100vh cũng không bóp mất nó. */
 .kdcl-footer {
   flex-shrink: 0;
+  /* column-gap phải áp cả khi hai vế nằm cùng dòng và bị đẩy sát nhau, nếu
+     không sẽ đọc thành "…Đà Nẵng566 Núi Thành" dính liền không có khoảng cách */
   display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 6px 18px;
+  flex-wrap: wrap; gap: 6px 28px;
   padding: 8px 20px;
   background: #fff;
   border-top: 2px solid #fbae40;

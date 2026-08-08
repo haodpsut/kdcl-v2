@@ -34,10 +34,29 @@ const PUBLIC_API = [
   /^\/surveys\/by-token\/[^/]+$/,
   /^\/surveys\/by-token\/[^/]+\/respond$/,
 ];
+
+// Vai `unit` (khoa, phòng) chỉ được GHI vào đúng phần việc của mình là nộp
+// minh chứng. Vai `viewer` (lãnh đạo, đoàn đánh giá) KHÔNG được ghi gì.
+// Trước đây phần lớn tuyến ghi chỉ gắn requireAuth, còn toàn bộ tuyến CTĐT
+// không gắn gì, nên một tài khoản khoa hay một tài khoản đoàn đánh giá đều
+// xoá được PLO, sửa được KPI và báo cáo tự đánh giá. Tên vai nói một đằng,
+// quyền thật một nẻo.
+const UNIT_WRITABLE = [
+  /^\/evidence$/,                       // nộp minh chứng
+  /^\/evidence\/\d+$/,                  // xoá minh chứng của mình (route tự kiểm đơn vị)
+  /^\/evidence\/\d+\/suggestions$/,     // khai mục gợi ý cho minh chứng của mình
+];
 app.use('/api', (req, res, next) => {
   if (PUBLIC_API.some((rx) => rx.test(req.path))) return next();
   if (!req.user) return res.status(401).json({ error: 'Chưa đăng nhập' });
-  next();
+  if (req.method === 'GET') return next();
+  if (req.user.role === 'admin') return next();
+  if (req.user.role === 'unit' && UNIT_WRITABLE.some((rx) => rx.test(req.path))) return next();
+  return res.status(403).json({
+    error: req.user.role === 'viewer'
+      ? 'Tài khoản chỉ xem, không sửa được dữ liệu'
+      : 'Đơn vị chỉ được nộp và quản lý minh chứng của đơn vị mình',
+  });
 });
 
 // ─── Standards / Criteria (hard-code, như v1) ───────────────────────────────
@@ -275,6 +294,12 @@ app.get('/api/evidence/:id/download', async (req, res) => {
 app.put('/api/evidence/:id/suggestions', auth.requireAuth, async (req, res) => {
   const wsId = await getWs(req);
   const names = parseSugNames(req.body.sug_names);
+  // Đơn vị chỉ khai được cho minh chứng của chính đơn vị mình
+  if (req.user.role === 'unit') {
+    const ev = await one('SELECT unit_id FROM evidence WHERE id=$1 AND workspace_id=$2', [parseInt(req.params.id), wsId]);
+    if (!ev) return res.status(404).json({ error: 'Không tìm thấy' });
+    if (ev.unit_id !== req.user.unit_id) return res.status(403).json({ error: 'Không phải minh chứng của đơn vị bạn' });
+  }
   const r = await one(
     'UPDATE evidence SET sug_names=$3 WHERE id=$1 AND workspace_id=$2 RETURNING id, sug_names',
     [parseInt(req.params.id), wsId, names]);

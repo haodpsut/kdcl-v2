@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tài khoản & phân quyền — KĐCLGD</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--border:#d9dce1;--text:#1c1e21;--muted:#4b5563;
+      --accent:#990000;--maroon-dark:#5c0000;--gold:#fbae40;--green:#1a7f4b;--red:#c0392b;--amber:#b26a00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);
+     display:flex;flex-direction:column;min-height:100vh;font-size:14px}
+.topnav{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;height:44px;flex-shrink:0}
+.brand{font-weight:700;color:var(--accent)}
+.main{max-width:1300px;width:100%;margin:0 auto;padding:20px}
+h1{font-size:20px;color:var(--maroon-dark);margin-bottom:4px}
+.sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:16px}
+.card h2{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);
+   border-bottom:2px solid var(--border);padding:8px 10px;white-space:nowrap}
+td{border-bottom:1px solid var(--border);padding:8px 10px;vertical-align:middle}
+tr:hover td{background:rgba(153,0,0,.03)}
+.role{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.role.admin{background:rgba(153,0,0,.1);color:var(--accent)}
+.role.unit{background:rgba(178,106,0,.14);color:var(--amber)}
+.role.viewer{background:rgba(26,127,75,.12);color:var(--green)}
+.off{opacity:.5}
+.badge-off{font-size:10px;font-weight:700;color:var(--red);border:1px solid var(--red);border-radius:3px;padding:1px 5px}
+input,select{font-family:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text)}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.btn{font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:4px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff}
+.btn:hover{background:var(--maroon-dark)}
+.btn.ghost{background:#fff;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent);color:#fff}
+.btn.sm{padding:4px 9px;font-size:11px}
+.btn.danger{border-color:var(--red);background:#fff;color:var(--red)}
+.btn.danger:hover{background:var(--red);color:#fff}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.f{display:flex;flex-direction:column;gap:4px}
+.f label{font-size:11px;font-weight:700;color:var(--muted)}
+.matrix td,.matrix th{font-size:12px}
+.matrix .yes{color:var(--green);font-weight:700}
+.matrix .no{color:var(--red)}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px}
+#toast{position:fixed;right:18px;bottom:18px;background:var(--maroon-dark);color:#fff;padding:10px 16px;
+       border-radius:5px;font-size:13px;display:none;z-index:50;max-width:420px}
+#toast.err{background:var(--red)}
+.pw{font-family:ui-monospace,Consolas,monospace;background:rgba(0,0,0,.05);padding:2px 6px;border-radius:3px}
+</style>
+</head>
+<body>
+<nav class="topnav"><span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span></nav>
+
+<div class="main">
+  <h1>👤 Tài khoản &amp; phân quyền</h1>
+  <div class="sub">Chỉ tài khoản quản trị (Phòng Đảm bảo chất lượng) mở được trang này.</div>
+
+  <div class="card">
+    <h2>Ba vai và quyền tương ứng</h2>
+    <table class="matrix">
+      <thead><tr><th>Việc</th><th>admin — P.ĐBCL</th><th>unit — Khoa / Phòng</th><th>viewer — Lãnh đạo, đoàn ĐG</th></tr></thead>
+      <tbody>
+        <tr><td>Xem toàn bộ dữ liệu, tải minh chứng về</td><td class="yes">Có</td><td class="yes">Có</td><td class="yes">Có</td></tr>
+        <tr><td>Nộp minh chứng</td><td class="yes">Có, vào xác nhận ngay</td><td class="yes">Có, vào trạng thái chờ duyệt</td><td class="no">Không</td></tr>
+        <tr><td>Xoá minh chứng</td><td class="yes">Mọi minh chứng</td><td class="yes">Chỉ của đơn vị mình và chưa xác nhận</td><td class="no">Không</td></tr>
+        <tr><td>Xác nhận / trả lại minh chứng</td><td class="yes">Có</td><td class="no">Không</td><td class="no">Không</td></tr>
+        <tr><td>Đánh giá tiêu chí, KPI, tiến độ TĐG, khảo sát, báo cáo</td><td class="yes">Có</td><td class="no">Chỉ xem</td><td class="no">Chỉ xem</td></tr>
+        <tr><td>Chuẩn đầu ra CTĐT (PEO/PLO/CLO, rubric, điểm)</td><td class="yes">Có</td><td class="no">Chỉ xem</td><td class="no">Chỉ xem</td></tr>
+        <tr><td>Quản lý đơn vị, phân công tiêu chí, tài khoản</td><td class="yes">Có</td><td class="no">Không</td><td class="no">Không</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Mỗi khoa hoặc phòng dùng <b>một tài khoản chung</b>, gắn với đúng đơn vị đó. Minh chứng do tài khoản nào nộp thì ghi tên đơn vị đó, và Phòng ĐBCL duyệt tập trung.</div>
+  </div>
+
+  <div class="card">
+    <h2>Tạo tài khoản mới</h2>
+    <div class="form-row">
+      <div class="f"><label>Tên đăng nhập</label><input id="n-user" placeholder="vd: khoa-cntt"></div>
+      <div class="f"><label>Mật khẩu</label><input id="n-pass" placeholder="tối thiểu 6 ký tự"></div>
+      <div class="f"><label>Tên hiển thị</label><input id="n-name" placeholder="vd: Khoa Công nghệ thông tin"></div>
+      <div class="f"><label>Vai</label><select id="n-role" onchange="onRoleChange()">
+        <option value="unit">unit — Khoa / Phòng</option>
+        <option value="admin">admin — P.ĐBCL</option>
+        <option value="viewer">viewer — chỉ xem</option>
+      </select></div>
+      <div class="f" id="n-unit-box"><label>Đơn vị</label><select id="n-unit"></select></div>
+      <button class="btn" onclick="createUser()">Tạo tài khoản</button>
+      <button class="btn ghost" onclick="genPass()">Sinh mật khẩu</button>
+    </div>
+    <div class="note">Mật khẩu lưu dạng băm scrypt, không xem lại được. Quên thì đặt lại bằng nút <b>Đổi mật khẩu</b> ở bảng dưới.</div>
+  </div>
+
+  <div class="card">
+    <h2>Danh sách tài khoản</h2>
+    <table>
+      <thead><tr><th>Tên đăng nhập</th><th>Tên hiển thị</th><th>Vai</th><th>Đơn vị</th><th>Đăng nhập gần nhất</th><th>Thao tác</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="6" style="color:var(--muted)">Đang tải…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/workspace-switcher.js"></script>
+<script>
+let UNITS = [], USERS = [];
+const $ = s => document.querySelector(s);
+function toast(m, err) { const t = $('#toast'); t.textContent = m; t.className = err ? 'err' : ''; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
+function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+async function api(url, opt) {
+  const r = await fetch(url, opt);
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || ('Lỗi ' + r.status));
+  return d;
+}
+function onRoleChange() { $('#n-unit-box').style.display = $('#n-role').value === 'unit' ? 'flex' : 'none'; }
+function genPass() {
+  const a = 'abcdefghijkmnpqrstuvwxyz', A = 'ABCDEFGHJKLMNPQRSTUVWXYZ', n = '23456789', s = '@#$%';
+  const pick = (set, k) => Array.from({ length: k }, () => set[Math.floor(Math.random() * set.length)]).join('');
+  $('#n-pass').value = pick(A, 1) + pick(a, 5) + pick(n, 3) + pick(s, 1);
+}
+
+async function load() {
+  const me = await api('/api/me');
+  if (!me) { location.href = '/login.html'; return; }
+  if (me.role !== 'admin') {
+    document.querySelector('.main').innerHTML =
+      '<div class="card"><h1>Không đủ quyền</h1><div class="note">Trang này chỉ dành cho tài khoản quản trị của Phòng Đảm bảo chất lượng. Bạn đang đăng nhập bằng vai <b>' + esc(me.role) + '</b>.</div></div>';
+    return;
+  }
+  UNITS = await api('/api/units');
+  $('#n-unit').innerHTML = UNITS.map(u => `<option value="${u.id}">${esc(u.name)}</option>`).join('');
+  await loadUsers();
+}
+
+async function loadUsers() {
+  USERS = await api('/api/users');
+  $('#rows').innerHTML = USERS.map(u => `
+    <tr class="${u.active ? '' : 'off'}">
+      <td><b>${esc(u.username)}</b> ${u.active ? '' : '<span class="badge-off">đã khoá</span>'}</td>
+      <td>${esc(u.display_name || '')}</td>
+      <td><span class="role ${esc(u.role)}">${esc(u.role)}</span></td>
+      <td>${esc(u.unit_name || (u.role === 'unit' ? '⚠ chưa gán đơn vị' : '—'))}</td>
+      <td style="color:var(--muted);font-size:12px">${esc(u.last_login_at || 'chưa đăng nhập')}</td>
+      <td style="white-space:nowrap">
+        <button class="btn ghost sm" onclick="resetPass(${u.id},'${esc(u.username)}')">Đổi mật khẩu</button>
+        <button class="btn ghost sm" onclick="toggleActive(${u.id},${u.active})">${u.active ? 'Khoá' : 'Mở'}</button>
+        <button class="btn danger sm" onclick="delUser(${u.id},'${esc(u.username)}')">Xoá</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function createUser() {
+  const body = {
+    username: $('#n-user').value.trim(), password: $('#n-pass').value,
+    display_name: $('#n-name').value.trim(), role: $('#n-role').value,
+    unit_id: $('#n-role').value === 'unit' ? $('#n-unit').value : null,
+  };
+  if (!body.username || !body.password) return toast('Nhập tên đăng nhập và mật khẩu', true);
+  if (body.password.length < 6) return toast('Mật khẩu tối thiểu 6 ký tự', true);
+  try {
+    await api('/api/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    toast('Đã tạo ' + body.username + ' · mật khẩu: ' + body.password);
+    $('#n-user').value = $('#n-pass').value = $('#n-name').value = '';
+    await loadUsers();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function resetPass(id, name) {
+  const p = prompt('Mật khẩu mới cho ' + name + ':');
+  if (!p) return;
+  if (p.length < 6) return toast('Mật khẩu tối thiểu 6 ký tự', true);
+  try {
+    await api('/api/users/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: p }) });
+    toast('Đã đổi mật khẩu ' + name);
+  } catch (e) { toast(e.message, true); }
+}
+
+async function toggleActive(id, active) {
+  try {
+    await api('/api/users/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: !active }) });
+    toast(active ? 'Đã khoá tài khoản' : 'Đã mở lại tài khoản');
+    await loadUsers();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function delUser(id, name) {
+  if (!confirm('Xoá tài khoản ' + name + '? Minh chứng đã nộp vẫn giữ nguyên, chỉ mất tên người nộp.')) return;
+  try {
+    await api('/api/users/' + id, { method: 'DELETE' });
+    toast('Đã xoá ' + name);
+    await loadUsers();
+  } catch (e) { toast(e.message, true); }
+}
+
+onRoleChange();
+load().catch(e => toast(e.message, true));
+</script>
+</body>
+</html>

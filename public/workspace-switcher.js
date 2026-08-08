@@ -147,8 +147,14 @@
     else nav.appendChild(frag);
   }
 
+  // Trang dùng chung cho mọi đợt kiểm định, không thuộc menu của workspace nào.
+  // Không loại trừ thì trang tài khoản luôn bị gắn nhãn "không thuộc workspace
+  // hiện tại", một cảnh báo sai làm người dùng tưởng mình vào nhầm chỗ.
+  const WS_NEUTRAL = ['/users.html'];
+
   function showMismatchBannerIfNeeded(type) {
     const here = location.pathname.replace(/\/$/, '') || '/';
+    if (WS_NEUTRAL.includes(here)) return;
     const allowed = (MENUS[type] || []).map(m => m.href);
     if (allowed.includes(here)) return;
     // Pages that exist but are not in current workspace's menu = mismatch
@@ -215,9 +221,16 @@
       const uEl = document.createElement('div');
       uEl.className = 'ws-user';
       const roleLabel = { admin: 'P.ĐBCL', unit: (me.unit?.name || 'Đơn vị'), viewer: 'Xem' }[me.role] || me.role;
+      // Lối vào trang tài khoản chỉ hiện với admin; vai khác mở thẳng URL cũng
+      // bị trang từ chối, đây chỉ là bớt một chỗ bấm nhầm.
+      const adminLink = me.role === 'admin'
+        ? '<button id="ws-users" title="Tài khoản &amp; phân quyền">👤+</button>' : '';
       uEl.innerHTML = `<span class="ws-user-name" title="${me.display_name || me.username} · ${roleLabel}">👤 ${roleLabel}</span>
+        ${adminLink}
         <button id="ws-logout" title="Đăng xuất (${me.display_name || me.username})">⎋</button>`;
       host.appendChild(uEl);
+      const uBtn = document.getElementById('ws-users');
+      if (uBtn) uBtn.onclick = () => { location.href = '/users.html'; };
       document.getElementById('ws-logout').onclick = async () => {
         await fetch('/api/logout', { method: 'POST' });
         location.href = '/login.html';
