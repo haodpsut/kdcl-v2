@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khảo sát KĐCLGD – Biểu 08-11</title>
+<title>Khảo sát KĐCLGD · Biểu 08-11</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -150,7 +150,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
   <a class="nav-link" href="/">📂 Minh chứng</a>
   <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI – Biểu 16</a>
+  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
   <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
   <a class="nav-link active" href="/module5.html">📝 Khảo sát</a>
   <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
@@ -190,10 +190,10 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
       <label>Loại khảo sát *</label>
       <select id="f-type" onchange="onTypeChange()">
         <option value="">-- Chọn loại --</option>
-        <option value="bieu08">Biểu 08 – Cán bộ / Giảng viên</option>
-        <option value="bieu09">Biểu 09 – Người học (Sinh viên)</option>
-        <option value="bieu10">Biểu 10 – Nhà tuyển dụng</option>
-        <option value="bieu11">Biểu 11 – Cựu sinh viên</option>
+        <option value="bieu08">Biểu 08 · Cán bộ / Giảng viên</option>
+        <option value="bieu09">Biểu 09 · Người học (Sinh viên)</option>
+        <option value="bieu10">Biểu 10 · Nhà tuyển dụng</option>
+        <option value="bieu11">Biểu 11 · Cựu sinh viên</option>
       </select>
     </div>
     <div class="form-row">
@@ -293,10 +293,10 @@ function renderSidebar() {
 function renderOverview() {
   if (activeSurveyId) return;
   const types = [
-    { key:'bieu08', cls:'ov-b08', label:'Biểu 08 – CB/GV' },
-    { key:'bieu09', cls:'ov-b09', label:'Biểu 09 – Người học' },
-    { key:'bieu10', cls:'ov-b10', label:'Biểu 10 – NTD' },
-    { key:'bieu11', cls:'ov-b11', label:'Biểu 11 – Cựu SV' },
+    { key:'bieu08', cls:'ov-b08', label:'Biểu 08 · CB/GV' },
+    { key:'bieu09', cls:'ov-b09', label:'Biểu 09 · Người học' },
+    { key:'bieu10', cls:'ov-b10', label:'Biểu 10 · NTD' },
+    { key:'bieu11', cls:'ov-b11', label:'Biểu 11 · Cựu SV' },
   ];
   document.getElementById('overview-cards').innerHTML = types.map(t => {
     const list = surveys.filter(s => s.type === t.key);
@@ -358,7 +358,7 @@ function renderDetail(s, stats) {
       // mức cạnh nhau ngay cả khi tương phản màu chưa đạt 3:1.
       return pct > 0
         ? `<div class="dist-seg" style="flex:${pct};background:${DIST_COLORS[vi]};color:${DIST_TEXT[vi]}"
-             title="Mức ${vi+1} – ${escHtml(scale[vi] || '')}: ${v}/${total} phản hồi (${pct}%)">${pct >= 8 ? pct+'%' : ''}</div>`
+             title="Mức ${vi+1} · ${escHtml(scale[vi] || '')}: ${v}/${total} phản hồi (${pct}%)">${pct >= 8 ? pct+'%' : ''}</div>`
         : '';
     }).join('');
     return `<div class="dist-row">
@@ -368,7 +368,7 @@ function renderDetail(s, stats) {
   }).join('');
 
   const distLegend = scale.map((l, i) =>
-    `<div class="dist-leg-item"><div class="dist-dot" style="background:${DIST_COLORS[i]}"></div>${i+1} – ${escHtml(l)}</div>`
+    `<div class="dist-leg-item"><div class="dist-dot" style="background:${DIST_COLORS[i]}"></div>${i+1} · ${escHtml(l)}</div>`
   ).join('');
 
   // Comments
@@ -503,7 +503,7 @@ async function createSurvey() {
   document.getElementById('f-desc').value  = '';
   await loadSurveys();
   await selectSurvey(data.id);
-  showToast('success', `✅ Đã tạo khảo sát – Token: ${data.token}`);
+  showToast('success', `✅ Đã tạo khảo sát · Token: ${data.token}`);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

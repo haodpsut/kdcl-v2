@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M10 — Đo lường CLO</title>
+<title>M10 · Đo lường CLO</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -117,7 +117,7 @@ async function loadCourses() {
   COURSES = await fetch('/api/courses').then(r => r.json());
   const sel = document.getElementById('course-filter');
   sel.innerHTML = '<option value="">— Tất cả học phần —</option>' +
-    COURSES.map(c => `<option value="${c.id}">${escapeHtml(c.code)} — ${escapeHtml(c.name)}</option>`).join('');
+    COURSES.map(c => `<option value="${c.id}">${escapeHtml(c.code)} · ${escapeHtml(c.name)}</option>`).join('');
 }
 
 async function loadPlans() {
@@ -162,7 +162,7 @@ async function loadPlans() {
 }
 
 function openPlanModal(p = null) {
-  if (COURSES.length === 0) { toast('Chưa có học phần — vào M8 tạo HP trước', 'error'); return; }
+  if (COURSES.length === 0) { toast('Chưa có học phần · vào M8 tạo HP trước', 'error'); return; }
   const isEdit = !!p;
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -171,10 +171,10 @@ function openPlanModal(p = null) {
       <h3>${isEdit ? 'Sửa' : 'Tạo'} kế hoạch đo CLO</h3>
       <label>Học phần</label>
       <select id="m-course" ${isEdit ? 'disabled' : ''}>
-        ${COURSES.map(c => `<option value="${c.id}" ${isEdit && p.course_id === c.id ? 'selected' : ''}>${escapeHtml(c.code)} — ${escapeHtml(c.name)}</option>`).join('')}
+        ${COURSES.map(c => `<option value="${c.id}" ${isEdit && p.course_id === c.id ? 'selected' : ''}>${escapeHtml(c.code)} · ${escapeHtml(c.name)}</option>`).join('')}
       </select>
       <label>Tên kế hoạch (để trống = tự sinh)</label>
-      <input id="m-name" placeholder="VD: CS101 — HK1 2025-2026" value="${isEdit ? escapeHtml(p.name) : ''}">
+      <input id="m-name" placeholder="VD: CS101 · HK1 2025-2026" value="${isEdit ? escapeHtml(p.name) : ''}">
       <div class="row">
         <div>
           <label>Năm học</label>

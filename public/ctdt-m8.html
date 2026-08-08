@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M8 — Khung CĐR (PEO + PLO)</title>
+<title>M8 · Khung CĐR (PEO + PLO)</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -161,7 +161,7 @@ body {
     <div class="col">
       <div class="col-head">
         <div>
-          <h2>📍 PEO — Mục tiêu giáo dục</h2>
+          <h2>📍 PEO · Mục tiêu giáo dục</h2>
           <p>3–5 mục tiêu mô tả người học sau 3–5 năm tốt nghiệp</p>
         </div>
         <button class="btn" onclick="openPeoModal()">+ Thêm PEO</button>
@@ -173,7 +173,7 @@ body {
     <div class="col">
       <div class="col-head">
         <div>
-          <h2>🎯 PLO — Chuẩn đầu ra CTĐT</h2>
+          <h2>🎯 PLO · Chuẩn đầu ra CTĐT</h2>
           <p>6–10 PLO mô tả năng lực sinh viên đạt khi tốt nghiệp</p>
         </div>
         <button class="btn" onclick="openPloModal()">+ Thêm PLO</button>
@@ -197,7 +197,7 @@ body {
     <div class="col clo-section">
       <div class="col-head">
         <div>
-          <h2>🧪 CLO — <span id="clo-course-label">chọn 1 học phần</span></h2>
+          <h2>🧪 CLO · <span id="clo-course-label">chọn 1 học phần</span></h2>
           <p>Khuyến nghị 4–6 CLO/HP. Cảnh báo CLO inflation nếu &gt; 6.</p>
         </div>
         <button class="btn" id="add-clo-btn" disabled onclick="openCloModal()">+ Thêm CLO</button>
@@ -566,7 +566,7 @@ function openCloModal(cl = null) {
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal">
-      <h3>${isEdit ? 'Sửa' : 'Thêm'} CLO — ${escapeHtml(SELECTED_COURSE.code)}</h3>
+      <h3>${isEdit ? 'Sửa' : 'Thêm'} CLO · ${escapeHtml(SELECTED_COURSE.code)}</h3>
       <label>Mã CLO</label>
       <input id="m-code" placeholder="CLO1" value="${isEdit ? escapeHtml(cl.code) : ''}">
       <label>Nội dung (động từ Bloom + đối tượng + bối cảnh)</label>

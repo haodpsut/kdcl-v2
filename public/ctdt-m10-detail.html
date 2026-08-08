@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M10 — Chi tiết kế hoạch đo CLO</title>
+<title>M10 · Chi tiết kế hoạch đo CLO</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -279,7 +279,7 @@ async function loadPlan() {
   }
   PLAN = await r.json();
   document.getElementById('crumb-name').textContent = PLAN.name;
-  document.title = `M10 — ${PLAN.name}`;
+  document.title = `M10 · ${PLAN.name}`;
   COURSE_CLOS = await fetch(`/api/clos?course_id=${PLAN.course_id}`).then(r => r.json());
   renderHead();
   switchTab('items');
@@ -344,7 +344,7 @@ function itemCardHtml(it, cloById) {
   const sum = targets.reduce((s, t) => s + (Number(t.weight) || 0), 0);
   const sumWarn = sum > 100;
   const targetRows = targets.length === 0
-    ? `<div class="none">⚠ Chưa gắn CLO nào — bài này sẽ KHÔNG được tính vào điểm CLO ở Inc6d</div>`
+    ? `<div class="none">⚠ Chưa gắn CLO nào · bài này sẽ KHÔNG được tính vào điểm CLO ở Inc6d</div>`
     : targets.map(t => {
         const cl = cloById[t.clo_id];
         return `<div class="row">
@@ -403,7 +403,7 @@ function openItemModal(it = null) {
       <label>Mô tả (tuỳ chọn)</label>
       <textarea id="m-desc" placeholder="Ghi chú nội dung, hướng dẫn chấm...">${isEdit ? escapeHtml(it.description || '') : ''}</textarea>
 
-      <label>CLO targets — bài này đóng góp vào CLO nào?</label>
+      <label>CLO targets · bài này đóng góp vào CLO nào?</label>
       <div class="clo-editor" id="clo-editor"></div>
 
       <div class="modal-actions">
@@ -448,7 +448,7 @@ function renderTargets() {
       return `
         <div class="row-target">
           <select data-i="${i}" data-k="clo_id">
-            ${COURSE_CLOS.map(c => `<option value="${c.id}" ${c.id === t.clo_id ? 'selected' : ''}>${escapeHtml(c.code)} — ${escapeHtml(c.content.slice(0, 40))}</option>`).join('')}
+            ${COURSE_CLOS.map(c => `<option value="${c.id}" ${c.id === t.clo_id ? 'selected' : ''}>${escapeHtml(c.code)} · ${escapeHtml(c.content.slice(0, 40))}</option>`).join('')}
           </select>
           <input type="number" min="0" max="100" step="1" placeholder="weight %" value="${t.weight}" data-i="${i}" data-k="weight">
           <button data-i="${i}" data-act="rm">×</button>

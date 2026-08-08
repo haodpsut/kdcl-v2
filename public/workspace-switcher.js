@@ -101,7 +101,28 @@
   function injectStyles() {
     if (document.getElementById('ws-switcher-style')) return;
     const css = `
-/* Logo thương hiệu ở đầu nav — click để về trang chủ */
+
+/* ── Cấu trúc menu nhóm ────────────────────────────────────────────────────
+   Đặt ở đây chứ không chỉ trong theme-school.css: menu do chính script này
+   chèn vào, nên kích thước biểu tượng và bố cục khung thả xuống phải đi kèm
+   nó. Trang nào quên nạp tệp theme thì SVG mất kích thước và phình to bằng
+   cả màn hình, còn danh sách con rơi xuống giữa trang. */
+.topnav .nav-scroll { display: flex; align-items: stretch; flex: 1 1 auto; min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.topnav .nav-scroll::-webkit-scrollbar { height: 0; }
+.topnav .nav-group { position: relative; display: flex; align-items: stretch; flex: 0 0 auto; }
+.topnav .nav-group-btn { font-family: inherit; background: transparent; border: 0; cursor: pointer; }
+.topnav .nav-ic { width: 16px; height: 16px; flex: 0 0 auto; }
+.topnav .caret { width: 11px; height: 11px; opacity: .7; flex: 0 0 auto; }
+.topnav .nav-drop { display: none; position: fixed; z-index: 60; min-width: 260px; padding: 6px;
+  background: #fff; border: 1px solid #d9dce1; border-top: 3px solid #fbae40;
+  border-radius: 0 0 7px 7px; box-shadow: 0 10px 26px rgba(0,0,0,.18); }
+.topnav .nav-group.open .nav-drop { display: block; }
+.topnav .nav-drop-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 5px;
+  color: #1c1e21; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: #990000; }
+.topnav .nav-drop-item:hover { background: rgba(153,0,0,.08); color: #990000; }
+.topnav .nav-drop-item.active { background: rgba(153,0,0,.12); color: #990000; }
+/* Logo thương hiệu ở đầu nav · click để về trang chủ */
 .topnav .brand { display: inline-flex; align-items: center; gap: 8px; }
 .brand-logo {
   width: 34px; height: 34px; border-radius: 50%; background: #fff;
@@ -343,7 +364,7 @@
       : '<span class="ws-badge ctdt">CTĐT</span>';
     host.innerHTML = `
       ${badge}
-      <select id="ws-select" title="${current.name} · ${current.law} — bấm để chuyển đợt kiểm định">
+      <select id="ws-select" title="${current.name} · ${current.law} · bấm để chuyển đợt kiểm định">
         ${data.items.map(w => `<option value="${w.id}" ${w.id === current.id ? 'selected' : ''} title="${w.name} · ${w.law}">${w.name}</option>`).join('')}
       </select>
       <button id="ws-new" title="Tạo workspace mới">+ Mới</button>
@@ -398,7 +419,7 @@
     brand.dataset.enhanced = '1';
     const full = brand.textContent.trim() || 'KĐCLGD · ĐH Kiến trúc Đà Nẵng';
     brand.style.cursor = 'pointer';
-    brand.title = full + ' — Về trang chủ';
+    brand.title = full + ' · Về trang chủ';
     brand.addEventListener('click', () => { location.href = homeHref || '/'; });
     brand.innerHTML = '<img src="/dau-logo.png" class="brand-logo" alt="ĐH Kiến trúc Đà Nẵng"><span class="brand-txt">KĐCLGD</span>';
   }
@@ -411,8 +432,8 @@
         <h3>Tạo Workspace mới</h3>
         <label>Loại workspace</label>
         <select id="m-type">
-          <option value="CSGD">CSGD — Kiểm định Cơ sở Giáo dục (TT26/2026)</option>
-          <option value="CTDT">CTĐT — Kiểm định Chương trình Đào tạo (TT04/2025)</option>
+          <option value="CSGD">CSGD · Kiểm định Cơ sở Giáo dục (TT26/2026)</option>
+          <option value="CTDT">CTĐT · Kiểm định Chương trình Đào tạo (TT04/2025)</option>
         </select>
         <label>Tên workspace</label>
         <input id="m-name" placeholder="Ví dụ: CTĐT CNTT 2026">
@@ -450,7 +471,7 @@
     const b = document.createElement('div');
     b.id = 'vercel-demo-banner';
     b.style.cssText = 'background:#3b2f1a;border-bottom:1px solid #b26a00;color:#f0d97a;padding:6px 16px;font-size:11px;text-align:center;';
-    b.innerHTML = '⚠️ <b>Chế độ demo trên Vercel</b> — dữ liệu mới thêm có thể reset sau ~15 phút không hoạt động (serverless <code>/tmp</code> là ephemeral). Dữ liệu mẫu sẽ được khôi phục tự động. Production cần DB ngoài (Supabase/Neon/MongoDB).';
+    b.innerHTML = '⚠️ <b>Chế độ demo trên Vercel</b> · dữ liệu mới thêm có thể reset sau ~15 phút không hoạt động (serverless <code>/tmp</code> là ephemeral). Dữ liệu mẫu sẽ được khôi phục tự động. Production cần DB ngoài (Supabase/Neon/MongoDB).';
     document.body.insertBefore(b, document.body.firstChild);
   }
 

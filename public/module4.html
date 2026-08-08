@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tiến độ TĐG – 24 Tuần</title>
+<title>Tiến độ TĐG · 24 Tuần</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -210,7 +210,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
   <a class="nav-link" href="/">📂 Minh chứng</a>
   <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI – Biểu 16</a>
+  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
   <a class="nav-link active" href="/module4.html">📅 Tiến độ TĐG</a>
   <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
   <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
@@ -431,7 +431,7 @@ function renderPlanContent() {
   const start = parseNgay(p.ngay_bat_dau);
   if (start) {
     const end = new Date(start); end.setDate(end.getDate() + 167); // 24 weeks
-    dateInfo = `${fmt(start)} — ${fmt(end)}`;
+    dateInfo = `${fmt(start)} · ${fmt(end)}`;
   } else if ((p.ngay_bat_dau || '').trim()) {
     // Báo rõ chuỗi hỏng thay vì để màn hình hiện "Invalid Date".
     dateInfo = `⚠ Ngày bắt đầu không hợp lệ: "${p.ngay_bat_dau}"`;
@@ -533,7 +533,7 @@ function renderTaskCard(t, phase) {
 // ── Gantt ──────────────────────────────────────────────────────────────
 function renderGantt(p) {
   const currentWeek = p.ngay_bat_dau ? getCurrentWeek(p.ngay_bat_dau) : -1;
-  let html = `<div class="gantt-section"><div class="gantt-title">Biểu đồ Gantt — 24 tuần</div><div class="gantt-wrap"><div class="gantt-grid">`;
+  let html = `<div class="gantt-section"><div class="gantt-title">Biểu đồ Gantt · 24 tuần</div><div class="gantt-wrap"><div class="gantt-grid">`;
 
   // Header row
   html += `<div class="gantt-hdr gantt-hdr-label">Giai đoạn</div>`;

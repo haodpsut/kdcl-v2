@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tài khoản & phân quyền — KĐCLGD</title>
+<title>Tài khoản & phân quyền · KĐCLGD</title>
 <link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/theme-school.css">
 <style>
 :root{--bg:#eef1f4;--panel:#fff;--border:#d9dce1;--text:#1c1e21;--muted:#4b5563;
       --accent:#990000;--maroon-dark:#5c0000;--gold:#fbae40;--green:#1a7f4b;--red:#c0392b;--amber:#b26a00}
@@ -61,7 +62,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
   <div class="card">
     <h2>Ba vai và quyền tương ứng</h2>
     <table class="matrix">
-      <thead><tr><th>Việc</th><th>admin — P.ĐBCL</th><th>unit — Khoa / Phòng</th><th>viewer — Lãnh đạo, đoàn ĐG</th></tr></thead>
+      <thead><tr><th>Việc</th><th>admin · P.ĐBCL</th><th>unit · Khoa / Phòng</th><th>viewer · Lãnh đạo, đoàn ĐG</th></tr></thead>
       <tbody>
         <tr><td>Xem toàn bộ dữ liệu, tải minh chứng về</td><td class="yes">Có</td><td class="yes">Có</td><td class="yes">Có</td></tr>
         <tr><td>Nộp minh chứng</td><td class="yes">Có, vào xác nhận ngay</td><td class="yes">Có, vào trạng thái chờ duyệt</td><td class="no">Không</td></tr>
@@ -82,9 +83,9 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
       <div class="f"><label>Mật khẩu</label><input id="n-pass" placeholder="tối thiểu 6 ký tự"></div>
       <div class="f"><label>Tên hiển thị</label><input id="n-name" placeholder="vd: Khoa Công nghệ thông tin"></div>
       <div class="f"><label>Vai</label><select id="n-role" onchange="onRoleChange()">
-        <option value="unit">unit — Khoa / Phòng</option>
-        <option value="admin">admin — P.ĐBCL</option>
-        <option value="viewer">viewer — chỉ xem</option>
+        <option value="unit">unit · Khoa / Phòng</option>
+        <option value="admin">admin · P.ĐBCL</option>
+        <option value="viewer">viewer · chỉ xem</option>
       </select></div>
       <div class="f" id="n-unit-box"><label>Đơn vị</label><select id="n-unit"></select></div>
       <button class="btn" onclick="createUser()">Tạo tài khoản</button>

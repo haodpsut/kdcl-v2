@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Theme chuẩn trường — ĐH Kiến trúc Đà Nẵng
+   Theme chuẩn trường · ĐH Kiến trúc Đà Nẵng
    Maroon #990000 · navbar #5c0000 · gold #fbae40 · nền sáng.
    Nạp SAU <style> inline của mỗi trang; !important để phủ cả style JS chèn.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -36,7 +36,7 @@
   color: #fff !important;
   border-bottom-color: #fbae40 !important;
 }
-/* Chống vỡ: nav không co/xuống dòng — nếu quá dài thì cuộn ngang, ẩn thanh cuộn */
+/* Chống vỡ: nav không co/xuống dòng · nếu quá dài thì cuộn ngang, ẩn thanh cuộn */
 .topnav { overflow-x: auto !important; overflow-y: hidden !important; scrollbar-width: none !important; -ms-overflow-style: none !important; }
 .topnav::-webkit-scrollbar { display: none !important; height: 0 !important; }
 .topnav .brand, .topnav .nav-link, .topnav .ws-switcher, .topnav .ws-user { flex-shrink: 0 !important; }

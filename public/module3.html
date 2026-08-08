@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KPI Database – Biểu 16</title>
+<title>KPI Database · Biểu 16</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -135,7 +135,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
   <a class="nav-link" href="/">📂 Minh chứng</a>
   <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link active" href="/module3.html">📊 KPI – Biểu 16</a>
+  <a class="nav-link active" href="/module3.html">📊 KPI · Biểu 16</a>
   <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
   <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
   <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
@@ -148,7 +148,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <div id="sidebar">
   <div class="sb-head">
     <h2>Cơ sở dữ liệu</h2>
-    <p>Biểu 16 – Thông tư 2026</p>
+    <p>Biểu 16 · Thông tư 2026</p>
   </div>
   <div class="year-list" id="year-list">
     <button class="btn-add-year" onclick="openAddYear()">＋ Thêm năm học</button>
@@ -159,7 +159,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <!-- ── Main ── -->
 <div id="main">
   <div class="main-head">
-    <h2 id="main-title">📊 KPI Database – Biểu 16</h2>
+    <h2 id="main-title">📊 KPI Database · Biểu 16</h2>
     <span class="year-tag" id="year-tag" style="display:none"></span>
     <button class="btn-export" onclick="exportCSV()">⬇ Xuất CSV</button>
   </div>
@@ -536,7 +536,7 @@ async function saveCurrentGroup() {
     activeYearData = full;
     const hint = document.getElementById('form-save-hint');
     if (hint) hint.textContent = `Đã lưu lúc: ${new Date().toLocaleTimeString('vi-VN')}`;
-    showToast('success', `✅ Đã lưu nhóm ${activeGroup} — ${activeYearData.nam_hoc}`);
+    showToast('success', `✅ Đã lưu nhóm ${activeGroup} · ${activeYearData.nam_hoc}`);
     await loadYears();
     renderYearList();
   } else {

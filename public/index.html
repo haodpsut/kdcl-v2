@@ -738,7 +738,7 @@ td {
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
   <a class="nav-link active" href="/">📂 Minh chứng</a>
   <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI – Biểu 16</a>
+  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
   <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
   <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
   <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
@@ -1393,7 +1393,7 @@ function onStandardChange() {
   sel.innerHTML = '<option value="">-- Chọn tiêu chí --</option>' +
     std.criteria.map((c, i) => {
       const code = `${tc}.${i+1}`;
-      return `<option value="${code}">${code} — ${c}</option>`;
+      return `<option value="${code}">${code} · ${c}</option>`;
     }).join('');
   updateCodePreview();
 }

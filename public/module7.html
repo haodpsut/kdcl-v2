@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Lãnh đạo – KĐCLGD</title>
+<title>Dashboard Lãnh đạo · KĐCLGD</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -135,7 +135,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
   <a class="nav-link" href="/">📂 Minh chứng</a>
   <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI – Biểu 16</a>
+  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
   <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
   <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
   <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
@@ -351,7 +351,7 @@ function renderHeatmap(rData) {
         else if (a.ket_qua === 'KHONG_DAT') { cls = 'kdat'; label = 'Không ĐẠT'; }
         else                            { cls = 'draft'; label = 'Nháp'; }
       }
-      const tip = `TC ${c.key}: ${c.name} — ${label}`;
+      const tip = `TC ${c.key}: ${c.name} · ${label}`;
       return `<div class="hm-cell ${cls}" title="${tip}"
         onmouseenter="showTip(event,'${tip.replace(/'/g,"&#39;")}')"
         onmouseleave="hideTip()"></div>`;

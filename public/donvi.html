@@ -245,7 +245,7 @@ async function renderPortal(){
 async function renderReview(){
   const el=$('#p-review');
   const [q,units]=await Promise.all([api('/api/evidence?status=cho_duyet'),api('/api/units')]);
-  el.innerHTML=`<h1>✅ Bàn duyệt minh chứng — P.ĐBCL</h1>
+  el.innerHTML=`<h1>✅ Bàn duyệt minh chứng · P.ĐBCL</h1>
     <div class="sub">Minh chứng các đơn vị vừa nộp. Xác nhận nếu đạt, hoặc trả lại kèm lý do.</div>
     <div class="panel"><h3>⏳ Hàng đợi chờ duyệt (${q.length})</h3>
     ${q.length?`<table><thead><tr><th>Mã MC</th><th>Tiêu chí</th><th>Đơn vị</th><th>Văn bản</th><th>Ngày nộp</th><th style="text-align:right">Thao tác</th></tr></thead><tbody>
@@ -270,7 +270,7 @@ async function renderMatrix(){
   let html=`<h1>🔍 Đối soát minh chứng theo tiêu chí</h1>
     <div class="sub">Mỗi tiêu chí hiển thị số minh chứng <b>đã xác nhận</b> và đơn vị phụ trách. Bấm dòng để xem văn bản.</div>`;
   for(const std of standards){
-    html+=`<div class="panel"><h3>🗺 Tiêu chuẩn ${std.id} — ${esc(std.name)}</h3>
+    html+=`<div class="panel"><h3>🗺 Tiêu chuẩn ${std.id} · ${esc(std.name)}</h3>
       <table><thead><tr><th style="width:60px">TC</th><th>Nội dung</th><th style="width:90px;text-align:center">MC xác nhận</th><th style="width:160px">Đơn vị phụ trách</th><th style="width:110px;text-align:center">Trạng thái</th></tr></thead><tbody>
       ${std.criteria.map(c=>`<tr style="cursor:pointer" onclick="showCrit('${c.key}',this)">
         <td><span class="code">${c.key}</span></td><td>${esc(c.name)}</td>
@@ -285,7 +285,7 @@ async function showCrit(key,row){
   const box=row.closest('.panel').querySelector('.crit-detail');
   const evs=await api('/api/submission/criteria/'+key+'/evidence');
   box.innerHTML=`<div style="margin-top:14px;padding:12px 14px;background:var(--green-soft);border-radius:6px;border-left:3px solid var(--green)">
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">📄 Minh chứng đã xác nhận cho TC ${key} — ${esc(critName(key))}</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">📄 Minh chứng đã xác nhận cho TC ${key} · ${esc(critName(key))}</div>
     ${evs.length?evs.map(e=>`<div class="ev-row" style="border:none;padding:5px 0"><span class="code">${esc(e.code)}</span>
       <a class="file grow" href="/api/evidence/${e.id}/download" target="_blank">${e.source_type==='link'?'🔗':'📄'} ${esc(e.mo_ta||e.file_name||e.link_url)}</a>
       <span style="font-size:11px;color:var(--muted)">${esc(e.unit_name||'')} · ${esc(e.reviewed_at||'')}</span></div>`).join(''):'<div class="empty">Chưa có minh chứng xác nhận.</div>'}</div>`;
@@ -318,7 +318,7 @@ async function renderDash(){
 }
 
 // ─── Upload modal ───────────────────────────────────────────────────────────
-function openUp(tc){upCtx={tieu_chi:tc};$('#up-title').textContent='Tải minh chứng — TC '+tc;setSrc('file');$('#up-file').value='';$('#up-link').value='';$('#up-desc').value='';$('#ov-up').classList.add('show');}
+function openUp(tc){upCtx={tieu_chi:tc};$('#up-title').textContent='Tải minh chứng · TC '+tc;setSrc('file');$('#up-file').value='';$('#up-link').value='';$('#up-desc').value='';$('#ov-up').classList.add('show');}
 function closeUp(){$('#ov-up').classList.remove('show');}
 function setSrc(s){srcType=s;$('#seg-file').classList.toggle('on',s==='file');$('#seg-link').classList.toggle('on',s==='link');$('#up-file-box').style.display=s==='file'?'block':'none';$('#up-link-box').style.display=s==='link'?'block':'none';}
 async function submitUp(){

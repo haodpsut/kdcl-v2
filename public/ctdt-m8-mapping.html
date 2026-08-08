@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M8 — Ma trận ánh xạ</title>
+<title>M8 · Ma trận ánh xạ</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -136,7 +136,7 @@ body {
 
 <div class="main">
   <div class="title-bar">
-    <h1>🗺 Ma trận ánh xạ — Khung CĐR</h1>
+    <h1>🗺 Ma trận ánh xạ · Khung CĐR</h1>
     <p>Xác định học phần/CLO nào đóng góp vào PLO nào. Click cell để toggle.</p>
   </div>
 
@@ -218,9 +218,9 @@ function renderCoursePlo(host) {
     </div>
     <div class="legend">
       <span style="color:var(--muted);">Click để cycle: trống → I → R → M → trống</span>
-      <div class="item"><div class="swatch I">I</div><span>Introduce — giới thiệu</span></div>
-      <div class="item"><div class="swatch R">R</div><span>Reinforce — củng cố</span></div>
-      <div class="item"><div class="swatch M">M</div><span>Master — thành thạo</span></div>
+      <div class="item"><div class="swatch I">I</div><span>Introduce · giới thiệu</span></div>
+      <div class="item"><div class="swatch R">R</div><span>Reinforce · củng cố</span></div>
+      <div class="item"><div class="swatch M">M</div><span>Master · thành thạo</span></div>
     </div>
   `;
 
@@ -317,7 +317,7 @@ function renderCloPlo(host) {
 
   const body = courseIds.map(cid => {
     const course = courseById[cid];
-    const courseTitle = course ? `${escapeHtml(course.code)} — ${escapeHtml(course.name)}` : 'HP đã xóa';
+    const courseTitle = course ? `${escapeHtml(course.code)} · ${escapeHtml(course.name)}` : 'HP đã xóa';
     const sep = `<tr><th colspan="${1 + PLOS.length}" style="background:#eef1f4;color:var(--accent);font-size:11px;padding:6px 10px;text-transform:uppercase;letter-spacing:.5px;">${courseTitle}</th></tr>`;
     const rows = groups[cid].map(cl => `
       <tr>
