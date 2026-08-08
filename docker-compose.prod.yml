@@ -1,0 +1,28 @@
+# ─── Lớp phủ khi chạy trên VPS dùng jwilder/nginx-proxy ─────────────────────
+# VPS của trường đã có sẵn container `proxy` (jwilder/nginx-proxy:alpine) giữ
+# cổng 80/443 và `nginx-letsencrypt-1` (companion) tự xin chứng chỉ. Proxy đó
+# sinh vhost bằng cách ĐỌC BIẾN MÔI TRƯỜNG của các container cùng network, nên
+# ở đây chỉ cần khai biến và nối vào network của proxy. Không sửa gì bên proxy,
+# không đụng tới hơn 50 container đang chạy.
+#
+# Chạy trên VPS:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Tệp riêng chứ không nhét vào docker-compose.yml, vì network `nginx-proxy` là
+# external: máy cá nhân không có network đó, khai chung sẽ làm hỏng lệnh chạy
+# local vốn đang dùng hằng ngày.
+services:
+  app:
+    environment:
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      VIRTUAL_PORT: 3001
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    networks:
+      - default      # phải khai lại, nếu không app mất đường sang container db
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-nginx-proxy}

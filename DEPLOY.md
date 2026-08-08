@@ -53,7 +53,30 @@ ADMIN_USER=admin ADMIN_PASS='<mat-khau-manh>' docker compose up -d --build
 - App chạy ở `127.0.0.1:8091` (chỉ localhost — an toàn, reverse proxy trỏ vào).
 - Postgres ở `127.0.0.1:5435`.
 
-## 5. Reverse proxy + HTTPS (chọn 1)
+## 5A. VPS của trường (VM01) — đã có sẵn nginx-proxy, KHÔNG cài Caddy
+
+VM01 đang chạy hơn 50 container và cổng 80/443 do container `proxy`
+(`jwilder/nginx-proxy:alpine`) giữ, kèm `nginx-letsencrypt-1` tự xin chứng chỉ.
+Loại proxy này sinh vhost bằng cách **đọc biến môi trường** của container cùng
+network `nginx-proxy`, nên chỉ cần khai biến, không sửa file cấu hình nào và
+không đụng tới các project khác. Cài Caddy lên host sẽ tranh cổng 80/443 và
+làm chết toàn bộ site đang chạy.
+
+```bash
+cd ~/kdcl-v2
+cat >> .env <<'EOF'
+VIRTUAL_HOST=kdcl-dau.coregenaihub.com
+LETSENCRYPT_HOST=kdcl-dau.coregenaihub.com
+LETSENCRYPT_EMAIL=haodp.sut@gmail.com
+EOF
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+Trước đó phải trỏ **bản ghi A** của tên miền con về IP VPS (không có wildcard
+`*.coregenaihub.com`, đã kiểm). Companion chỉ xin được chứng chỉ khi DNS đã
+phân giải đúng.
+
+## 5B. VPS trống (tham khảo) — reverse proxy + HTTPS (chọn 1)
 
 ### Caddy (khuyến nghị — tự động HTTPS)
 Tạo `/etc/caddy/Caddyfile`:
