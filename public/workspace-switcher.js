@@ -127,7 +127,7 @@
     nav.querySelectorAll('a.nav-link').forEach(el => el.remove());
     const switcher = nav.querySelector('#ws-switcher');
     const items = MENUS[type] || MENUS.CSGD;
-    const here = location.pathname.replace(/\/$/, '') || '/';
+    const here = normPath();
     const frag = document.createDocumentFragment();
     for (const it of items) {
       const a = document.createElement('a');
@@ -143,13 +143,35 @@
       });
       frag.appendChild(a);
     }
-    if (switcher) nav.insertBefore(frag, switcher);
-    else nav.appendChild(frag);
+    // Thanh menu phải rộng 1522px mới đủ chỗ, nên ở màn 1440 nút đăng xuất đã
+    // nằm ngoài khung, còn ở 1366 hay cửa sổ chia đôi thì mất cả bộ đổi đợt
+    // kiểm định. Không có thanh cuộn nào hiện ra nên người dùng không biết
+    // đường lấy lại. Nay bọc riêng phần menu vào một dải cuộn được, còn bộ đổi
+    // đợt và nút đăng xuất neo cố định bên phải, luôn nhìn thấy.
+    let scroll = nav.querySelector('.nav-scroll');
+    if (!scroll) {
+      scroll = document.createElement('div');
+      scroll.className = 'nav-scroll';
+      if (switcher) nav.insertBefore(scroll, switcher);
+      else nav.appendChild(scroll);
+    }
+    scroll.innerHTML = '';
+    scroll.appendChild(frag);
   }
 
   // Trang dùng chung cho mọi đợt kiểm định, không thuộc menu của workspace nào.
   // Không loại trừ thì trang tài khoản luôn bị gắn nhãn "không thuộc workspace
   // hiện tại", một cảnh báo sai làm người dùng tưởng mình vào nhầm chỗ.
+  // Menu khai trang chủ là '/', nhưng ai gõ thẳng hoặc bookmark '/index.html'
+  // thì đường dẫn không khớp: trang bị gắn nhãn sai "không thuộc workspace
+  // hiện tại" rồi mời chuyển sang chính workspace đang mở, và không mục nào
+  // trên thanh menu được tô sáng. Quy về một dạng trước khi so.
+  function normPath() {
+    let p = location.pathname.replace(/\/$/, '') || '/';
+    if (p === '/index.html') p = '/';
+    return p;
+  }
+
   const WS_NEUTRAL = ['/users.html', '/report-view.html', '/survey-fill.html'];
 
   // Trang khoan sâu: có thuộc workspace, nhưng cố ý không nằm trên thanh menu
@@ -162,7 +184,7 @@
   };
 
   function showMismatchBannerIfNeeded(type) {
-    const here = location.pathname.replace(/\/$/, '') || '/';
+    const here = normPath();
     if (WS_NEUTRAL.includes(here)) return;
     if ((WS_DRILLDOWN[type] || []).includes(here)) return;
     const allowed = (MENUS[type] || []).map(m => m.href);

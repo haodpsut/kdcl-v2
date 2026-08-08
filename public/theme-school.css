@@ -109,3 +109,26 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
 @media (max-width: 700px) {
   .kdcl-footer { justify-content: flex-start; }
 }
+
+/* ── Thanh menu cuộn được, bộ đổi đợt và nút đăng xuất neo phải ─────────────
+   Thanh menu cần 1522px mới đủ chỗ, nên ở 1440 nút đăng xuất đã ra ngoài
+   khung, ở 1280 mất thêm bộ đổi đợt kiểm định, ở 1024 mất gần hết. Trước đây
+   .topnav có overflow-x:auto nhưng không hiện thanh cuộn nào nên coi như mất
+   luôn. Nay chỉ dải menu cuộn, phần điều khiển bên phải không co. */
+.topnav { flex-wrap: nowrap !important; overflow: visible !important; }
+.topnav .nav-scroll {
+  display: flex; align-items: stretch;
+  flex: 1 1 auto; min-width: 0;
+  overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none;                 /* Firefox: ẩn thanh cuộn cho gọn */
+}
+.topnav .nav-scroll::-webkit-scrollbar { height: 0; }
+.topnav .nav-scroll .nav-link { flex: 0 0 auto; white-space: nowrap; }
+.topnav .brand { flex: 0 0 auto; }
+.ws-switcher, .ws-user { flex: 0 0 auto !important; }
+
+/* Màn hẹp thì bỏ bớt chữ trong nhãn menu, giữ biểu tượng để còn nhận ra */
+@media (max-width: 1180px) {
+  .topnav .nav-scroll .nav-link { padding-left: 8px !important; padding-right: 8px !important; font-size: 12px !important; }
+  .topnav .brand { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

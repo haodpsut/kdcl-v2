@@ -349,10 +349,16 @@ td {
   border-radius: 4px;
 }
 
+/* Chip loại tệp phải luôn thấy được. Trước đây chip nằm CÙNG hộp cắt với tên
+   tệp, mà tên tệp dài hơn 220px nên chip bị đẩy ra ngoài: đo được 51 trên 57
+   dòng mất hẳn chip, chỉ 4 dòng còn nhìn thấy. Nay tách hai phần: tên tệp co
+   lại và cắt bằng ba chấm, chip đứng riêng và không co. */
+.file-cell { display: flex; align-items: baseline; gap: 4px; max-width: 320px; }
 .file-name {
   color: var(--text);
   font-size: 12px;
-  max-width: 220px;
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1289,8 +1295,9 @@ function renderTable() {
       <td><span class="tc-badge">${e.tieu_chi}</span></td>
       <td class="desc-cell" title="${escHtml(e.mo_ta)}">${escHtml(e.mo_ta) || '<span style="color:var(--muted)">—</span>'}</td>
       <td>
-        <div class="file-name" title="${escHtml(nameText)}">
-          ${isLink ? '🔗 ' : ''}${escHtml(nameText)}<span class="ext-badge ${extClass}">${ext}</span>
+        <div class="file-cell">
+          <span class="file-name" title="${escHtml(nameText)}">${isLink ? '🔗 ' : ''}${escHtml(nameText)}</span>
+          <span class="ext-badge ${extClass}">${ext}</span>
         </div>
         ${sizeStr ? `<div class="file-size">${sizeStr}</div>` : ''}
       </td>
