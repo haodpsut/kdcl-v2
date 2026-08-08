@@ -12,3 +12,6 @@ kdcl-backup-*.tgz
 # Logs / tạm
 *.log
 .env
+
+# Bản sao lưu sinh trên VPS
+backups/
