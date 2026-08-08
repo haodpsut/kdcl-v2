@@ -119,7 +119,7 @@
 .topnav .nav-group.open .nav-drop { display: block; }
 .topnav .nav-drop-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 5px;
   color: #1c1e21; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: #990000; }
+.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: inherit; }
 .topnav .nav-drop-item:hover { background: rgba(153,0,0,.08); color: #990000; }
 .topnav .nav-drop-item.active { background: rgba(153,0,0,.12); color: #990000; }
 /* Logo thương hiệu ở đầu nav · click để về trang chủ */
@@ -392,11 +392,12 @@
       const roleLabel = { admin: 'P.ĐBCL', unit: (me.unit?.name || 'Đơn vị'), viewer: 'Xem' }[me.role] || me.role;
       // Lối vào trang tài khoản chỉ hiện với admin; vai khác mở thẳng URL cũng
       // bị trang từ chối, đây chỉ là bớt một chỗ bấm nhầm.
+      const ic = (n) => (window.KIcon ? window.KIcon(n, 'k-ic sm') : '');
       const adminLink = me.role === 'admin'
-        ? '<button id="ws-users" title="Tài khoản &amp; phân quyền">👤+</button>' : '';
-      uEl.innerHTML = `<span class="ws-user-name" title="${me.display_name || me.username} · ${roleLabel}">👤 ${roleLabel}</span>
+        ? '<button id="ws-users" title="Tài khoản và phân quyền">' + ic('users') + '</button>' : '';
+      uEl.innerHTML = `<span class="ws-user-name" title="${me.display_name || me.username} · ${roleLabel}">${ic('users')} ${roleLabel}</span>
         ${adminLink}
-        <button id="ws-logout" title="Đăng xuất (${me.display_name || me.username})">⎋</button>`;
+        <button id="ws-logout" title="Đăng xuất (${me.display_name || me.username})">${ic('logout')}</button>`;
       host.appendChild(uEl);
       const uBtn = document.getElementById('ws-users');
       if (uBtn) uBtn.onclick = () => { location.href = '/users.html'; };

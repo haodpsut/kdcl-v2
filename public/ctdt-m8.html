@@ -142,6 +142,7 @@ body {
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -151,7 +152,7 @@ body {
 <div class="main">
   <div class="title-bar">
     <div>
-      <h1>🧭 Khung Chuẩn Đầu Ra (M8)</h1>
+      <h1><span data-ic="map" data-ic-class="k-ic lg"></span> Khung Chuẩn Đầu Ra (M8)</h1>
       <p>Định nghĩa PEO (Mục tiêu giáo dục) và PLO (Chuẩn đầu ra CTĐT). Các Inc tiếp theo sẽ thêm Course/CLO + ánh xạ.</p>
     </div>
   </div>
@@ -161,7 +162,7 @@ body {
     <div class="col">
       <div class="col-head">
         <div>
-          <h2>📍 PEO · Mục tiêu giáo dục</h2>
+          <h2><span data-ic="cap"></span> PEO · Mục tiêu giáo dục</h2>
           <p>3–5 mục tiêu mô tả người học sau 3–5 năm tốt nghiệp</p>
         </div>
         <button class="btn" onclick="openPeoModal()">+ Thêm PEO</button>
@@ -173,7 +174,7 @@ body {
     <div class="col">
       <div class="col-head">
         <div>
-          <h2>🎯 PLO · Chuẩn đầu ra CTĐT</h2>
+          <h2><span data-ic="target"></span> PLO · Chuẩn đầu ra CTĐT</h2>
           <p>6–10 PLO mô tả năng lực sinh viên đạt khi tốt nghiệp</p>
         </div>
         <button class="btn" onclick="openPloModal()">+ Thêm PLO</button>
@@ -187,7 +188,7 @@ body {
     <div class="col">
       <div class="col-head">
         <div>
-          <h2>📚 Học phần (Courses)</h2>
+          <h2><span data-ic="book"></span> Học phần (Courses)</h2>
           <p>Bấm vào hàng để xem/thêm CLO của học phần đó</p>
         </div>
         <button class="btn" onclick="openCourseModal()">+ Thêm HP</button>
@@ -197,7 +198,7 @@ body {
     <div class="col clo-section">
       <div class="col-head">
         <div>
-          <h2>🧪 CLO · <span id="clo-course-label">chọn 1 học phần</span></h2>
+          <h2><span data-ic="flask"></span> CLO · <span id="clo-course-label">chọn 1 học phần</span></h2>
           <p>Khuyến nghị 4–6 CLO/HP. Cảnh báo CLO inflation nếu &gt; 6.</p>
         </div>
         <button class="btn" id="add-clo-btn" disabled onclick="openCloModal()">+ Thêm CLO</button>
@@ -532,8 +533,8 @@ async function loadClos() {
   host.innerHTML = list.map(cl => {
     const rubric = cl.rubric_id ? RUBRICS_CACHE.find(r => r.id === cl.rubric_id) : null;
     const rubricTag = rubric
-      ? `<span class="tag" style="background:#e7eef7;color:#2563eb;">📐 ${escapeHtml(rubric.name)}</span>`
-      : `<span class="tag" style="background:#fbf0e2;color:#b26a00;">⚠ chưa có rubric</span>`;
+      ? `<span class="tag" style="background:#e7eef7;color:#2563eb;">${KIcon('ruler', 'k-ic sm')} ${escapeHtml(rubric.name)}</span>`
+      : `<span class="tag" style="background:#fbf0e2;color:#b26a00;">${KIcon('warning', 'k-ic sm')} chưa có rubric</span>`;
     return `
       <div class="card">
         <div class="badge">${escapeHtml(cl.code)}</div>
@@ -579,7 +580,7 @@ function openCloModal(cl = null) {
           </select>
         </div>
         <div>
-          <label>Loại (Knowledge → đề thi M10; Skill/Attitude → rubric)</label>
+          <label>Loại (Knowledge đo bằng đề thi M10; Skill/Attitude đo bằng rubric)</label>
           <select id="m-type">
             ${Object.entries(TYPE_LABEL).map(([k, v]) => `<option value="${k}" ${isEdit && cl.type === k ? 'selected' : ''}>${v}</option>`).join('')}
           </select>

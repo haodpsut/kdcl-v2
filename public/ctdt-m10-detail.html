@@ -227,6 +227,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -234,15 +235,15 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </nav>
 
 <div class="main">
-  <div class="crumbs"><a href="/ctdt-m10.html">← Đo CLO</a> / <span id="crumb-name">Chi tiết</span></div>
+  <div class="crumbs"><a href="/ctdt-m10.html"><span data-ic="back" data-ic-class="k-ic sm"></span> Đo CLO</a> / <span id="crumb-name">Chi tiết</span></div>
 
   <div class="plan-head" id="plan-head">— đang tải —</div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="items" onclick="switchTab('items')">📝 Bài đánh giá</button>
-    <button class="tab" data-tab="students" onclick="switchTab('students')">👥 Sinh viên</button>
-    <button class="tab" data-tab="grid" onclick="switchTab('grid')">📊 Bảng điểm</button>
-    <button class="tab" data-tab="results" onclick="switchTab('results')">📈 Kết quả CLO</button>
+    <button class="tab active" data-tab="items" onclick="switchTab('items')"><span data-ic="clipboard" data-ic-class="k-ic sm"></span> Bài đánh giá</button>
+    <button class="tab" data-tab="students" onclick="switchTab('students')"><span data-ic="users" data-ic-class="k-ic sm"></span> Sinh viên</button>
+    <button class="tab" data-tab="grid" onclick="switchTab('grid')"><span data-ic="chart" data-ic-class="k-ic sm"></span> Bảng điểm</button>
+    <button class="tab" data-tab="results" onclick="switchTab('results')"><span data-ic="trend" data-ic-class="k-ic sm"></span> Kết quả CLO</button>
   </div>
 
   <div id="content"></div>
@@ -327,7 +328,7 @@ async function loadItems() {
   host.innerHTML = `
     <div class="section-head">
       <div>
-        <h2>📝 Bài đánh giá (${items.length})</h2>
+        <h2>${KIcon('clipboard')} Bài đánh giá (${items.length})</h2>
         <p>Mỗi bài có thể đóng góp vào nhiều CLO với trọng số %.</p>
       </div>
       <button class="btn" onclick="openItemModal()">+ Thêm bài đánh giá</button>
@@ -344,7 +345,7 @@ function itemCardHtml(it, cloById) {
   const sum = targets.reduce((s, t) => s + (Number(t.weight) || 0), 0);
   const sumWarn = sum > 100;
   const targetRows = targets.length === 0
-    ? `<div class="none">⚠ Chưa gắn CLO nào · bài này sẽ KHÔNG được tính vào điểm CLO ở Inc6d</div>`
+    ? `<div class="none">${KIcon('warning', 'k-ic sm')} Chưa gắn CLO nào · bài này sẽ KHÔNG được tính vào điểm CLO ở Inc6d</div>`
     : targets.map(t => {
         const cl = cloById[t.clo_id];
         return `<div class="row">
@@ -455,7 +456,7 @@ function renderTargets() {
         </div>`;
     }).join('')}
     <button class="add" id="add-target">+ Thêm CLO target</button>
-    <div class="sum-line ${sumCls}"><span>Σ weight</span><span>${sum}%${sum === 100 ? ' ✓' : (sum > 100 ? ' ⚠ vượt 100%' : '')}</span></div>
+    <div class="sum-line ${sumCls}"><span>Σ weight</span><span>${sum}% ${sum === 100 ? KIcon('check', 'k-ic sm') : (sum > 100 ? KIcon('warning', 'k-ic sm') + ' vượt 100%' : '')}</span></div>
   `;
 
   host.querySelectorAll('select, input').forEach(el => {
@@ -500,11 +501,11 @@ async function loadStudents() {
   host.innerHTML = `
     <div class="section-head">
       <div>
-        <h2>👥 Sinh viên (${list.length})</h2>
+        <h2>${KIcon('users')} Sinh viên (${list.length})</h2>
         <p>Danh sách SV trong plan. MSSV unique trong plan.</p>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn ghost" onclick="openBulkModal()">📋 Dán hàng loạt</button>
+        <button class="btn ghost" onclick="openBulkModal()">${KIcon('clipboard', 'k-ic sm')} Dán hàng loạt</button>
         <button class="btn" onclick="openStuModal()">+ Thêm SV</button>
       </div>
     </div>
@@ -567,7 +568,7 @@ function openBulkModal() {
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal bulk-modal">
-      <h3>📋 Dán danh sách SV hàng loạt</h3>
+      <h3>${KIcon('clipboard')} Dán danh sách SV hàng loạt</h3>
       <p style="font-size:12px;color:var(--muted);">Mỗi dòng = 1 SV. Phân tách bằng <b>tab</b>, <b>dấu phẩy</b>, hoặc <b>≥ 2 spaces</b>. SV trùng MSSV sẽ bỏ qua.</p>
       <label>Dữ liệu</label>
       <textarea id="m-raw" placeholder="20211234	Nguyễn Văn A
@@ -592,7 +593,7 @@ function openBulkModal() {
     const data = await r.json();
     if (!r.ok) { toast(data.error || 'Lỗi', 'error'); return; }
     overlay.remove();
-    toast(`✓ ${data.added} thêm, ${data.skipped} trùng, ${data.invalid} sai định dạng`);
+    toast(`Đã thêm ${data.added}, trùng ${data.skipped}, sai định dạng ${data.invalid}`);
     loadStudents();
   };
 }
@@ -614,16 +615,16 @@ async function loadGrid() {
   if (items.length === 0 || students.length === 0) {
     host.innerHTML = `
       <div class="section-head">
-        <div><h2>📊 Bảng điểm</h2><p>Cần có ≥ 1 bài đánh giá và ≥ 1 SV để nhập điểm.</p></div>
+        <div><h2>${KIcon('chart')} Bảng điểm</h2><p>Cần có ≥ 1 bài đánh giá và ≥ 1 SV để nhập điểm.</p></div>
       </div>
       <div class="grid-empty">
-        ${items.length === 0    ? '⚠ Chưa có bài đánh giá. ' : ''}
-        ${students.length === 0 ? '⚠ Chưa có sinh viên. ' : ''}
+        ${items.length === 0    ? KIcon('warning', 'k-ic sm') + ' Chưa có bài đánh giá. ' : ''}
+        ${students.length === 0 ? KIcon('warning', 'k-ic sm') + ' Chưa có sinh viên. ' : ''}
       </div>`;
     return;
   }
 
-  // Score index from items embedded → fetch separately for grid input values
+  // Score index from items embedded, fetched separately for grid input values
   const scores = await fetch(`/api/scores?plan_id=${PLAN_ID}`).then(r => r.json());
   const idx = {};
   for (const s of scores) idx[`${s.item_id}-${s.plan_student_id}`] = s.score;
@@ -642,7 +643,7 @@ async function loadGrid() {
           return `
             <th>
               <div class="item-name">${escapeHtml(it.name)}</div>
-              <div class="item-meta">Max ${it.max_score} · ${cloLabels || '⚠ no CLO'}</div>
+              <div class="item-meta">Max ${it.max_score} · ${cloLabels || KIcon('warning', 'k-ic sm') + ' no CLO'}</div>
             </th>`;
         }).join('')}
         ${clos.map(cl => `<th class="clo-col"><div class="item-name">${escapeHtml(cl.code)}</div><div class="item-meta">% đạt CLO</div></th>`).join('')}
@@ -683,7 +684,7 @@ async function loadGrid() {
   host.innerHTML = `
     <div class="section-head">
       <div>
-        <h2>📊 Bảng điểm (${students.length} SV × ${items.length} bài × ${clos.length} CLO)</h2>
+        <h2>${KIcon('chart')} Bảng điểm (${students.length} SV × ${items.length} bài × ${clos.length} CLO)</h2>
         <p>Ô xanh = SV đạt ≥ ${passPct}% trên bài. Cột CLO bên phải = % đạt CLO của SV đó (auto-tính). Hàng cuối = % SV đạt mỗi CLO.</p>
       </div>
     </div>
@@ -743,7 +744,7 @@ async function loadResults() {
   host.innerHTML = `
     <div class="section-head">
       <div>
-        <h2>📈 Kết quả đo CLO theo 4 mức AUN-QA</h2>
+        <h2>${KIcon('trend')} Kết quả đo CLO theo 4 mức AUN-QA</h2>
         <p>Ngưỡng SV đạt CLO ≥ ${plan.pass_score_pct}% · CLO "Đạt" khi ≥ ${plan.threshold_pct}% SV đạt</p>
       </div>
     </div>
@@ -786,7 +787,7 @@ async function loadResults() {
             <div class="stats">
               <span>${s.students_passed || 0}</span>/<span>${s.students_with_data || 0}</span> SV đạt &nbsp;·&nbsp;
               <span>${s.items_count || 0}</span> bài đánh giá target CLO này
-              ${s.students_with_data === 0 ? ' &nbsp;·&nbsp; <span style="color:var(--yellow);">⚠ chưa có điểm nào</span>' : ''}
+              ${s.students_with_data === 0 ? ' &nbsp;·&nbsp; <span style="color:var(--yellow);">' + KIcon('warning', 'k-ic sm') + ' chưa có điểm nào</span>' : ''}
             </div>
           </div>`;
       }).join('')}

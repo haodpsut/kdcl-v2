@@ -18,6 +18,43 @@ const DATA_DIR = process.env.DATA_DIR || __dirname;
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
+// ─── Bọc mọi handler async ──────────────────────────────────────────────────
+// Express 4 KHÔNG bắt lỗi từ promise bị từ chối trong handler async, mà Node 20
+// mặc định cho tiến trình chết khi có promise bị từ chối không ai bắt. Hệ quả
+// đã tái hiện được: mở /api/reports/abc thì parseInt cho NaN, Postgres báo lỗi
+// kiểu dữ liệu, và CẢ MÁY CHỦ TẮT, mọi người đang dùng mất kết nối cho tới khi
+// Docker khởi động lại. Một địa chỉ gõ sai không được phép hạ cả hệ thống.
+// Bọc ở đây, trước khi khai báo tuyến, nên áp cho toàn bộ tuyến kể cả tuyến
+// thêm về sau.
+for (const m of ['get', 'post', 'put', 'delete', 'patch', 'use']) {
+  const goc = app[m].bind(app);
+  app[m] = (...args) => goc(...args.map((a) => {
+    if (typeof a !== 'function' || a.length > 3) return a;   // giữ nguyên middleware bắt lỗi 4 tham số
+    return function (req, res, next) {
+      try {
+        const kq = a.call(this, req, res, next);
+        if (kq && typeof kq.catch === 'function') kq.catch(next);
+        return kq;
+      } catch (e) { next(e); }
+    };
+  }));
+}
+
+// Id không phải số thì trả 400 thay vì để câu truy vấn nổ ở tầng CSDL.
+app.use('/api', (req, res, next) => {
+  const doan = req.path.split('/').filter(Boolean);
+  for (let i = 1; i < doan.length; i++) {
+    const truoc = doan[i - 1];
+    if (['evidence', 'reports', 'kpi', 'tdg', 'surveys', 'users', 'units', 'unit-criteria',
+         'workspaces', 'assessments', 'peos', 'plos', 'courses', 'clos', 'rubrics',
+         'assessment-plans', 'assessment-items', 'plan-students', 'scores'].includes(truoc)
+        && !/^\d+$/.test(doan[i]) && !['by-token', 'by-criteria', 'current', 'bulk'].includes(doan[i])) {
+      return res.status(400).json({ error: 'Mã không hợp lệ' });
+    }
+  }
+  next();
+});
+
 app.use(express.json({ limit: '2mb' }));
 app.use(auth.attachUser());
 
@@ -915,3 +952,8 @@ async function start() {
 start().catch(e => { console.error('Khởi động thất bại:', e); process.exit(1); });
 
 module.exports = app;
+
+// Chốt chặn cuối cùng: nếu vẫn còn lỗi nào lọt ra ngoài mọi lớp trên thì GHI
+// LOG rồi chạy tiếp, không để tiến trình chết và kéo theo cả hệ thống.
+process.on('unhandledRejection', (e) => console.error('[promise bị từ chối không ai bắt]', e));
+process.on('uncaughtException', (e) => console.error('[ngoại lệ không ai bắt]', e));

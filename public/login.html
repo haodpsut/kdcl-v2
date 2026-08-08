@@ -30,6 +30,7 @@ input:focus{outline:none;border-color:var(--maroon)}
 .err.show{display:block}
 .hint{font-size:11px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.6}
 </style>
+<script src="/icons.js"></script>
 </head>
 <body>
 <div class="card">
@@ -52,7 +53,7 @@ input:focus{outline:none;border-color:var(--maroon)}
 </div>
 <script>
 const f=document.getElementById('f'),err=document.getElementById('err'),btn=document.getElementById('btn');
-// Nếu đã đăng nhập → về trang chủ
+// Nếu đã đăng nhập thì về trang chủ
 fetch('/api/me').then(r=>r.json()).then(me=>{ if(me) location.href='/'; });
 f.addEventListener('submit', async (e)=>{
   e.preventDefault();

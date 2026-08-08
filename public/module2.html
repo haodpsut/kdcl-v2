@@ -92,7 +92,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .prog-seg.red    { background: var(--red); }
 .prog-seg.yellow { background: var(--yellow); }
 /* Nhóm "Chưa đánh giá" nay có đoạn riêng nên bốn đoạn cộng lại phủ đúng 100% bề rộng. */
-.prog-seg.gray   { background: var(--border); }
+.prog-seg.gray   { background: #c3cad3; }   /* đậm hơn nền rãnh #d9dce1 để đoạn
+                                                  "chưa đánh giá" còn nhìn thấy được;
+                                                  trước đây trùng đúng màu rãnh nên
+                                                  28 tiêu chí trông như khoảng trống */
 .prog-legend { display: flex; gap: 20px; margin-top: 10px; }
 .prog-note { font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
 .prog-note b { color: var(--yellow); font-weight: 700; }
@@ -167,6 +170,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .fp-ev-sug .ev-row.has .chk { color: var(--green); }
 .fp-ev-sug .ev-row .name { flex: 1; }
 
+/* Ô chỉ chứa biểu tượng, không có chữ: bỏ lề phải mặc định của .k-ic để
+   biểu tượng nằm đúng giữa như khi còn dùng ký tự. */
+.std-arrow .k-ic, .section-num .k-ic, .opt-icon .k-ic,
+.fp-ev-sug .ev-row .chk .k-ic, .fp-ev-sug .ev-row .icon .k-ic { margin-right: 0; }
+.btn-open-tc .k-ic { margin-right: 0; margin-left: 2px; }
+
 /* Evidence linked */
 .mc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .mc-table th { background: var(--panel); padding: 8px 10px; text-align: left; color: var(--muted); font-size: 11px; border-bottom: 1px solid var(--border); }
@@ -229,19 +238,20 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <!-- ── Top Nav ─────────────────────────────── -->
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link active" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link active" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -260,7 +270,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
   <!-- Dashboard (shown when no criterion selected) -->
   <div id="dashboard">
-    <div class="dash-title">📋 Đánh giá Tiêu chí · Biểu 04</div>
+    <div class="dash-title"><span data-ic="clipboard" data-ic-class="k-ic lg"></span> Đánh giá Tiêu chí · Biểu 04</div>
     <div class="dash-subtitle"><span data-ws-law>Bộ tiêu chuẩn đang áp dụng</span> &nbsp;·&nbsp; 15 Tiêu chuẩn / 60 Tiêu chí</div>
 
     <div class="stats-grid">
@@ -318,7 +328,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       <span class="tchi-badge" id="fp-code">TC x.y</span>
       <h2 id="fp-title">Tên tiêu chí</h2>
       <span class="status-pill draft" id="fp-status">Phiếu nháp</span>
-      <button class="btn-print" onclick="printBieu04()">🖨 In Biểu 04</button>
+      <button class="btn-print" onclick="printBieu04()"><span data-ic="print"></span>In Biểu 04</button>
     </div>
 
     <div class="form-body">
@@ -380,7 +390,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
         <div class="result-row">
           <label class="result-opt" id="opt-dat" onclick="selectResult('DAT')">
             <input type="radio" name="ket_qua" value="DAT">
-            <span class="opt-icon">✅</span>
+            <span class="opt-icon" style="color:var(--green)"><span data-ic="checkCircle" data-ic-class="k-ic lg"></span></span>
             <div>
               <div class="opt-label">ĐẠT</div>
               <div class="opt-desc">Đáp ứng đủ các yêu cầu của tiêu chí</div>
@@ -388,7 +398,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           </label>
           <label class="result-opt" id="opt-kdat" onclick="selectResult('KHONG_DAT')">
             <input type="radio" name="ket_qua" value="KHONG_DAT">
-            <span class="opt-icon">❌</span>
+            <span class="opt-icon" style="color:var(--red)"><span data-ic="xCircle" data-ic-class="k-ic lg"></span></span>
             <div>
               <div class="opt-label">KHÔNG ĐẠT</div>
               <div class="opt-desc">Chưa đáp ứng một hoặc nhiều yêu cầu</div>
@@ -399,7 +409,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
       <!-- Meta -->
       <div class="form-section">
-        <label><span class="section-num" style="background:var(--muted)">⚙</span> Thông tin thực hiện</label>
+        <label><span class="section-num" style="background:var(--muted)"><span data-ic="info" data-ic-class="k-ic sm"></span></span> Thông tin thực hiện</label>
         <div class="meta-row">
           <div class="meta-field">
             <label>Người thực hiện</label>
@@ -423,9 +433,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
     </div><!-- /form-body -->
 
     <div class="form-footer">
-      <button class="btn-save" id="btn-save" onclick="saveAssessment()">💾 Lưu đánh giá</button>
+      <button class="btn-save" id="btn-save" onclick="saveAssessment()"><span data-ic="save"></span>Lưu đánh giá</button>
       <span class="save-status" id="save-status"></span>
-      <button class="btn-delete" id="btn-delete" onclick="deleteAssessment()" style="display:none">🗑 Xoá đánh giá này</button>
+      <button class="btn-delete" id="btn-delete" onclick="deleteAssessment()" style="display:none"><span data-ic="trash"></span>Xoá đánh giá này</button>
     </div>
 
     <!-- Print-only Biểu 04 -->
@@ -565,7 +575,7 @@ function renderTree() {
         <div class="std-badge">${s.id}</div>
         <div class="std-name">TC${s.id}: ${s.name}</div>
         <div class="std-prog">${done}/${s.criteria.length}</div>
-        <div class="std-arrow" id="std-arr-${s.id}">▶</div>
+        <div class="std-arrow" id="std-arr-${s.id}">${KIcon('chevronRight', 'k-ic sm')}</div>
       </div>
       <div class="criteria-list" id="cl-${s.id}">
         ${s.criteria.map((c, i) => {
@@ -600,7 +610,7 @@ function renderStdOverview(stats) {
       <span class="sov-name">${s.name}</span>
       <div class="sov-bar"><div class="sov-fill" style="width:${pct}%"></div></div>
       <span class="sov-count">${done}/${s.criteria.length}</span>
-      <button class="btn-open-tc" onclick="openCriteria('${s.id}.1')">Mở →</button>
+      <button class="btn-open-tc" onclick="openCriteria('${s.id}.1')">Mở ${KIcon('arrowRight', 'k-ic sm')}</button>
     </div>`;
   }).join('');
 }
@@ -675,6 +685,19 @@ async function openCriteria(code) {
 let FP_DETAIL_CACHE = {};
 let FP_EV_TYPE_MAP = null;
 
+// Loại minh chứng do máy chủ trả về kèm emoji. Trang này vẽ bằng bộ biểu tượng
+// dùng chung nên tra tên biểu tượng theo mã loại, không dùng emoji của máy chủ.
+const EV_TYPE_IC = {
+  official_statement: 'report',  decision: 'report',      regulation: 'book',
+  guideline: 'book',             policy: 'book',          plan: 'calendar',
+  strategic_plan: 'target',      procedure: 'refresh',    report: 'chart',
+  meeting_minutes: 'edit',       survey: 'survey',        audit: 'search',
+  evaluation: 'ruler',           training: 'cap',         website: 'link',
+  handbook: 'book',              visual: 'eye',           official_doc: 'report',
+  external_doc: 'link',
+};
+function evTypeIc(type) { return KIcon(EV_TYPE_IC[type] || 'report', 'k-ic sm'); }
+
 async function loadFpDetail(code, evidence) {
   if (!FP_EV_TYPE_MAP) {
     try { FP_EV_TYPE_MAP = await fetch('/api/evidence-types').then(r => r.json()); }
@@ -702,7 +725,7 @@ async function loadFpDetail(code, evidence) {
 
   // Requirements from PL2
   const reqsHtml = `
-    <h5>⚡ Yêu cầu tiêu chí theo PL2 <span class="n">(${detail.requirements.length})</span></h5>
+    <h5>${KIcon('target', 'k-ic sm')} Yêu cầu tiêu chí theo PL2 <span class="n">(${detail.requirements.length})</span></h5>
     <ul class="fp-reqs-pl2">
       ${detail.requirements.map((r, i) => `<li><span class="idx">${i+1}.</span><span>${escHtml(r)}</span></li>`).join('')}
     </ul>`;
@@ -711,7 +734,7 @@ async function loadFpDetail(code, evidence) {
   // Self-check questions
   if (detail.self_check_questions && detail.self_check_questions.length) {
     document.getElementById('fp-selfcheck').innerHTML = `
-      <h5>🤔 Câu hỏi tự đánh giá trước khi viết</h5>
+      <h5>${KIcon('survey', 'k-ic sm')} Câu hỏi tự đánh giá trước khi viết</h5>
       <ul class="fp-selfcheck-list">
         ${detail.self_check_questions.map(q => `<li>${escHtml(q)}</li>`).join('')}
       </ul>`;
@@ -731,13 +754,12 @@ async function loadFpDetail(code, evidence) {
     });
     const hasCount = matches.filter(m => m.found.length > 0).length;
     document.getElementById('fp-evidence-sug').innerHTML = `
-      <h5>📑 Minh chứng gợi ý <span class="n">(${hasCount}/${detail.suggested_evidence.length} đã có)</span></h5>
+      <h5>${KIcon('folder', 'k-ic sm')} Minh chứng gợi ý <span class="n">(${hasCount}/${detail.suggested_evidence.length} đã có)</span></h5>
       <div class="fp-ev-sug">
         ${matches.map(m => {
-          const t = FP_EV_TYPE_MAP?.[m.sug.type] || {};
           return `<div class="ev-row ${m.found.length > 0 ? 'has' : ''}">
-            <span class="chk">${m.found.length > 0 ? '✓' : '○'}</span>
-            <span class="icon">${t.icon || '•'}</span>
+            <span class="chk">${m.found.length > 0 ? KIcon('check', 'k-ic sm') : '○'}</span>
+            <span class="icon">${evTypeIc(m.sug.type)}</span>
             <span class="name">${escHtml(m.sug.name)}${m.found.length > 0 ? ` <span style="color:var(--green);font-weight:700;">(${m.found.map(f => f.code).join(', ')})</span>` : ''}</span>
           </div>`;
         }).join('')}
@@ -764,7 +786,7 @@ function renderEvidenceTable(list) {
     <td class="mc-code">${e.code}</td>
     <td>${escHtml(e.mo_ta)}</td>
     <td>${escHtml(e.nguon)}</td>
-    <td><a href="/api/evidence/${e.id}/download" target="_blank" style="color:var(--accent);text-decoration:none;">⬇ ${escHtml(e.file_name)}</a></td>
+    <td><a href="/api/evidence/${e.id}/download" target="_blank" style="color:var(--accent);text-decoration:none;">${KIcon('download', 'k-ic sm')} ${escHtml(e.file_name)}</a></td>
   </tr>`).join('');
 }
 
@@ -816,7 +838,8 @@ async function saveAssessment() {
     }
   } catch { showToast('error', '❌ Lỗi kết nối'); }
 
-  btn.disabled = false; btn.textContent = '💾 Lưu đánh giá';
+  // innerHTML để dựng lại biểu tượng SVG, textContent sẽ xoá mất nó.
+  btn.disabled = false; btn.innerHTML = KIcon('save') + 'Lưu đánh giá';
 }
 
 async function deleteAssessment() {

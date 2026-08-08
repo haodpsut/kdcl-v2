@@ -144,17 +144,18 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link active" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>Tiến độ TĐG</a>
+  <a class="nav-link active" href="/module5.html"><span data-ic="survey"></span>Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -169,7 +170,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
     <button class="type-tab" onclick="filterType('bieu11')">B.11</button>
   </div>
   <div class="survey-list" id="survey-list"></div>
-  <button class="btn-add-survey" onclick="openCreateModal()">＋ Tạo khảo sát mới</button>
+  <button class="btn-add-survey" onclick="openCreateModal()"><span data-ic="plus" data-ic-class="k-ic sm"></span>Tạo khảo sát mới</button>
 </aside>
 
 <!-- Main -->
@@ -185,7 +186,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 <!-- Create Modal -->
 <div class="modal-backdrop" id="modal-create">
   <div class="modal">
-    <h2>📝 Tạo khảo sát mới</h2>
+    <h2><span data-ic="survey"></span>Tạo khảo sát mới</h2>
     <div class="form-row">
       <label>Loại khảo sát *</label>
       <select id="f-type" onchange="onTypeChange()">
@@ -404,15 +405,15 @@ function renderDetail(s, stats) {
 
     <!-- Share link -->
     <div class="share-box">
-      <span class="share-label">🔗 Link khảo sát:</span>
+      <span class="share-label">${KIcon('link','k-ic sm')} Link khảo sát:</span>
       <span class="share-url" id="share-url">${shareUrl}</span>
       <button class="btn-copy" onclick="copyLink()">Sao chép</button>
-      <a href="${shareUrl}" target="_blank" class="btn-copy" style="text-decoration:none">Mở ↗</a>
+      <a href="${shareUrl}" target="_blank" class="btn-copy" style="text-decoration:none">Mở ${KIcon('arrowRight','k-ic sm')}</a>
     </div>
 
     ${stats.count === 0 ? `
       <div class="empty-state">
-        <div style="font-size:36px;margin-bottom:12px">📭</div>
+        <div style="margin-bottom:12px">${KIcon('inbox','k-ic xl')}</div>
         <div>Chưa có phản hồi nào.</div>
         <div style="margin-top:8px;font-size:12px">Chia sẻ link trên để bắt đầu thu thập dữ liệu.</div>
       </div>
@@ -454,7 +455,7 @@ async function toggleActive(id, active) {
   });
   document.getElementById('active-label').textContent = active ? 'Đang mở' : 'Đã đóng';
   await loadSurveys();
-  showToast('success', active ? '✅ Đã mở khảo sát' : '🔒 Đã đóng khảo sát');
+  showToast('success', active ? 'Đã mở khảo sát' : 'Đã đóng khảo sát');
 }
 
 async function deleteSurvey(id, name) {
@@ -465,13 +466,13 @@ async function deleteSurvey(id, name) {
   document.getElementById('detail-section').style.display = 'none';
   await loadSurveys();
   renderOverview();
-  showToast('success', '✅ Đã xoá khảo sát');
+  showToast('success', 'Đã xoá khảo sát');
 }
 
 function copyLink() {
   const url = document.getElementById('share-url')?.textContent;
   if (!url) return;
-  navigator.clipboard.writeText(url).then(() => showToast('success', '✅ Đã sao chép link'));
+  navigator.clipboard.writeText(url).then(() => showToast('success', 'Đã sao chép link'));
 }
 
 // ── Create Modal ──────────────────────────────────────────────────────────────
@@ -488,22 +489,22 @@ async function createSurvey() {
   const type  = document.getElementById('f-type').value;
   const title = document.getElementById('f-title').value.trim();
   const desc  = document.getElementById('f-desc').value.trim();
-  if (!type)  return showToast('error', '❌ Chọn loại khảo sát');
-  if (!title) return showToast('error', '❌ Nhập tiêu đề');
+  if (!type)  return showToast('error', 'Chọn loại khảo sát');
+  if (!title) return showToast('error', 'Nhập tiêu đề');
 
   const res  = await fetch('/api/surveys', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ type, title, description: desc }),
   });
   const data = await res.json();
-  if (!res.ok) return showToast('error', `❌ ${data.error}`);
+  if (!res.ok) return showToast('error', `${data.error}`);
   closeModal();
   document.getElementById('f-type').value  = '';
   document.getElementById('f-title').value = '';
   document.getElementById('f-desc').value  = '';
   await loadSurveys();
   await selectSurvey(data.id);
-  showToast('success', `✅ Đã tạo khảo sát · Token: ${data.token}`);
+  showToast('success', `Đã tạo khảo sát · Token: ${data.token}`);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -511,7 +512,11 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 
 function showToast(type, msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg; el.className = `toast ${type} show`;
+  // Biểu tượng dựng bằng innerHTML, phần chữ nối bằng append() để chuỗi từ máy
+  // chủ (token, thông báo lỗi) không bị đọc như HTML.
+  el.innerHTML = KIcon(type === 'success' ? 'checkCircle' : 'xCircle', 'k-ic sm');
+  el.append(' ' + msg);
+  el.className = `toast ${type} show`;
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 </script>

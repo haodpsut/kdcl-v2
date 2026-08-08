@@ -168,7 +168,10 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
 .topnav .nav-ic { width: 16px; height: 16px; flex: 0 0 auto; }
 .topnav .nav-link { gap: 7px !important; }
 .topnav .caret { width: 11px; height: 11px; opacity: .7; flex: 0 0 auto; margin-left: 1px; }
-.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: #990000; opacity: .85; }
+/* Biểu tượng trong khung thả xuống phải ăn theo màu chữ để mang tín hiệu
+   trạng thái. Ghim cứng maroon thì mục thường thành chữ đen mà biểu tượng đỏ,
+   và biểu tượng không còn nói lên mục nào đang mở. */
+.topnav .nav-drop-item .drop-ic { width: 16px; height: 16px; flex: 0 0 auto; color: inherit; opacity: .9; }
 
 /* Khung thả xuống định vị theo cửa sổ, để không bị dải menu cuộn ngang cắt mất */
 .topnav .nav-drop { position: fixed !important; top: 52px; left: 0; right: auto !important; }

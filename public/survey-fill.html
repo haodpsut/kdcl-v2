@@ -15,7 +15,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
 /* Header */
 .site-header { background:var(--card); border-bottom:1px solid var(--border); padding:14px 20px; display:flex; align-items:center; gap:14px; }
-.site-logo { font-size:22px; }
+.site-logo { font-size:22px; line-height:1; display:flex; align-items:center; }
 .site-info .school { font-size:13px; font-weight:800; color:var(--accent); }
 .site-info .sub { font-size:11px; color:var(--muted); }
 .badge-type { display:inline-block; font-size:11px; font-weight:700; padding:3px 8px; border-radius:5px; margin-left:8px; }
@@ -83,7 +83,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
 /* States */
 .state-screen { max-width:500px; margin:60px auto; text-align:center; padding:0 20px; }
-.state-icon { font-size:56px; margin-bottom:16px; }
+.state-icon { line-height:1; margin-bottom:16px; }
 .state-title { font-size:22px; font-weight:800; margin-bottom:10px; }
 .state-sub { font-size:14px; color:var(--muted); line-height:1.6; }
 .loading-spinner { display:inline-block; width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:16px; }
@@ -97,11 +97,12 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 }
 </style>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <header class="site-header">
-  <div class="site-logo">🏛️</div>
+  <div class="site-logo"><span data-ic="building" data-ic-class="k-ic lg"></span></div>
   <div class="site-info">
     <div class="school">Trường ĐH Kiến trúc Đà Nẵng</div>
     <div class="sub">Hệ thống Kiểm định Chất lượng Giáo dục</div>
@@ -141,7 +142,7 @@ async function init() {
 function renderError(msg) {
   document.getElementById('app').innerHTML = `
     <div class="state-screen">
-      <div class="state-icon">⚠️</div>
+      <div class="state-icon">${KIcon('warning', 'k-ic xl')}</div>
       <div class="state-title">Không thể tải khảo sát</div>
       <div class="state-sub">${msg}</div>
     </div>`;
@@ -191,12 +192,12 @@ function renderSurvey() {
         <span class="badge-type ${tm.cls}">${tm.label}</span>
       </div>
       <div class="survey-meta">
-        <span>📋 ${escHtml(tpl.target || '')}</span>
+        <span>${KIcon('clipboard', 'k-ic sm')} ${escHtml(tpl.target || '')}</span>
         <span>·</span>
         <span>Tạo ngày ${s.created_at}</span>
       </div>
       ${s.description ? `<div class="survey-desc">${escHtml(s.description)}</div>` : ''}
-      <div class="response-count">👥 ${s.response_count} người đã tham gia</div>
+      <div class="response-count">${KIcon('users', 'k-ic sm')} ${s.response_count} người đã tham gia</div>
     </div>
 
     <!-- Scale legend -->
@@ -211,7 +212,7 @@ function renderSurvey() {
 
       <!-- Comment -->
       <div class="comment-block">
-        <label>💬 Ý kiến bổ sung (không bắt buộc)</label>
+        <label>${KIcon('survey', 'k-ic sm')} Ý kiến bổ sung (không bắt buộc)</label>
         <textarea id="comment-field" placeholder="Góp ý, đề xuất cải thiện chất lượng đào tạo..."></textarea>
       </div>
 
@@ -284,7 +285,7 @@ async function submitSurvey(e) {
 function renderThankYou() {
   document.getElementById('app').innerHTML = `
     <div class="state-screen">
-      <div class="state-icon">✅</div>
+      <div class="state-icon">${KIcon('checkCircle', 'k-ic xl')}</div>
       <div class="state-title">Cảm ơn bạn đã tham gia!</div>
       <div class="state-sub">
         Phản hồi của bạn đã được ghi nhận thành công.<br><br>

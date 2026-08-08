@@ -108,15 +108,16 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 @page { size:A4; margin:0; }
 </style>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <!-- Toolbar (hidden when printing) -->
 <div class="toolbar">
-  <span class="brand">📄 Báo cáo TĐG · Xem trước</span>
+  <span class="brand"><span data-ic="report" data-ic-class="k-ic sm"></span> Báo cáo TĐG · Xem trước</span>
   <span class="tb-stat" id="tb-stat">Đang tải...</span>
-  <button class="tb-btn tb-back" onclick="window.close()">✕ Đóng</button>
-  <button class="tb-btn tb-print" onclick="window.print()">🖨 In / Xuất PDF</button>
+  <button class="tb-btn tb-back" onclick="window.close()"><span data-ic="x" data-ic-class="k-ic sm"></span> Đóng</button>
+  <button class="tb-btn tb-print" onclick="window.print()"><span data-ic="print" data-ic-class="k-ic sm"></span> In / Xuất PDF</button>
 </div>
 
 <div class="pages" id="pages">
@@ -303,7 +304,7 @@ function renderReport(report, data) {
 
 // ── Builder helpers ───────────────────────────────────────────────────────────
 function buildSchoolInfoBlock(si) {
-  if (!si || !Object.keys(si).length) return '<p class="no-data">Chưa nhập thông tin trường (xem Biểu 16 → Thông tin trường).</p>';
+  if (!si || !Object.keys(si).length) return '<p class="no-data">Chưa nhập thông tin trường (xem Biểu 16, phần Thông tin trường).</p>';
   const rows = [
     ['Tên trường', si.ten_truong], ['Mã trường', si.ma_truong],
     ['Địa chỉ', si.dia_chi], ['Website', si.website],

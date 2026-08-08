@@ -128,18 +128,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link active" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link active" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -151,7 +152,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
     <p>Biểu 16 · Thông tư 2026</p>
   </div>
   <div class="year-list" id="year-list">
-    <button class="btn-add-year" onclick="openAddYear()">＋ Thêm năm học</button>
+    <button class="btn-add-year" onclick="openAddYear()"><span data-ic="plus" data-ic-class="k-ic sm"></span>Thêm năm học</button>
   </div>
   <div class="group-nav" id="group-nav"></div>
 </div>
@@ -159,16 +160,16 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <!-- ── Main ── -->
 <div id="main">
   <div class="main-head">
-    <h2 id="main-title">📊 KPI Database · Biểu 16</h2>
+    <h2 id="main-title"><span data-ic="chart"></span>KPI Database · Biểu 16</h2>
     <span class="year-tag" id="year-tag" style="display:none"></span>
-    <button class="btn-export" onclick="exportCSV()">⬇ Xuất CSV</button>
+    <button class="btn-export" onclick="exportCSV()"><span data-ic="download" data-ic-class="k-ic sm"></span>Xuất CSV</button>
   </div>
   <div class="main-body" id="main-body">
     <div class="no-year" id="no-year-msg">
-      <div class="icon">📊</div>
+      <div class="icon"><span data-ic="chart" data-ic-class="k-ic xl"></span></div>
       <h3>Chưa có dữ liệu năm học</h3>
       <p style="margin-bottom:20px;font-size:13px">Thêm năm học đầu tiên để bắt đầu nhập dữ liệu KPI (Biểu 16)</p>
-      <button class="btn-primary" onclick="openAddYear()">＋ Thêm năm học</button>
+      <button class="btn-primary" onclick="openAddYear()"><span data-ic="plus"></span>Thêm năm học</button>
     </div>
     <div id="content-area" style="display:none"></div>
   </div>
@@ -193,9 +194,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <script>
 // ── KPI Schema ────────────────────────────────────────────────
 const KPI_GROUPS = [
-  { id: 'overview', name: 'Tổng quan', icon: '📈' },
+  { id: 'overview', name: 'Tổng quan', icon: 'trend' },
   {
-    id: 'B', name: 'Chương trình ĐT', icon: '🎓',
+    id: 'B', name: 'Chương trình ĐT', icon: 'cap',
     fields: [
       { key: 'so_ctdt_dh',        label: 'Số CTĐT trình độ ĐH',           unit: 'CT' },
       { key: 'so_ctdt_ths',       label: 'Số CTĐT trình độ ThS',          unit: 'CT' },
@@ -207,7 +208,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'C', name: 'Đội ngũ GV/CBQL', icon: '👩‍🏫',
+    id: 'C', name: 'Đội ngũ GV/CBQL', icon: 'users',
     fields: [
       { key: 'so_gv_co_huu',      label: 'Số GV cơ hữu',                  unit: 'người' },
       { key: 'so_gv_gs_pgs',      label: 'GV có học hàm GS/PGS',          unit: 'người' },
@@ -219,7 +220,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'D', name: 'Tuyển sinh', icon: '📋',
+    id: 'D', name: 'Tuyển sinh', icon: 'clipboard',
     fields: [
       { key: 'chi_tieu_ts',       label: 'Chỉ tiêu tuyển sinh',           unit: 'chỉ tiêu' },
       { key: 'so_tuyen_duoc',     label: 'Số tuyển được',                 unit: 'SV' },
@@ -229,7 +230,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'E', name: 'Kết quả đào tạo', icon: '🏆',
+    id: 'E', name: 'Kết quả đào tạo', icon: 'target',
     fields: [
       { key: 'pct_tot_nghiep',    label: 'Tỉ lệ tốt nghiệp đúng hạn',   unit: '%', bench: { min: 70, dir: 'up',   hint: 'Tối thiểu 70%' } },
       { key: 'pct_thoi_hoc',      label: 'Tỉ lệ thôi học',               unit: '%', bench: { max: 10, dir: 'down', hint: 'Tối đa 10%' } },
@@ -240,7 +241,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'F', name: 'Nghiên cứu KH', icon: '🔬',
+    id: 'F', name: 'Nghiên cứu KH', icon: 'flask',
     fields: [
       { key: 'so_dt_cap_nn',      label: 'Đề tài cấp Nhà nước',           unit: 'đề tài' },
       { key: 'so_dt_cap_bo_tinh', label: 'Đề tài cấp Bộ/Tỉnh',           unit: 'đề tài' },
@@ -253,7 +254,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'G', name: 'NCKH người học', icon: '🧑‍🎓',
+    id: 'G', name: 'NCKH người học', icon: 'book',
     fields: [
       { key: 'so_dt_sv',          label: 'Đề tài NCKH SV được nghiệm thu', unit: 'đề tài' },
       { key: 'so_bao_sv',         label: 'Bài báo đồng tác giả SV/GV',   unit: 'bài' },
@@ -261,7 +262,7 @@ const KPI_GROUPS = [
     ]
   },
   {
-    id: 'H', name: 'CSVC & Thư viện', icon: '🏛️',
+    id: 'H', name: 'CSVC & Thư viện', icon: 'building',
     fields: [
       { key: 'dien_tich_dat',     label: 'Tổng diện tích đất',            unit: 'm²' },
       { key: 'dien_tich_san_xd',  label: 'Diện tích sàn xây dựng',        unit: 'm²' },
@@ -315,9 +316,9 @@ function renderYearList() {
   el.innerHTML = years.map(y => `
     <button class="year-btn ${y.id === activeYearId ? 'active' : ''}" onclick="selectYear(${y.id})">
       <span>${y.nam_hoc}</span>
-      <span class="del-year" onclick="event.stopPropagation(); deleteYear(${y.id},'${y.nam_hoc}')">✕</span>
+      <span class="del-year" onclick="event.stopPropagation(); deleteYear(${y.id},'${y.nam_hoc}')">${KIcon('x','k-ic sm')}</span>
     </button>`).join('') +
-    `<button class="btn-add-year" onclick="openAddYear()">＋ Thêm năm học</button>`;
+    `<button class="btn-add-year" onclick="openAddYear()">${KIcon('plus','k-ic sm')}Thêm năm học</button>`;
 }
 
 async function selectYear(id) {
@@ -343,8 +344,8 @@ function renderGroupNav() {
   const el = document.getElementById('group-nav');
   el.innerHTML = KPI_GROUPS.map(g => `
     <button class="grp-btn ${g.id === activeGroup ? 'active' : ''}" onclick="setGroup('${g.id}')">
-      <span class="grp-badge">${g.id === 'overview' ? '◉' : g.id}</span>
-      <span>${g.icon} ${g.name}</span>
+      <span class="grp-badge">${g.id === 'overview' ? KIcon('target','k-ic sm') : g.id}</span>
+      <span>${KIcon(g.icon,'k-ic sm')} ${g.name}</span>
     </button>`).join('');
 }
 
@@ -356,7 +357,7 @@ function setGroup(id) {
 
 // ── Dashboard ─────────────────────────────────────────────────
 function renderDashboard() {
-  document.getElementById('main-title').textContent = '📈 Tổng quan KPI';
+  document.getElementById('main-title').innerHTML = KIcon('trend') + 'Tổng quan KPI';
 
   let html = '<div class="dash-grid">';
   for (const kpi of DASH_KPIS) {
@@ -385,8 +386,8 @@ function renderDashboard() {
   // Trend charts (only if multiple years)
   if (years.length >= 2) {
     html += '<div class="charts-row">';
-    html += '<div class="chart-box"><h3>📉 Tỉ lệ tốt nghiệp & Việc làm (%)</h3><canvas id="chart-dao-tao"></canvas></div>';
-    html += '<div class="chart-box"><h3>🔬 Bài báo khoa học (bài)</h3><canvas id="chart-nckh"></canvas></div>';
+    html += `<div class="chart-box"><h3>${KIcon('chart')}Tỉ lệ tốt nghiệp &amp; Việc làm (%)</h3><canvas id="chart-dao-tao"></canvas></div>`;
+    html += `<div class="chart-box"><h3>${KIcon('flask')}Bài báo khoa học (bài)</h3><canvas id="chart-nckh"></canvas></div>`;
     html += '</div>';
   }
 
@@ -455,10 +456,16 @@ function destroyChart(id) {
 }
 
 // ── KPI Form ──────────────────────────────────────────────────
+// Biểu tượng cho dòng gợi ý ngưỡng chuẩn. Ăn theo màu chữ của .kf-bench-hint
+// nên vẫn giữ đúng ba màu lục / hổ phách / đỏ như trước.
+function benchIcon(s) {
+  return KIcon(s === 'ok' ? 'check' : s === 'warn' ? 'warning' : 'x', 'k-ic sm');
+}
+
 function renderForm(groupId) {
   const group = KPI_GROUPS.find(g => g.id === groupId);
   if (!group || !group.fields) return;
-  document.getElementById('main-title').textContent = `${group.icon} ${group.name}`;
+  document.getElementById('main-title').innerHTML = KIcon(group.icon) + group.name;
 
   let html = `<div class="form-section-head">Nhóm ${group.id}: ${group.name}</div>`;
   html += '<div class="kpi-form-grid">';
@@ -472,11 +479,11 @@ function renderForm(groupId) {
       if (f.bench.dir === 'up') {
         const s = n >= f.bench.min ? 'ok' : n >= f.bench.min * 0.85 ? 'warn' : 'bad';
         cls += ' has-bench bench-' + s;
-        hint = `<div class="kf-bench-hint ${s}">${s === 'ok' ? '✓' : s === 'warn' ? '⚠' : '✗'} ${f.bench.hint}</div>`;
+        hint = `<div class="kf-bench-hint ${s}">${benchIcon(s)} ${f.bench.hint}</div>`;
       } else {
         const s = n <= f.bench.max ? 'ok' : n <= f.bench.max * 1.15 ? 'warn' : 'bad';
         cls += ' has-bench bench-' + s;
-        hint = `<div class="kf-bench-hint ${s}">${s === 'ok' ? '✓' : s === 'warn' ? '⚠' : '✗'} ${f.bench.hint}</div>`;
+        hint = `<div class="kf-bench-hint ${s}">${benchIcon(s)} ${f.bench.hint}</div>`;
       }
     }
     html += `<div class="${cls}">
@@ -492,7 +499,7 @@ function renderForm(groupId) {
 
   html += '</div>';
   html += `<div class="form-sticky-footer">
-    <button class="btn-save" onclick="saveCurrentGroup()">💾 Lưu nhóm ${group.id}</button>
+    <button class="btn-save" onclick="saveCurrentGroup()">${KIcon('check')}Lưu nhóm ${group.id}</button>
     <span class="save-hint" id="form-save-hint">Cập nhật lần cuối: ${activeYearData.updated_at || 'Chưa lưu'}</span>
   </div>`;
 
@@ -513,7 +520,7 @@ function onFieldChange(key, input) {
   else                         s = val <= f.bench.max ? 'ok' : val <= f.bench.max * 1.15 ? 'warn' : 'bad';
   wrapper.className = `kf-group has-bench bench-${s}`;
   const hint = wrapper.querySelector('.kf-bench-hint');
-  if (hint) { hint.className = `kf-bench-hint ${s}`; hint.textContent = (s === 'ok' ? '✓' : s === 'warn' ? '⚠' : '✗') + ' ' + f.bench.hint; }
+  if (hint) { hint.className = `kf-bench-hint ${s}`; hint.innerHTML = benchIcon(s) + ' ' + f.bench.hint; }
 }
 
 async function saveCurrentGroup() {
@@ -536,11 +543,11 @@ async function saveCurrentGroup() {
     activeYearData = full;
     const hint = document.getElementById('form-save-hint');
     if (hint) hint.textContent = `Đã lưu lúc: ${new Date().toLocaleTimeString('vi-VN')}`;
-    showToast('success', `✅ Đã lưu nhóm ${activeGroup} · ${activeYearData.nam_hoc}`);
+    showToast('success', `Đã lưu nhóm ${activeGroup} · ${activeYearData.nam_hoc}`);
     await loadYears();
     renderYearList();
   } else {
-    showToast('error', '❌ Lưu thất bại');
+    showToast('error', 'Lưu thất bại');
   }
 }
 
@@ -559,9 +566,9 @@ async function createYear() {
     closeAddYear();
     await loadYears();
     selectYear(data.id);
-    showToast('success', `✅ Đã tạo năm học ${nh}`);
+    showToast('success', `Đã tạo năm học ${nh}`);
   } else {
-    showToast('error', `❌ ${data.error}`);
+    showToast('error', `${data.error}`);
   }
 }
 
@@ -576,12 +583,12 @@ async function deleteYear(id, nh) {
     document.getElementById('content-area').style.display = 'none';
   }
   await loadYears();
-  showToast('success', `✅ Đã xoá năm học ${nh}`);
+  showToast('success', `Đã xoá năm học ${nh}`);
 }
 
 // ── Export CSV ────────────────────────────────────────────────
 function exportCSV() {
-  if (!activeYearId) return showToast('error', '❌ Chọn năm học trước');
+  if (!activeYearId) return showToast('error', 'Chọn năm học trước');
   const rows = [['Năm học', 'Chỉ số', 'Giá trị', 'Đơn vị']];
   for (const g of KPI_GROUPS) {
     if (!g.fields) continue;
@@ -600,7 +607,11 @@ function exportCSV() {
 let toastTimer;
 function showToast(type, msg) {
   const el = document.getElementById('toast');
-  el.className = `toast show ${type}`; el.textContent = msg;
+  el.className = `toast show ${type}`;
+  // Biểu tượng dựng bằng innerHTML, phần chữ nối bằng append() để dữ liệu người
+  // dùng (tên năm học, thông báo lỗi từ máy chủ) không bị đọc như HTML.
+  el.innerHTML = KIcon(type === 'success' ? 'checkCircle' : 'xCircle');
+  el.append(msg);
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 }
 

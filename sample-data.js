@@ -37,7 +37,7 @@ function makeFile(code, tc, desc) {
   seq++;
   const stored = `sample_${code}_${seq}.txt`;
   const content =
-`MINH CHỨNG MẪU — Hệ thống KĐCLGD
+`MINH CHỨNG MẪU · Hệ thống KĐCLGD
 Trường Đại học Kiến trúc Đà Nẵng
 ========================================
 Mã minh chứng : ${code}
@@ -96,7 +96,7 @@ async function main() {
     }
   }
 
-  // ═══ CSGD — phủ cả 15 tiêu chuẩn ════════════════════════════════════════
+  // ═══ CSGD · phủ cả 15 tiêu chuẩn ════════════════════════════════════════
   const EV_CSGD = [
     ['1.1','PTCHC','Nghị quyết ban hành tầm nhìn, sứ mạng của Nhà trường','da_xac_nhan','file'],
     ['1.2','PTCHC','Quy chế tổ chức và hoạt động của Trường','da_xac_nhan','file'],
@@ -154,7 +154,7 @@ async function main() {
   await assignFrom(csgd, EV_CSGD, [['PDT','12.2'],['PKHCN','5.2'],['PKHTC','4.3'],['PDBCL','9.4']]);
   for (const [tc, u, d, s, src, n] of EV_CSGD) await ev(csgd, tc, u, d, s, src, n);
 
-  // ═══ CTĐT — minh chứng ══════════════════════════════════════════════════
+  // ═══ CTĐT · minh chứng ══════════════════════════════════════════════════
   const EV_CTDT = [
     ['6.2','PDT','Chương trình đào tạo ngành CNTT khóa 2026 (bản ban hành)','da_xac_nhan','file'],
     ['6.2','PDT','Ma trận chuẩn đầu ra và học phần (curriculum map)','da_xac_nhan','file'],
@@ -174,7 +174,7 @@ async function main() {
   await assignFrom(ctdt, EV_CTDT, [['KCNTT','6.5']]);
   for (const [tc, u, d, s, src, n] of EV_CTDT) await ev(ctdt, tc, u, d, s, src, n);
 
-  // ═══ CTĐT — bộ CĐR (PEO/PLO/HP/CLO) ═════════════════════════════════════
+  // ═══ CTĐT · bộ CĐR (PEO/PLO/HP/CLO) ═════════════════════════════════════
   for (const [c, ct] of [
     ['PEO1','Có năng lực chuyên môn công nghệ thông tin, giải quyết được các vấn đề thực tiễn'],
     ['PEO2','Làm việc nhóm và giao tiếp hiệu quả, tuân thủ đạo đức nghề nghiệp'],
@@ -228,7 +228,7 @@ async function main() {
     await q("INSERT INTO clo_plo_map(workspace_id,clo_id,plo_id,weight) VALUES ($1,$2,$3,$4)", [ctdt, CL[cl], P[p], w]);
 
   const plan = await insId(`INSERT INTO assessment_plans(workspace_id,course_id,name,semester,school_year,threshold_pct,pass_score_pct,status)
-    VALUES ($1,$2,'IT101 — HK1 2025-2026',1,'2025-2026',75,50,'active') RETURNING id`, [ctdt, C['IT101']]);
+    VALUES ($1,$2,'IT101 · HK1 2025-2026',1,'2025-2026',75,50,'active') RETURNING id`, [ctdt, C['IT101']]);
   const it1 = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
     VALUES ($1,$2,'Bài kiểm tra giữa kỳ','test',10,$3) RETURNING id`,
     [ctdt, plan, JSON.stringify([{clo_id:CL['IT101.CLO1'],weight:40},{clo_id:CL['IT101.CLO2'],weight:60}])]);
@@ -246,7 +246,7 @@ async function main() {
     await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [ctdt, it2, sid[i], SC[i][1]]);
   }
   // Đo thêm học phần IT201 để M11 phủ thêm PLO
-  await makeMeasure(ctdt, C['IT201'], 'IT201 — HK2 2025-2026', CL['IT201.CLO1'], CL['IT201.CLO2'], CL['IT201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
+  await makeMeasure(ctdt, C['IT201'], 'IT201 · HK2 2025-2026', CL['IT201.CLO1'], CL['IT201.CLO2'], CL['IT201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
 
   // ═══ Thông tin trường (school_info) ═════════════════════════════════════
   const SCHOOL = {
@@ -286,7 +286,7 @@ async function main() {
   for (const [tc, kq, tt] of [['6.1','DAT','approved'],['6.2','DAT','approved'],['6.3','DAT','approved'],['6.4','DAT','draft'],['6.6','DAT','draft'],['7.4','CHUA','draft'],['9.1','DAT','draft'],['11.1','DAT','draft']])
     await assess(ctdt, tc, kq, tt);
 
-  // ═══ KPI (Biểu 16) — 3 năm học ══════════════════════════════════════════
+  // ═══ KPI (Biểu 16) · 3 năm học ══════════════════════════════════════════
   const KPI = {
     '2022-2023': { so_gv_co_huu:180, so_gv_tien_si:40, so_gv_thac_si:120, so_gv_gs_pgs:5, pct_gv_ts:22, so_cbql_nv:90,
       so_nguoi_hoc_dh:4500, so_nguoi_hoc_ths:120, so_nguoi_hoc_ts:8, so_ctdt_dh:15, so_ctdt_ths:3, so_ctdt_ts:1, so_ctdt_kiem_dinh:3,
@@ -306,7 +306,7 @@ async function main() {
   };
   for (const [ny, data] of Object.entries(KPI))
     await q("INSERT INTO kpi_data(workspace_id,nam_hoc,data) VALUES ($1,$2,$3)", [csgd, ny, JSON.stringify(data)]);
-  // CTĐT — KPI cấp chương trình đào tạo (quy mô nhỏ hơn)
+  // CTĐT · KPI cấp chương trình đào tạo (quy mô nhỏ hơn)
   const KPI_CTDT = {
     '2023-2024': { so_gv_co_huu:28, so_gv_tien_si:9, so_gv_thac_si:17, pct_gv_ts:32, so_cbql_nv:6,
       so_nguoi_hoc_dh:520, so_ctdt_dh:1, so_ctdt_kiem_dinh:1, pct_tuyen_sinh:92, pct_nhap_hoc:85, pct_thoi_hoc:4,
@@ -328,18 +328,18 @@ async function main() {
     T(1,1,2,'Phân công nhiệm vụ cho các nhóm TĐG','done'),
     T(1,2,2,'Xây dựng Kế hoạch TĐG chi tiết (Biểu 02)','done'),
     T(1,3,4,'Tập huấn Hội đồng TĐG về quy trình và biểu mẫu','done'),
-    T(2,5,6,'Thu thập minh chứng — Tiêu chuẩn 1, 2, 3','done'),
-    T(2,7,8,'Thu thập minh chứng — Tiêu chuẩn 4, 5, 6','done'),
-    T(2,9,10,'Thu thập minh chứng — Tiêu chuẩn 7, 8, 9','in_progress'),
-    T(2,11,12,'Thu thập minh chứng — Tiêu chuẩn 10–15','in_progress'),
+    T(2,5,6,'Thu thập minh chứng · Tiêu chuẩn 1, 2, 3','done'),
+    T(2,7,8,'Thu thập minh chứng · Tiêu chuẩn 4, 5, 6','done'),
+    T(2,9,10,'Thu thập minh chứng · Tiêu chuẩn 7, 8, 9','in_progress'),
+    T(2,11,12,'Thu thập minh chứng · Tiêu chuẩn 10–15','in_progress'),
     T(2,10,12,'Mã hóa và phân loại minh chứng (Hn.ab.cd.ef)','in_progress'),
     T(2,12,12,'Nhập dữ liệu KPI vào Biểu 16','done'),
     T(3,13,14,'Đánh giá Tiêu chuẩn 1–4 (Biểu 04)','in_progress'),
     T(3,15,16,'Đánh giá Tiêu chuẩn 5–9 (Biểu 04)','late'),
     T(3,17,18,'Đánh giá Tiêu chuẩn 10–15 (Biểu 04)','todo'),
-    T(3,18,18,'Họp Hội đồng TĐG — xem xét kết quả đánh giá','todo'),
-    T(4,19,20,'Viết Báo cáo TĐG — Phần mở đầu và TC 1–7','todo'),
-    T(4,21,22,'Viết Báo cáo TĐG — TC 8–15 và kết luận','todo'),
+    T(3,18,18,'Họp Hội đồng TĐG · xem xét kết quả đánh giá','todo'),
+    T(4,19,20,'Viết Báo cáo TĐG · Phần mở đầu và TC 1–7','todo'),
+    T(4,21,22,'Viết Báo cáo TĐG · TC 8–15 và kết luận','todo'),
     T(4,22,22,'Rà soát, chỉnh sửa Báo cáo TĐG lần 1','todo'),
     T(5,23,23,'Thẩm định nội bộ, chỉnh sửa lần cuối','todo'),
     T(5,23,24,'Hoàn thiện và đóng gói hồ sơ minh chứng','todo'),
@@ -349,7 +349,7 @@ async function main() {
   for (const t of TASKS)
     await q(`INSERT INTO tdg_tasks(plan_id,phase,week_start,week_end,title,status,priority,sort_order)
       VALUES ($1,$2,$3,$4,$5,$6,'normal',$7)`, [plan2, t.p, t.a, t.b, t.t, t.s, ord++]);
-  // CTĐT — kế hoạch tự đánh giá chương trình
+  // CTĐT · kế hoạch tự đánh giá chương trình
   const planC = await insId("INSERT INTO tdg_plans(workspace_id,name,ngay_bat_dau) VALUES ($1,'Kế hoạch tự đánh giá chương trình đào tạo CNTT','06/01/2026') RETURNING id", [ctdt]);
   let ordC = 0;
   for (const t of TASKS)
@@ -392,7 +392,7 @@ async function main() {
     'Chương trình đào tạo CNTT đáp ứng chuẩn đầu ra; kết quả đo lường CLO/PLO cho thấy đa số PLO đạt mức cao.')`, [ctdt]);
 
   // ═══════════════════════════════════════════════════════════════════════
-  //  KTr 2026 — CTĐT ngành KIẾN TRÚC (workspace mới, chọn ở dropdown)
+  //  KTr 2026 · CTĐT ngành KIẾN TRÚC (workspace mới, chọn ở dropdown)
   // ═══════════════════════════════════════════════════════════════════════
   let ktr = await one("SELECT id FROM workspaces WHERE name='KTr 2026'");
   if (!ktr) ktr = await one(`INSERT INTO workspaces(name,type,law,description)
@@ -481,7 +481,7 @@ async function main() {
     await q("INSERT INTO clo_plo_map(workspace_id,clo_id,plo_id,weight) VALUES ($1,$2,$3,$4)", [K, CLk[cl], Pk[p], w]);
 
   const planK = await insId(`INSERT INTO assessment_plans(workspace_id,course_id,name,semester,school_year,threshold_pct,pass_score_pct,status)
-    VALUES ($1,$2,'AR101 — HK1 2025-2026',1,'2025-2026',75,50,'active') RETURNING id`, [K, Ck['AR101']]);
+    VALUES ($1,$2,'AR101 · HK1 2025-2026',1,'2025-2026',75,50,'active') RETURNING id`, [K, Ck['AR101']]);
   const it1k = await insId(`INSERT INTO assessment_items(workspace_id,plan_id,name,type,max_score,clo_targets)
     VALUES ($1,$2,'Bài tập giữa kỳ','test',10,$3) RETURNING id`,
     [K, planK, JSON.stringify([{clo_id:CLk['AR101.CLO1'],weight:40},{clo_id:CLk['AR101.CLO2'],weight:60}])]);
@@ -498,7 +498,7 @@ async function main() {
     await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [K, it2k, sidK[i], SCk[i][1]]);
   }
   // Đo thêm học phần AR201 để M11 phủ thêm PLO
-  await makeMeasure(K, Ck['AR201'], 'AR201 — HK2 2025-2026', CLk['AR201.CLO1'], CLk['AR201.CLO2'], CLk['AR201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
+  await makeMeasure(K, Ck['AR201'], 'AR201 · HK2 2025-2026', CLk['AR201.CLO1'], CLk['AR201.CLO2'], CLk['AR201.CLO3'], [[7,8],[6,7],[8,9],[5,6],[9,8],[6,7]]);
 
   for (const [ny, data] of Object.entries({
     '2023-2024': { so_gv_co_huu:24, so_gv_tien_si:7, so_gv_thac_si:15, pct_gv_ts:29, so_cbql_nv:5, so_nguoi_hoc_dh:480,

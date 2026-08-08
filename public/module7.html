@@ -129,29 +129,30 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link active" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link active" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="dash-wrap">
   <!-- Header -->
   <div class="dash-header">
     <div>
-      <h1>🏛 Dashboard Lãnh đạo KĐCLGD</h1>
+      <h1><span data-ic="dashboard" data-ic-class="k-ic lg"></span>Dashboard Lãnh đạo KĐCLGD</h1>
       <div class="school" id="school-name">Trường Đại học Kiến trúc Đà Nẵng</div>
     </div>
     <div class="header-actions">
       <span class="refresh-time" id="refresh-time">Đang tải...</span>
-      <button class="btn-refresh" onclick="loadAll()">🔄 Làm mới</button>
+      <button class="btn-refresh" onclick="loadAll()"><span data-ic="refresh" data-ic-class="k-ic sm"></span>Làm mới</button>
     </div>
   </div>
 
@@ -168,16 +169,16 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <!-- Row 2: Radar + Heatmap -->
   <div class="row-2">
     <div class="card">
-      <div class="card-title">📡 Kết quả 15 Tiêu chuẩn <a href="/module2.html">→ Chi tiết</a></div>
+      <div class="card-title"><span data-ic="target" data-ic-class="k-ic sm"></span>Kết quả 15 Tiêu chuẩn <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Chi tiết</a></div>
       <div class="radar-wrap"><canvas id="chart-radar"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">🗺 Bản đồ 60 Tiêu chí <a href="/module2.html">→ Đánh giá</a></div>
+      <div class="card-title"><span data-ic="map" data-ic-class="k-ic sm"></span>Bản đồ 60 Tiêu chí <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Đánh giá</a></div>
       <div id="heatmap"></div>
       <div class="hm-legend">
         <div class="hm-leg"><div class="hm-dot" style="background:var(--green)"></div>ĐẠT</div>
         <div class="hm-leg"><div class="hm-dot" style="background:var(--red)"></div>Không ĐẠT</div>
-        <div class="hm-leg"><div class="hm-dot" style="background:var(--yellow)"></div>Nháp</div>
+        <div class="hm-leg"><div class="hm-dot" style="background:var(--yellow)"></div>Chưa kết luận</div>
         <div class="hm-leg"><div class="hm-dot" style="background:#d9dce1"></div>Chưa đánh giá</div>
       </div>
     </div>
@@ -186,12 +187,12 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <!-- Row 3: KPI trends + Surveys -->
   <div class="row-3">
     <div class="card">
-      <div class="card-title">📈 Xu hướng KPI theo năm <a href="/module3.html">→ Biểu 16</a></div>
+      <div class="card-title"><span data-ic="trend" data-ic-class="k-ic sm"></span>Xu hướng KPI theo năm <a href="/module3.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Biểu 16</a></div>
       <div class="kpi-chart-wrap"><canvas id="chart-kpi"></canvas></div>
       <div class="axis-note" id="kpi-axis-note"></div>
     </div>
     <div class="card">
-      <div class="card-title">📝 Tổng hợp Khảo sát (Biểu 08–11) <a href="/module5.html">→ Chi tiết</a></div>
+      <div class="card-title"><span data-ic="survey" data-ic-class="k-ic sm"></span>Tổng hợp Khảo sát (Biểu 08–11) <a href="/module5.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Chi tiết</a></div>
       <div id="survey-wrap" class="survey-wrap"></div>
     </div>
   </div>
@@ -199,11 +200,11 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <!-- Row 4: TĐG progress + Action items -->
   <div class="row-4">
     <div class="card">
-      <div class="card-title">📅 Tiến độ TĐG <a href="/module4.html">→ Chi tiết</a></div>
+      <div class="card-title"><span data-ic="calendar" data-ic-class="k-ic sm"></span>Tiến độ TĐG <a href="/module4.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Chi tiết</a></div>
       <div id="tdg-wrap" class="tdg-ring-wrap"></div>
     </div>
     <div class="card">
-      <div class="card-title">⚠️ Cần chú ý <a href="/module2.html">→ Đánh giá TC</a></div>
+      <div class="card-title"><span data-ic="warning" data-ic-class="k-ic sm"></span>Cần chú ý <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Đánh giá TC</a></div>
       <div id="action-items"></div>
     </div>
   </div>
@@ -349,7 +350,10 @@ function renderHeatmap(rData) {
       if (a) {
         if (a.ket_qua === 'DAT')       { cls = 'dat';   label = 'ĐẠT'; }
         else if (a.ket_qua === 'KHONG_DAT') { cls = 'kdat'; label = 'Không ĐẠT'; }
-        else                            { cls = 'draft'; label = 'Nháp'; }
+        // Nhánh này bắt ket_qua='CHUA': đã có phiếu nhưng chưa chốt kết quả.
+        // Trước đây gọi là "Nháp", trùng tên với phiếu chưa duyệt ở màn Đánh giá
+        // tiêu chí, nên cùng một chữ cho ra 3 chỗ này và 15 chỗ kia.
+        else                            { cls = 'draft'; label = 'Chưa kết luận'; }
       }
       const tip = `TC ${c.key}: ${c.name} · ${label}`;
       return `<div class="hm-cell ${cls}" title="${tip}"
@@ -382,7 +386,7 @@ function renderKpiChart(kpiList) {
   const noteEl = document.getElementById('kpi-axis-note');
 
   if (sorted.length === 0) {
-    if (noteEl) noteEl.textContent = '';
+    if (noteEl) noteEl.innerHTML = '';
     ctx.fillStyle = '#64748b'; ctx.font = '13px Segoe UI';
     ctx.textAlign = 'center';
     ctx.fillText('Chưa có dữ liệu KPI. Nhập tại Biểu 16.', ctx.canvas.width/2, 80);
@@ -409,8 +413,8 @@ function renderKpiChart(kpiList) {
   // Cắt gốc trục thì BẮT BUỘC nói ra, nếu không người đọc sẽ hiểu chênh lệch
   // giữa các đường lớn hơn thực tế.
   if (noteEl) {
-    noteEl.textContent = yMin > 0
-      ? `⚠️ Trục dọc bắt đầu từ ${yMin}% chứ không phải 0%, để thấy được xu hướng. Khoảng cách giữa các đường trên hình vì thế lớn hơn chênh lệch thực tế.`
+    noteEl.innerHTML = yMin > 0
+      ? `${KIcon('warning','k-ic sm')} Trục dọc bắt đầu từ ${yMin}% chứ không phải 0%, để thấy được xu hướng. Khoảng cách giữa các đường trên hình vì thế lớn hơn chênh lệch thực tế.`
       : '';
   }
 
@@ -495,6 +499,24 @@ async function renderTdg(tdgList) {
   // Ba trạng thái còn lại (in_progress, late, todo) đều tính là chưa xong.
   // module4 có gọi autoMarkLate() trước khi tính, nhưng hàm đó chỉ đổi todo → late
   // nên không đụng tới số 'done'; hai màn hình vì thế luôn ra cùng con số.
+  // Số việc trễ phải đếm CÙNG MỘT CÁCH với màn Tiến độ TĐG, nếu không cùng một
+  // kế hoạch mà Dashboard báo 1 việc trễ còn màn kia báo 7. Màn Tiến độ đếm
+  // theo lịch: việc chưa làm mà đã quá tuần kết thúc thì tính là trễ, dù trạng
+  // thái đó chưa được ghi xuống hồ sơ. Ở đây làm y hệt.
+  function tuanHienTai(chuoiNgay) {
+    if (!chuoiNgay) return -1;
+    const m = String(chuoiNgay).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    const d = m ? new Date(+m[3], +m[2] - 1, +m[1]) : new Date(chuoiNgay);
+    if (isNaN(d)) return -1;
+    const cach = Date.now() - d.getTime();
+    if (cach < 0) return 0;
+    return Math.min(24, Math.floor(cach / (7 * 24 * 60 * 60 * 1000)) + 1);
+  }
+  const tuan = tuanHienTai(p.ngay_bat_dau);
+  const treTheoLich = tasks.filter(t =>
+    t.status === 'late' || (t.status === 'todo' && tuan > 0 && Number(t.week_end) < tuan)).length;
+  const choLam = Math.max(0, tasks.length - p.done - p.in_progress - treTheoLich);
+
   const phaseRows = TDG_PHASES.map(ph => {
     const list = tasks.filter(t => Number(t.phase) === ph.id);
     const done = list.filter(t => t.status === 'done').length;
@@ -528,7 +550,7 @@ async function renderTdg(tdgList) {
             title="${r.pct == null ? 'Giai đoạn chưa có công việc nào' : `${r.done}/${r.n} công việc đã hoàn thành`}">${r.pct == null ? '–' : r.pct + '%'}</span>
         </div>`).join('')}
       <div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
-        ${p.done} xong · ${p.in_progress} đang làm · ${p.late} trễ · ${p.total - p.done - p.in_progress - p.late} chờ
+        ${p.done} xong · ${p.in_progress} đang làm · ${tasks.length ? treTheoLich : p.late} trễ · ${tasks.length ? choLam : (p.total - p.done - p.in_progress - p.late)} chờ
       </div>
     </div>
   `;
@@ -561,7 +583,7 @@ function renderActions(rData) {
 
   const el = document.getElementById('action-items');
   if (!actions.length) {
-    el.innerHTML = '<div class="empty-msg">🎉 Tất cả 60 tiêu chí đã được đánh giá ĐẠT!</div>';
+    el.innerHTML = `<div class="empty-msg">${KIcon('checkCircle','k-ic sm')} Tất cả 60 tiêu chí đã được đánh giá ĐẠT!</div>`;
     return;
   }
 
@@ -578,7 +600,7 @@ function renderActions(rData) {
           <span class="action-tc" style="color:${a.type==='kdat'?'var(--red)':'var(--muted)'}">${a.tc}</span>
           <span class="action-name">${escHtml(a.name)}</span>
           <span class="action-badge ${a.type}">${a.label}</span>
-          <a class="action-link" href="/module2.html">→ Đánh giá</a>
+          <a class="action-link" href="/module2.html">${KIcon('arrowRight','k-ic sm')}Đánh giá</a>
         </div>`).join('')}
     </div>
     ${actions.length < (totalKdat + totalNone) ? `<div style="font-size:11px;color:var(--muted);text-align:right;margin-top:6px">Hiển thị ${actions.length}/${totalKdat+totalNone} mục</div>` : ''}

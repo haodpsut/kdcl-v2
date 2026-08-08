@@ -720,29 +720,40 @@ td {
   cursor: pointer; transition: all .12s; font-family: inherit;
 }
 .modal-suggestions .sug-item span { flex: 1; }
-.modal-suggestions .sug-item input { cursor: pointer; flex-shrink: 0; }
+/* Quy tắc .form-group input { width:100% } của hộp thoại ăn cả vào ô tick,
+   làm ô rộng 480px và bóp phần chữ còn 36px nên chữ rơi dọc từng ký tự.
+   Ô tick phải giữ kích thước tự nhiên. */
+.modal-suggestions .sug-item input[type="checkbox"] {
+  cursor: pointer; flex: 0 0 auto; width: auto !important; min-width: 0; margin: 0;
+}
 .modal-suggestions .sug-done {
   flex-shrink: 0; font-style: normal; font-size: 10px; font-weight: 700;
   color: var(--green); background: rgba(26,127,75,.12); padding: 1px 5px; border-radius: 3px;
 }
 .modal-suggestions .sug-item:hover { border-color: var(--accent); background: rgba(153,0,0,.07); }
 .modal-suggestions .sug-item.used { opacity: .5; text-decoration: line-through; }
+
+/* Nút chỉ có biểu tượng, không có chữ: bỏ lề phải mặc định của .k-ic để
+   biểu tượng nằm đúng giữa nút như khi còn dùng ký tự. */
+.btn-icon .k-ic, .modal-close .k-ic, .filter-chip button .k-ic,
+.std-arrow .k-ic, .empty-state .icon .k-ic, .dz-icon .k-ic { margin-right: 0; }
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <!-- ── Top Nav ─────────────────────────────────────────────── -->
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link active" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link active" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -761,7 +772,7 @@ td {
 <!-- ── Main ───────────────────────────────────────────────── -->
 <div id="main">
   <div class="topbar">
-    <h1>📂 Quản lý Minh chứng KĐCLGD</h1>
+    <h1><span data-ic="folder"></span>Quản lý Minh chứng KĐCLGD</h1>
     <span id="filter-label">ĐH Kiến trúc Đà Nẵng</span>
   </div>
 
@@ -783,9 +794,9 @@ td {
   <div class="criterion-panel" id="criterion-panel"></div>
 
   <div class="filter-bar">
-    <input id="search-input" type="text" placeholder="🔍  Tìm theo mô tả, mã minh chứng, tên file, nguồn..." oninput="applySearch()">
+    <input id="search-input" type="text" placeholder="Tìm theo mô tả, mã minh chứng, tên file, nguồn..." oninput="applySearch()">
     <div id="active-filter"></div>
-    <button class="btn-upload" onclick="openModal()">＋ Thêm minh chứng</button>
+    <button class="btn-upload" onclick="openModal()"><span data-ic="plus"></span>Thêm minh chứng</button>
   </div>
 
   <div class="table-wrap">
@@ -804,7 +815,7 @@ td {
       <tbody id="evidence-body"></tbody>
     </table>
     <div id="empty-state" class="empty-state" style="display:none">
-      <div class="icon">📭</div>
+      <div class="icon"><span data-ic="inbox" data-ic-class="k-ic xl"></span></div>
       <p>Chưa có minh chứng nào. Nhấn <strong>Thêm minh chứng</strong> để bắt đầu.</p>
     </div>
   </div>
@@ -814,8 +825,8 @@ td {
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-header">
-      <h3>➕ Thêm minh chứng mới</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h3><span data-ic="plus"></span>Thêm minh chứng mới</h3>
+      <button class="modal-close" onclick="closeModal()"><span data-ic="x" data-ic-class="k-ic lg"></span></button>
     </div>
     <div class="modal-body">
 
@@ -863,7 +874,7 @@ td {
              ondragover="onDragOver(event)"
              ondragleave="onDragLeave(event)"
              ondrop="onDrop(event)">
-          <div class="dz-icon">📄</div>
+          <div class="dz-icon"><span data-ic="report" data-ic-class="k-ic xl"></span></div>
           <p>Kéo thả file vào đây hoặc <strong>nhấn để chọn</strong></p>
           <p style="font-size:11px;margin-top:4px">PDF, Word, Excel, PPT, ảnh... (tối đa 50MB)</p>
           <div class="file-chosen" id="file-chosen"></div>
@@ -945,7 +956,7 @@ function renderTree() {
         <div class="std-badge">${s.id}</div>
         <div class="std-name">TC${s.id}: ${s.name}</div>
         <div class="std-count" id="std-cnt-${s.id}">0</div>
-        <div class="std-arrow" id="std-arr-${s.id}">▶</div>
+        <div class="std-arrow" id="std-arr-${s.id}">${KIcon('chevronRight', 'k-ic sm')}</div>
       </div>
       <div class="criteria-list" id="cl-${s.id}">
         ${s.criteria.map((c, i) => {
@@ -1031,6 +1042,19 @@ function clearFilter() {
 // ── Criterion Detail Panel (PL2: chi tiết + minh chứng gợi ý) ────────────────
 let CRITERION_DETAIL_CACHE = {};  // cache theo code "1.1"
 let EVIDENCE_TYPE_MAP = null;
+
+// Loại minh chứng do máy chủ trả về kèm emoji. Trang này vẽ bằng bộ biểu tượng
+// dùng chung nên tra tên biểu tượng theo mã loại, không dùng emoji của máy chủ.
+const EV_TYPE_IC = {
+  official_statement: 'report',  decision: 'report',      regulation: 'book',
+  guideline: 'book',             policy: 'book',          plan: 'calendar',
+  strategic_plan: 'target',      procedure: 'refresh',    report: 'chart',
+  meeting_minutes: 'edit',       survey: 'survey',        audit: 'search',
+  evaluation: 'ruler',           training: 'cap',         website: 'link',
+  handbook: 'book',              visual: 'eye',           official_doc: 'report',
+  external_doc: 'link',
+};
+function evTypeIc(type) { return KIcon(EV_TYPE_IC[type] || 'report', 'k-ic sm'); }
 let CP_STATE = { code: null, sugs: [], uploaded: [], openSug: null };
 
 // ── Gắn minh chứng vào mục gợi ý ────────────────────────────────────────────
@@ -1116,7 +1140,7 @@ function renderCriterionPanel(code, d) {
         <span class="cp-code">${code}</span>
       </div>
       <div style="font-size:12px;color:var(--muted);padding:6px 0;">
-        ⓘ Chi tiết cho tiêu chí này sẽ được bổ sung ở Pha B (hiện chỉ có TC 1.1–1.6).
+        ${KIcon('info', 'k-ic sm')} Chi tiết cho tiêu chí này sẽ được bổ sung ở Pha B (hiện chỉ có TC 1.1–1.6).
       </div>`;
     panel.classList.add('show');
     return;
@@ -1142,7 +1166,7 @@ function renderCriterionPanel(code, d) {
   panel.innerHTML = `
     <div class="cp-head">
       <div>
-        <h3>📋 Chi tiết tiêu chí</h3>
+        <h3>${KIcon('clipboard')}Chi tiết tiêu chí</h3>
       </div>
       <span class="cp-code">${code}</span>
       <button class="cp-collapse-btn" onclick="hideCriterionPanel()">Ẩn</button>
@@ -1150,28 +1174,28 @@ function renderCriterionPanel(code, d) {
     <div class="cp-full-name">${escHtml(d.full_name)}</div>
 
     <div class="cp-section">
-      <h4>⚡ Yêu cầu tiêu chí <span class="count">(${d.requirements.length})</span></h4>
+      <h4>${KIcon('target', 'k-ic sm')} Yêu cầu tiêu chí <span class="count">(${d.requirements.length})</span></h4>
       <ul class="cp-reqs">
         ${d.requirements.map((r, i) => `<li><span class="n">${i+1}.</span><span>${escHtml(r)}</span></li>`).join('')}
       </ul>
     </div>
 
     <div class="cp-section">
-      <h4>📑 Minh chứng gợi ý <span class="count">(${hasCount}/${d.suggested_evidence.length} đã khai)</span></h4>
-      ${chuaKhai.length ? `<div class="cp-note">⚠ ${chuaKhai.length}/${uploaded.length} minh chứng của tiêu chí này <b>chưa khai</b> phục vụ mục nào, nên chưa được tính vào độ bao phủ. Bấm <b>Gắn</b> ở từng mục để khai.</div>` : ''}
+      <h4>${KIcon('folder', 'k-ic sm')} Minh chứng gợi ý <span class="count">(${hasCount}/${d.suggested_evidence.length} đã khai)</span></h4>
+      ${chuaKhai.length ? `<div class="cp-note">${KIcon('warning', 'k-ic sm')} ${chuaKhai.length}/${uploaded.length} minh chứng của tiêu chí này <b>chưa khai</b> phục vụ mục nào, nên chưa được tính vào độ bao phủ. Bấm <b>Gắn</b> ở từng mục để khai.</div>` : ''}
       <div class="cp-checklist">
         ${matches.map((m, i) => {
           const t = EVIDENCE_TYPE_MAP?.[m.sug.type] || {};
           const hasCls = m.found.length > 0 ? 'has' : '';
           const open = CP_STATE.openSug === i;
           return `<div class="cp-item ${hasCls}">
-            <div class="chk">${m.found.length > 0 ? '✓' : '○'}</div>
+            <div class="chk">${m.found.length > 0 ? KIcon('check') : '○'}</div>
             <div class="body">
               <div class="name">${escHtml(m.sug.name)}</div>
               <div class="meta">
-                <span class="ev-type">${t.icon || ''} ${escHtml(t.label || m.sug.type)}</span>
+                <span class="ev-type">${evTypeIc(m.sug.type)} ${escHtml(t.label || m.sug.type)}</span>
                 <span style="color:var(--muted);">${escHtml(m.sug.category || '')}</span>
-                ${m.found.length > 0 ? `<span class="mc-codes">📎 ${m.found.map(f => escHtml(f.code)).join(', ')}</span>` : ''}
+                ${m.found.length > 0 ? `<span class="mc-codes">${KIcon('link', 'k-ic sm')} ${m.found.map(f => escHtml(f.code)).join(', ')}</span>` : ''}
               </div>
               ${open ? renderSugPicker(i) : ''}
             </div>
@@ -1187,7 +1211,7 @@ function renderCriterionPanel(code, d) {
 
     ${d.self_check_questions && d.self_check_questions.length ? `
       <div class="cp-section">
-        <h4>🤔 Câu hỏi tự đánh giá <span class="count">(${d.self_check_questions.length})</span></h4>
+        <h4>${KIcon('survey', 'k-ic sm')} Câu hỏi tự đánh giá <span class="count">(${d.self_check_questions.length})</span></h4>
         <ul class="cp-selfcheck">
           ${d.self_check_questions.map(q => `<li>${escHtml(q)}</li>`).join('')}
         </ul>
@@ -1218,13 +1242,12 @@ async function refreshModalSuggestions() {
   // "đã có" để khỏi nộp trùng, dấu này đọc từ khai báo thật chứ không dò chữ.
   const uploaded = evidenceList.filter(e => e.tieu_chi === code);
   host.innerHTML = `
-    <div class="sug-head">💡 Minh chứng này phục vụ mục nào? (tick để khai, bấm chữ để điền mô tả)</div>
+    <div class="sug-head">${KIcon('info', 'k-ic sm')} Minh chứng này phục vụ mục nào? (tick để khai, bấm chữ để điền mô tả)</div>
     ${detail.suggested_evidence.map((s, i) => {
       const used = uploaded.some(u => (u.sug_names || []).includes(s.name));
-      const t = EVIDENCE_TYPE_MAP?.[s.type] || {};
       return `<label class="sug-item">
         <input type="checkbox" class="sug-check" value="${escHtml(s.name)}">
-        <span onclick="event.preventDefault(); applySuggestion(${i});">${t.icon || '•'} ${escHtml(s.name)}</span>
+        <span onclick="event.preventDefault(); applySuggestion(${i});">${evTypeIc(s.type)} ${escHtml(s.name)}</span>
         ${used ? '<em class="sug-done">đã có</em>' : ''}
       </label>`;
     }).join('')}
@@ -1252,10 +1275,10 @@ function applySearch() {
 function updateActiveFilter() {
   const el = document.getElementById('active-filter');
   if (filterTchi) {
-    el.innerHTML = `<div class="filter-chip">Tiêu chí ${filterTchi} <button onclick="clearFilter()">✕</button></div>`;
+    el.innerHTML = `<div class="filter-chip">Tiêu chí ${filterTchi} <button onclick="clearFilter()">${KIcon('x', 'k-ic sm')}</button></div>`;
   } else if (filterTC) {
     const s = standards.find(s => s.id === filterTC);
-    el.innerHTML = `<div class="filter-chip">TC${filterTC} <button onclick="clearFilter()">✕</button></div>`;
+    el.innerHTML = `<div class="filter-chip">TC${filterTC} <button onclick="clearFilter()">${KIcon('x', 'k-ic sm')}</button></div>`;
   } else {
     el.innerHTML = '';
   }
@@ -1296,7 +1319,7 @@ function renderTable() {
       <td class="desc-cell" title="${escHtml(e.mo_ta)}">${escHtml(e.mo_ta) || '<span style="color:var(--muted)">—</span>'}</td>
       <td>
         <div class="file-cell">
-          <span class="file-name" title="${escHtml(nameText)}">${isLink ? '🔗 ' : ''}${escHtml(nameText)}</span>
+          <span class="file-name" title="${escHtml(nameText)}">${isLink ? KIcon('link', 'k-ic sm') + ' ' : ''}${escHtml(nameText)}</span>
           <span class="ext-badge ${extClass}">${ext}</span>
         </div>
         ${sizeStr ? `<div class="file-size">${sizeStr}</div>` : ''}
@@ -1305,8 +1328,8 @@ function renderTable() {
       <td class="date-cell">${e.created_at}</td>
       <td>
         <div class="actions">
-          <button class="btn-icon download" title="Tải xuống" onclick="download(${e.id})">⬇</button>
-          <button class="btn-icon delete" title="Xóa" onclick="deleteEvidence(${e.id}, '${escHtml(e.code)}')">🗑</button>
+          <button class="btn-icon download" title="Tải xuống" onclick="download(${e.id})">${KIcon('download')}</button>
+          <button class="btn-icon delete" title="Xóa" onclick="deleteEvidence(${e.id}, '${escHtml(e.code)}')">${KIcon('trash')}</button>
         </div>
       </td>
     </tr>`;
@@ -1433,7 +1456,9 @@ function onFileSelect(input) {
 }
 function setFile(file) {
   selectedFile = file;
-  document.getElementById('file-chosen').textContent = `📎 ${file.name} (${formatSize(file.size)})`;
+  // innerHTML chứ không textContent, vì biểu tượng là SVG chứ không còn là emoji.
+  document.getElementById('file-chosen').innerHTML =
+    `${KIcon('report', 'k-ic sm')} ${escHtml(file.name)} (${formatSize(file.size)})`;
 }
 
 async function submitEvidence() {

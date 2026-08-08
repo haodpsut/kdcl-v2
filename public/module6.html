@@ -113,17 +113,18 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link active" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link active" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -131,7 +132,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 <aside id="sidebar">
   <div class="sidebar-header"><h2>Hồ sơ Báo cáo</h2></div>
   <div class="report-list" id="report-list"></div>
-  <button class="btn-add" onclick="openNewModal()">＋ Tạo báo cáo mới</button>
+  <button class="btn-add" onclick="openNewModal()"><span data-ic="plus" data-ic-class="k-ic sm"></span>Tạo báo cáo mới</button>
 </aside>
 
 <!-- Main -->
@@ -144,7 +145,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 <!-- New Report Modal -->
 <div class="modal-backdrop" id="modal-new">
   <div class="modal">
-    <h2>📄 Tạo Báo cáo TĐG mới</h2>
+    <h2><span data-ic="report"></span>Tạo Báo cáo TĐG mới</h2>
     <div class="form-row">
       <label>Tiêu đề báo cáo *</label>
       <input id="f-title" type="text" placeholder="VD: Báo cáo Tự đánh giá CSGD 2025-2026">
@@ -232,10 +233,16 @@ function renderDashboard() {
     const total = std.criteria.length;
     const pct   = total ? Math.round(std.assessed / total * 100) : 0;
     const fillCls = pct === 100 ? '' : pct > 0 ? 'partial' : 'none';
+    // Thiếu chip cho nhóm ĐÃ CÓ PHIẾU NHƯNG CHƯA CHỐT KẾT QUẢ nên 3 trên 15 thẻ
+    // cộng không đủ số tiêu chí: tiêu chuẩn 1 hiện 2 ĐẠT + 3 chưa = 5 trên 6,
+    // tiêu chuẩn 3 và 7 mỗi thẻ hụt 1. Bốn nhóm dưới đây loại trừ nhau và cộng
+    // đúng bằng tổng số tiêu chí của tiêu chuẩn.
+    const chuaKetLuan = Math.max(0, std.assessed - std.dat - std.khong_dat);
     const badges  = [
       std.dat       ? `<span class="sc-badge dat">${std.dat} ĐẠT</span>`    : '',
       std.khong_dat ? `<span class="sc-badge kdat">${std.khong_dat} KĐ</span>` : '',
-      (total - std.assessed) ? `<span class="sc-badge none">${total - std.assessed} chưa</span>` : '',
+      chuaKetLuan   ? `<span class="sc-badge draft">${chuaKetLuan} chưa kết luận</span>` : '',
+      (total - std.assessed) ? `<span class="sc-badge none">${total - std.assessed} chưa ĐG</span>` : '',
     ].filter(Boolean).join('');
 
     return `<div class="std-card">
@@ -250,7 +257,7 @@ function renderDashboard() {
   }).join('');
 
   document.getElementById('dashboard-section').innerHTML = `
-    <div class="dash-title">📊 Sẵn sàng Báo cáo TĐG</div>
+    <div class="dash-title">${KIcon('chart','k-ic lg')} Sẵn sàng Báo cáo TĐG</div>
 
     <div class="readiness-bar-wrap">
       <h3>Tiến độ đánh giá 60 tiêu chí</h3>
@@ -304,18 +311,18 @@ function renderForm(r) {
 
   document.getElementById('form-section').innerHTML = `
     <div class="action-bar">
-      <button class="btn btn-ghost" onclick="backToDash()">← Tổng quan</button>
+      <button class="btn btn-ghost" onclick="backToDash()">${KIcon('back','k-ic sm')}Tổng quan</button>
       <button class="btn btn-success" onclick="viewReport(${r.id})" ${ready ? '' : 'title="Cần đánh giá ít nhất 30/60 tiêu chí"'}>
-        👁 Xem & In Báo cáo
+        ${KIcon('eye','k-ic sm')}Xem &amp; In Báo cáo
       </button>
-      <button class="btn btn-ghost" onclick="viewReport(${r.id})">📄 Mở cửa sổ mới ↗</button>
+      <button class="btn btn-ghost" onclick="viewReport(${r.id})">${KIcon('report','k-ic sm')}Mở cửa sổ mới ${KIcon('arrowRight','k-ic sm')}</button>
       <button class="btn btn-danger" onclick="deleteReport(${r.id},'${escHtml(r.title).replace(/'/g,"\\'")}')">Xoá</button>
       <span style="font-size:12px;color:var(--muted);margin-left:8px">Đã đánh giá: <strong>${assessed}/60</strong> TC · <strong>${dat}</strong> ĐẠT · Tiến độ: <strong>${pct}%</strong></span>
     </div>
 
     <!-- Metadata -->
     <div class="form-section">
-      <h3>📋 Thông tin Báo cáo</h3>
+      <h3>${KIcon('clipboard')}Thông tin Báo cáo</h3>
       <div class="form-grid">
         <div class="form-row">
           <label>Tiêu đề *</label>
@@ -365,7 +372,7 @@ function renderForm(r) {
         <textarea id="e-kehoach" rows="5" oninput="scheduleSave(${r.id})">${escHtml(r.ke_hoach_cai_tien||'')}</textarea>
       </div>
     </div>
-    <div id="save-hint" class="saved-hint" style="display:none;text-align:right;margin-top:-8px;margin-bottom:12px">✅ Đã lưu tự động</div>
+    <div id="save-hint" class="saved-hint" style="display:none;text-align:right;margin-top:-8px;margin-bottom:12px">${KIcon('checkCircle','k-ic sm')} Đã lưu tự động</div>
   `;
 }
 
@@ -419,18 +426,18 @@ async function createReport() {
   const title  = document.getElementById('f-title').value.trim();
   const period = document.getElementById('f-period').value.trim();
   const author = document.getElementById('f-author').value.trim();
-  if (!title) return showToast('error', '❌ Nhập tiêu đề báo cáo');
+  if (!title) return showToast('error', 'Nhập tiêu đề báo cáo');
   const res  = await fetch('/api/reports', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ title, period, author }),
   });
   const data = await res.json();
-  if (!res.ok) return showToast('error', `❌ ${data.error}`);
+  if (!res.ok) return showToast('error', `${data.error}`);
   closeModal();
   document.getElementById('f-title').value = document.getElementById('f-period').value = document.getElementById('f-author').value = '';
   await loadReports();
   await selectReport(data.id);
-  showToast('success', '✅ Đã tạo báo cáo');
+  showToast('success', 'Đã tạo báo cáo');
 }
 
 async function deleteReport(id, name) {
@@ -438,14 +445,18 @@ async function deleteReport(id, name) {
   await fetch(`/api/reports/${id}`, { method:'DELETE' });
   backToDash();
   await loadReports();
-  showToast('success', '✅ Đã xoá');
+  showToast('success', 'Đã xoá');
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function showToast(type, msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg; el.className = `toast ${type} show`;
+  // Biểu tượng dựng bằng innerHTML, phần chữ nối bằng append() để chuỗi lỗi từ
+  // máy chủ không bị đọc như HTML.
+  el.innerHTML = KIcon(type === 'error' ? 'xCircle' : type === 'info' ? 'info' : 'checkCircle', 'k-ic sm');
+  el.append(' ' + msg);
+  el.className = `toast ${type} show`;
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 </script>

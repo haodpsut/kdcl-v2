@@ -22,7 +22,7 @@ function makeFile(code, tc, desc) {
   seq++;
   const stored = `logi_${code}_${seq}.txt`;
   const content =
-`MINH CHỨNG MẪU — Hệ thống KĐCLGD
+`MINH CHỨNG MẪU · Hệ thống KĐCLGD
 Chương trình đào tạo Logistics và Quản lý chuỗi cung ứng
 Trường Đại học Kiến trúc Đà Nẵng
 ========================================
@@ -174,13 +174,13 @@ async function main() {
       await q("INSERT INTO scores(workspace_id,item_id,plan_student_id,score) VALUES ($1,$2,$3,$4)", [W, it2, sid, diem[n][1]]);
     }
   }
-  await measure('LOG201', 'LOG201 — HK2 2025-2026', 2,
+  await measure('LOG201', 'LOG201 · HK2 2025-2026', 2,
     ['LOG201.CLO1','LOG201.CLO2','LOG201.CLO3'],
     [[8,7.5],[7,8],[6.5,7],[9,8.5],[5.5,6],[7.5,7],[8,9],[6,6.5]]);
-  await measure('LOG302', 'LOG302 — HK1 2025-2026', 1,
+  await measure('LOG302', 'LOG302 · HK1 2025-2026', 1,
     ['LOG302.CLO1','LOG302.CLO2','LOG302.CLO3'],
     [[4.5,5],[6,5.5],[5,4],[7,6.5],[4,4.5],[5.5,5],[6.5,6],[3.5,5]]);   // cố ý dưới ngưỡng
-  await measure('LOG401', 'LOG401 — Đồ án khóa 2026', 2,
+  await measure('LOG401', 'LOG401 · Đồ án khóa 2026', 2,
     ['LOG401.CLO1','LOG401.CLO2','LOG401.CLO3'],
     [[8.5,8],[7.5,8.5],[9,8],[7,7.5],[8,8],[6.5,7],[9.5,9],[7.5,8]]);
 

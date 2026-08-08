@@ -203,18 +203,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 
 <nav class="topnav">
   <span class="brand">KĐCLGD · ĐH Kiến trúc Đà Nẵng</span>
-  <a class="nav-link" href="/">📂 Minh chứng</a>
-  <a class="nav-link" href="/module2.html">📋 Đánh giá TC</a>
-  <a class="nav-link" href="/module3.html">📊 KPI · Biểu 16</a>
-  <a class="nav-link active" href="/module4.html">📅 Tiến độ TĐG</a>
-  <a class="nav-link" href="/module5.html">📝 Khảo sát</a>
-  <a class="nav-link" href="/module6.html">📄 Báo cáo TĐG</a>
-  <a class="nav-link" href="/module7.html">🏛 Dashboard</a>
+  <a class="nav-link" href="/"><span data-ic="folder"></span>&nbsp;Minh chứng</a>
+  <a class="nav-link" href="/module2.html"><span data-ic="clipboard"></span>&nbsp;Đánh giá TC</a>
+  <a class="nav-link" href="/module3.html"><span data-ic="chart"></span>&nbsp;KPI · Biểu 16</a>
+  <a class="nav-link active" href="/module4.html"><span data-ic="calendar"></span>&nbsp;Tiến độ TĐG</a>
+  <a class="nav-link" href="/module5.html"><span data-ic="survey"></span>&nbsp;Khảo sát</a>
+  <a class="nav-link" href="/module6.html"><span data-ic="report"></span>&nbsp;Báo cáo TĐG</a>
+  <a class="nav-link" href="/module7.html"><span data-ic="dashboard"></span>&nbsp;Dashboard</a>
 </nav>
 
 <div class="layout">
@@ -226,25 +227,25 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
     <p>Quy trình tự đánh giá</p>
   </div>
   <div class="plan-list" id="plan-list">
-    <button class="btn-add-plan" onclick="openNewPlan()">＋ Tạo kế hoạch TĐG</button>
+    <button class="btn-add-plan" onclick="openNewPlan()"><span data-ic="plus" data-ic-class="k-ic sm"></span>Tạo kế hoạch TĐG</button>
   </div>
 </div>
 
 <!-- ── Main ── -->
 <div id="main">
   <div class="main-head">
-    <h2 id="plan-title">📅 Kế hoạch Tự Đánh Giá</h2>
+    <h2 id="plan-title"><span data-ic="calendar"></span>Kế hoạch Tự Đánh Giá</h2>
     <span class="head-date" id="plan-date-info"></span>
-    <button class="btn-edit-plan" id="btn-edit-plan" style="display:none" onclick="openEditPlan()">✏ Sửa</button>
-    <button class="btn-add-task" id="btn-add-task" style="display:none" onclick="openAddTask()">＋ Thêm việc</button>
+    <button class="btn-edit-plan" id="btn-edit-plan" style="display:none" onclick="openEditPlan()"><span data-ic="edit" data-ic-class="k-ic sm"></span>Sửa</button>
+    <button class="btn-add-task" id="btn-add-task" style="display:none" onclick="openAddTask()"><span data-ic="plus" data-ic-class="k-ic sm"></span>Thêm việc</button>
   </div>
 
   <div class="main-body" id="main-body">
     <div class="no-plan" id="no-plan-msg">
-      <div class="icon">📅</div>
+      <div class="icon"><span data-ic="calendar" data-ic-class="k-ic xl"></span></div>
       <h3>Chưa có kế hoạch TĐG</h3>
       <p style="margin-bottom:20px;font-size:13px">Tạo kế hoạch để theo dõi tiến độ tự đánh giá 24 tuần</p>
-      <button class="btn-primary" onclick="openNewPlan()">＋ Tạo kế hoạch TĐG</button>
+      <button class="btn-primary" onclick="openNewPlan()"><span data-ic="plus"></span>Tạo kế hoạch TĐG</button>
     </div>
     <div id="plan-content" style="display:none"></div>
   </div>
@@ -403,10 +404,10 @@ function renderPlanList() {
         <div class="plan-name">${p.name}</div>
         <div class="plan-meta">${p.done}/${p.total} hoàn thành · ${pct}%${lateShow ? ` · <span style="color:var(--red)">${lateShow} trễ</span>` : ''}</div>
       </div>
-      <span class="del-plan" onclick="event.stopPropagation();deletePlan(${p.id},'${escHtml(p.name)}')">✕</span>
+      <span class="del-plan" onclick="event.stopPropagation();deletePlan(${p.id},'${escHtml(p.name)}')">${KIcon('x','k-ic sm')}</span>
     </button>`;
   }).join('');
-  el.innerHTML = items + `<button class="btn-add-plan" onclick="openNewPlan()">＋ Tạo kế hoạch TĐG</button>`;
+  el.innerHTML = items + `<button class="btn-add-plan" onclick="openNewPlan()">${KIcon('plus','k-ic sm')}Tạo kế hoạch TĐG</button>`;
 }
 
 // ── Select plan ─────────────────────────────────────────────────────
@@ -422,7 +423,7 @@ function renderPlanContent() {
   const p = activePlan;
   document.getElementById('no-plan-msg').style.display = 'none';
   document.getElementById('plan-content').style.display = '';
-  document.getElementById('plan-title').textContent = `📅 ${p.name}`;
+  document.getElementById('plan-title').innerHTML = KIcon('calendar') + escHtml(p.name);
   document.getElementById('btn-edit-plan').style.display = '';
   document.getElementById('btn-add-task').style.display = '';
 
@@ -434,9 +435,13 @@ function renderPlanContent() {
     dateInfo = `${fmt(start)} · ${fmt(end)}`;
   } else if ((p.ngay_bat_dau || '').trim()) {
     // Báo rõ chuỗi hỏng thay vì để màn hình hiện "Invalid Date".
-    dateInfo = `⚠ Ngày bắt đầu không hợp lệ: "${p.ngay_bat_dau}"`;
+    dateInfo = `Ngày bắt đầu không hợp lệ: "${p.ngay_bat_dau}"`;
   }
-  document.getElementById('plan-date-info').textContent = dateInfo;
+  // Ngày hỏng thì gắn thêm biểu tượng cảnh báo; chuỗi ngày do người dùng nhập
+  // vẫn nối bằng append() nên không bị đọc như HTML.
+  const elDate = document.getElementById('plan-date-info');
+  elDate.innerHTML = (dateInfo && !start) ? KIcon('warning', 'k-ic sm') + ' ' : '';
+  elDate.append(dateInfo);
 
   // Auto-update late status
   autoMarkLate();
@@ -485,7 +490,7 @@ function renderPlanContent() {
           <div class="phase-pct-bar"><div class="phase-pct-fill" style="width:${pPct}%;background:${phase.color}"></div></div>
           <span class="phase-pct-txt" style="color:${hasLate?'var(--red)':phase.color}">${pPct}%</span>
         </div>
-        <span class="phase-arrow open" id="ph-arr-${phase.id}">▶</span>
+        <span class="phase-arrow open" id="ph-arr-${phase.id}">${KIcon('arrowRight','k-ic sm')}</span>
       </div>
       <div class="phase-tasks open" id="ph-tasks-${phase.id}">
         ${tasks.map(t => renderTaskCard(t, phase)).join('')}
@@ -513,7 +518,7 @@ function renderTaskCard(t, phase) {
     <div class="task-main">
       <div class="task-title ${t.status === 'done' ? 'done' : ''}">${escHtml(t.title)}${t.priority === 'high' ? ' <span class="prio-high">ƯU TIÊN</span>' : ''}</div>
       <div class="task-meta">
-        <span class="task-assignee">👤 <input type="text" value="${escHtml(t.assignee)}" placeholder="Người phụ trách..."
+        <span class="task-assignee">${KIcon('users','k-ic sm')}<input type="text" value="${escHtml(t.assignee)}" placeholder="Người phụ trách..."
           onchange="updateTask(${t.id},{assignee:this.value})" onblur="updateTask(${t.id},{assignee:this.value})"></span>
         <span class="task-due ${isLate ? 'late' : ''}">${dueText}</span>
       </div>
@@ -522,10 +527,10 @@ function renderTaskCard(t, phase) {
       <select class="status-sel ${t.status}" onchange="updateTask(${t.id},{status:this.value});this.className='status-sel '+this.value">
         <option value="todo"       ${t.status==='todo'?'selected':''}>Chưa làm</option>
         <option value="in_progress"${t.status==='in_progress'?'selected':''}>Đang làm</option>
-        <option value="done"       ${t.status==='done'?'selected':''}>✓ Hoàn thành</option>
-        <option value="late"       ${t.status==='late'?'selected':''}>⚠ Trễ hạn</option>
+        <option value="done"       ${t.status==='done'?'selected':''}>Hoàn thành</option>
+        <option value="late"       ${t.status==='late'?'selected':''}>Trễ hạn</option>
       </select>
-      <button class="btn-del-task" onclick="deleteTask(${t.id})" title="Xóa">🗑</button>
+      <button class="btn-del-task" onclick="deleteTask(${t.id})" title="Xóa">${KIcon('trash','k-ic sm')}</button>
     </div>
   </div>`;
 }
@@ -692,7 +697,7 @@ async function savePlan() {
     closeModal('modal-plan');
     await loadPlans();
     await selectPlan(editingPlanId);
-    showToast('success', '✅ Đã cập nhật kế hoạch');
+    showToast('success', 'Đã cập nhật kế hoạch');
   } else {
     const res = await fetch('/api/tdg', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -703,9 +708,9 @@ async function savePlan() {
       closeModal('modal-plan');
       await loadPlans();
       await selectPlan(data.id);
-      showToast('success', `✅ Đã tạo "${name}" với ${use_defaults ? '20 việc mặc định' : '0 việc'}`);
+      showToast('success', `Đã tạo "${name}" với ${use_defaults ? '20 việc mặc định' : '0 việc'}`);
     } else {
-      showToast('error', `❌ ${data.error}`);
+      showToast('error', `${data.error}`);
     }
   }
 }
@@ -717,13 +722,13 @@ async function deletePlan(id, name) {
     activePlanId = null; activePlan = null;
     document.getElementById('no-plan-msg').style.display = '';
     document.getElementById('plan-content').style.display = 'none';
-    document.getElementById('plan-title').textContent = '📅 Kế hoạch Tự Đánh Giá';
+    document.getElementById('plan-title').innerHTML = KIcon('calendar') + 'Kế hoạch Tự Đánh Giá';
     document.getElementById('plan-date-info').textContent = '';
     document.getElementById('btn-edit-plan').style.display = 'none';
     document.getElementById('btn-add-task').style.display = 'none';
   }
   await loadPlans();
-  showToast('success', `✅ Đã xoá kế hoạch`);
+  showToast('success', `Đã xoá kế hoạch`);
 }
 
 // ── Add task modal ──────────────────────────────────────────────────────
@@ -748,7 +753,7 @@ async function addTask() {
     activePlan = full;
     renderPlanContent();
     await loadPlans();
-    showToast('success', '✅ Đã thêm công việc');
+    showToast('success', 'Đã thêm công việc');
   }
 }
 
@@ -759,7 +764,11 @@ function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 let toastTimer;
 function showToast(type, msg) {
   const el = document.getElementById('toast');
-  el.className = `toast show ${type}`; el.textContent = msg;
+  el.className = `toast show ${type}`;
+  // Biểu tượng dựng bằng innerHTML, phần chữ nối bằng append() để tên kế hoạch
+  // do người dùng đặt không bị đọc như HTML.
+  el.innerHTML = KIcon(type === 'success' ? 'checkCircle' : 'xCircle');
+  el.append(msg);
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 }
 

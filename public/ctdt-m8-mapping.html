@@ -128,6 +128,7 @@ body {
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -136,13 +137,13 @@ body {
 
 <div class="main">
   <div class="title-bar">
-    <h1>🗺 Ma trận ánh xạ · Khung CĐR</h1>
+    <h1><span data-ic="arrowLeftRight" data-ic-class="k-ic lg"></span> Ma trận ánh xạ · Khung CĐR</h1>
     <p>Xác định học phần/CLO nào đóng góp vào PLO nào. Click cell để toggle.</p>
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="cp" onclick="switchTab('cp')">📚 Course × PLO  <span style="font-size:10px;color:var(--muted);">(I/R/M)</span></button>
-    <button class="tab" data-tab="clp" onclick="switchTab('clp')">🧪 CLO × PLO  <span style="font-size:10px;color:var(--muted);">(weight)</span></button>
+    <button class="tab active" data-tab="cp" onclick="switchTab('cp')"><span data-ic="book" data-ic-class="k-ic sm"></span> Course × PLO  <span style="font-size:10px;color:var(--muted);">(I/R/M)</span></button>
+    <button class="tab" data-tab="clp" onclick="switchTab('clp')"><span data-ic="flask" data-ic-class="k-ic sm"></span> CLO × PLO  <span style="font-size:10px;color:var(--muted);">(weight)</span></button>
   </div>
 
   <div id="content"></div>
@@ -214,10 +215,10 @@ function renderCoursePlo(host) {
       <div class="summary-card"><span class="v">${COURSES.length}</span> học phần</div>
       <div class="summary-card"><span class="v">${PLOS.length}</span> PLO</div>
       <div class="summary-card"><span class="v">${filled}</span>/${totalCells} cell đã gán</div>
-      <div class="summary-card" style="color:${uncovered ? 'var(--yellow)' : 'var(--green)'}">${uncovered ? `⚠ ${uncovered} PLO chưa có HP đóng góp` : '✓ Mọi PLO đều có HP đóng góp'}</div>
+      <div class="summary-card" style="color:${uncovered ? 'var(--yellow)' : 'var(--green)'}">${uncovered ? `${KIcon('warning', 'k-ic sm')} ${uncovered} PLO chưa có HP đóng góp` : `${KIcon('check', 'k-ic sm')} Mọi PLO đều có HP đóng góp`}</div>
     </div>
     <div class="legend">
-      <span style="color:var(--muted);">Click để cycle: trống → I → R → M → trống</span>
+      <span style="color:var(--muted);">Click để cycle: trống ${KIcon('arrowRight', 'k-ic sm')} I ${KIcon('arrowRight', 'k-ic sm')} R ${KIcon('arrowRight', 'k-ic sm')} M ${KIcon('arrowRight', 'k-ic sm')} trống</span>
       <div class="item"><div class="swatch I">I</div><span>Introduce · giới thiệu</span></div>
       <div class="item"><div class="swatch R">R</div><span>Reinforce · củng cố</span></div>
       <div class="item"><div class="swatch M">M</div><span>Master · thành thạo</span></div>
@@ -284,7 +285,7 @@ function renderCloPlo(host) {
 
   // Group CLOs by course for visual structure
   const courseById = {}; for (const c of COURSES) courseById[c.id] = c;
-  const groups = {}; // course_id → [clos]
+  const groups = {}; // course_id tới [clos]
   for (const cl of CLOS) {
     (groups[cl.course_id] = groups[cl.course_id] || []).push(cl);
   }

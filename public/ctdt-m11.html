@@ -121,6 +121,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -130,8 +131,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <div class="main">
   <div class="title-bar">
     <div>
-      <h1>📊 Tổng hợp PLO (M11)</h1>
-      <p>Pipeline cuối: điểm CLO (M10) × ánh xạ CLO×PLO (M8) → mức đạt PLO toàn CTĐT, phân loại 4 mức AUN-QA.</p>
+      <h1><span data-ic="chart" data-ic-class="k-ic lg"></span> Tổng hợp PLO (M11)</h1>
+      <p>Pipeline cuối: điểm CLO (M10) × ánh xạ CLO×PLO (M8) cho ra mức đạt PLO toàn CTĐT, phân loại 4 mức AUN-QA.</p>
     </div>
   </div>
 
@@ -219,14 +220,14 @@ function render(data) {
     </div>
 
     <div class="section">
-      <h2>🎯 Mức đạt từng PLO (theo 4 mức AUN-QA)</h2>
+      <h2>${KIcon('target')} Mức đạt từng PLO (theo 4 mức AUN-QA)</h2>
       <div class="plo-cards">
         ${plos.map(p => ploCardHtml(p)).join('')}
       </div>
     </div>
 
     <div class="section">
-      <h2>🗺 Heatmap Course × PLO · % đạt thực tế (vs ánh xạ I/R/M)</h2>
+      <h2>${KIcon('map')} Heatmap Course × PLO · % đạt thực tế (vs ánh xạ I/R/M)</h2>
       ${counts.courses === 0 ? '<div class="empty-msg">Chưa có học phần.</div>' : heatmapHtml(heatmap)}
     </div>
   `;
@@ -238,7 +239,7 @@ function ploCardHtml(p) {
   const pctText = p.pct === null ? '—' : `${p.pct}%`;
   const fillW = p.pct === null ? 0 : p.pct;
   const contribHtml = p.contributing_clos.length === 0
-    ? `<div class="none">⚠ Chưa map CLO nào lên PLO này (vào <a href="/ctdt-m8-mapping.html" style="color:var(--accent);">Ma trận ánh xạ</a> để gán)</div>`
+    ? `<div class="none">${KIcon('warning', 'k-ic sm')} Chưa map CLO nào lên PLO này (vào <a href="/ctdt-m8-mapping.html" style="color:var(--accent);">Ma trận ánh xạ</a> để gán)</div>`
     : `<div class="head row"><span>HP</span><span>CLO</span><span></span><span>W</span><span>%</span></div>` +
       p.contributing_clos.map(c => `
         <div class="row">

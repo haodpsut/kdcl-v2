@@ -107,6 +107,7 @@ body {
 </style>
 <script src="/workspace-switcher.js" defer></script>
 <link rel="stylesheet" href="/theme-school.css">
+<script src="/icons.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -116,7 +117,7 @@ body {
 <div class="main">
   <div class="title-bar">
     <div>
-      <h1>📐 Rubric Library (M9)</h1>
+      <h1><span data-ic="ruler" data-ic-class="k-ic lg"></span> Rubric Library (M9)</h1>
       <p>Thang đo theo doc05: 4 dòng · Mức độ / Đạt CĐR / Trọng số % / Mô tả năng lực. Thư viện tái dùng cho nhiều CLO.</p>
     </div>
     <button class="btn" onclick="openEditor()">+ Tạo Rubric mới</button>
@@ -238,7 +239,7 @@ async function openEditor(id = null) {
       <div class="editor-actions">
         <div class="left">
           <button class="btn ghost" id="r-add-lvl" type="button">+ Thêm mức</button>
-          <button class="btn ghost" id="r-balance" type="button">⚖ Cân W = 100% đều</button>
+          <button class="btn ghost" id="r-balance" type="button">${KIcon('arrowLeftRight', 'k-ic sm')} Cân W = 100% đều</button>
           <span id="r-weight-status" class="weight-status">Σ W = ?</span>
         </div>
         <div class="right">
@@ -333,7 +334,7 @@ function renderMatrix() {
       </tr>
       <tr>
         <th class="label"></th>
-        ${EDIT_LEVELS.map((_, i) => `<td class="col-actions"><button data-i="${i}" data-act="rm" type="button" title="Xóa mức">🗑</button></td>`).join('')}
+        ${EDIT_LEVELS.map((_, i) => `<td class="col-actions"><button data-i="${i}" data-act="rm" type="button" title="Xóa mức">${KIcon('trash', 'k-ic sm')}</button></td>`).join('')}
       </tr>
     </tbody>`;
 
@@ -374,7 +375,7 @@ function updateWeightStatus() {
   const ok = Math.abs(r - 100) < 0.5;
   el.textContent = `Σ W = ${r}%`;
   el.className = 'weight-status ' + (ok ? 'ok' : 'warn');
-  el.title = ok ? 'Tổng trọng số = 100% ✓' : 'Lưu ý: tổng nên = 100% (bấm "Cân W")';
+  el.title = ok ? 'Tổng trọng số = 100%' : 'Lưu ý: tổng nên = 100% (bấm "Cân W")';
 }
 
 loadAll();

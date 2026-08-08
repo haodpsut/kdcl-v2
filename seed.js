@@ -18,7 +18,7 @@ async function ensureSeed({ q, one }) {
   const wsCount = (await one('SELECT count(*)::int n FROM workspaces')).n;
   if (wsCount === 0) {
     await q(`INSERT INTO workspaces(name,type,law,description)
-             VALUES ('CSGD 2026','CSGD','TT26/2026 BGDĐT','Kiểm định Cơ sở Giáo dục — 15 tiêu chuẩn / 60 tiêu chí')`);
+             VALUES ('CSGD 2026','CSGD','TT26/2026 BGDĐT','Kiểm định Cơ sở Giáo dục · 15 tiêu chuẩn / 60 tiêu chí')`);
     console.log('[seed] đã tạo workspace "CSGD 2026"');
   }
 
