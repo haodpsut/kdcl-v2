@@ -313,11 +313,37 @@
     document.head.appendChild(l);
   }
 
+  // ── Footer dùng chung ─────────────────────────────────────────────────────
+  // Đặt ở đây chứ không chép vào 15 tệp HTML: chép tay thì sớm muộn có trang
+  // quên sửa, và đúng trang đó là trang người ta in ra nộp. Tên trường lấy từ
+  // school_info trong CSDL nên sửa một chỗ là cả hệ đổi theo.
+  async function injectFooter() {
+    if (document.querySelector('.kdcl-footer')) return;
+    let info = {};
+    try { info = await fetch('/api/school-info').then((r) => (r.ok ? r.json() : {})); } catch { info = {}; }
+    const ten = info.ten_truong || 'Trường Đại học Kiến trúc Đà Nẵng';
+    const f = document.createElement('footer');
+    f.className = 'kdcl-footer';
+    f.innerHTML =
+      '<span class="kf-left">Hệ thống quản lý minh chứng kiểm định chất lượng giáo dục' +
+      ' &nbsp;·&nbsp; ' + esc(ten) + '</span>' +
+      '<span class="kf-right">' +
+      (info.dia_chi ? esc(info.dia_chi) + ' &nbsp;·&nbsp; ' : '') +
+      (info.website ? '<a href="' + esc(info.website) + '" target="_blank" rel="noopener">' + esc(info.website.replace(/^https?:\/\//, '')) + '</a>' : '') +
+      '</span>';
+    document.body.appendChild(f);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  }
+
   async function init() {
     injectStyles();
     injectFavicon();
     injectDemoBannerIfVercel();
     if (!(await requireLogin())) return;
+    injectFooter();
     try {
       const data = await loadWorkspaces();
       if (!data.items || data.items.length === 0) return;

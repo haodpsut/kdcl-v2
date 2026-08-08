@@ -87,3 +87,23 @@ h1 { color: #5c0000; }
 /* Trang nào đặt font khác thì kéo về một ngăn xếp duy nhất, tránh chữ đổi dáng
    giữa các trang (trước đây 'Segoe UI' vs system-ui đứng đầu ở hai nhóm trang). */
 body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }
+
+/* ── Footer dùng chung, do workspace-switcher.js chèn vào mọi trang ─────────
+   Là flex item cuối của body (mọi trang đều để body là cột flex) nên nó nằm
+   đáy nội dung, không đè lên vùng đang cuộn. flex-shrink:0 để trang nào khoá
+   chiều cao 100vh cũng không bóp mất nó. */
+.kdcl-footer {
+  flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 6px 18px;
+  padding: 8px 20px;
+  background: #fff;
+  border-top: 2px solid #fbae40;
+  color: #4b5563; font-size: 11px; line-height: 1.5;
+}
+.kdcl-footer .kf-left { font-weight: 600; color: #5c0000; }
+.kdcl-footer a { color: #990000; text-decoration: none; }
+.kdcl-footer a:hover { text-decoration: underline; }
+@media (max-width: 700px) {
+  .kdcl-footer { justify-content: flex-start; }
+}
