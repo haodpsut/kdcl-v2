@@ -69,3 +69,21 @@
 /* ── Nhấn nhá thương hiệu cho nội dung ── */
 h1 { color: #5c0000; }
 ::selection { background: rgba(251,174,64,.35); }
+
+/* ── Bảng màu nền dùng chung ────────────────────────────────────────────────
+   Trước đây 15 trang khai --bg:#eef1f4 / --muted:#64748b, 2-3 trang lại khai
+   --bg:#f5f6f8 / --muted:#606770 / --border:#dadde1, nên chuyển trang thấy nền
+   và chữ phụ đổi sắc. Tệp này nạp SAU <style> của trang nên khai lại ở đây là
+   đủ để thống nhất, không cần sửa 15 tệp.
+   --muted cũ #64748b trên nền trắng chỉ đạt 4,2:1, dưới ngưỡng AA 4,5:1 cho
+   chữ nhỏ; #4b5563 đạt 8,0:1 mà vẫn giữ đúng vai trò chữ phụ. */
+:root {
+  --bg:     #eef1f4;
+  --panel:  #ffffff;
+  --border: #d9dce1;
+  --hover:  #eef1f4;
+  --muted:  #4b5563;
+}
+/* Trang nào đặt font khác thì kéo về một ngăn xếp duy nhất, tránh chữ đổi dáng
+   giữa các trang (trước đây 'Segoe UI' vs system-ui đứng đầu ở hai nhóm trang). */
+body { font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; }

@@ -200,6 +200,15 @@
     });
     document.getElementById('ws-new').addEventListener('click', openCreateModal);
 
+    // Căn cứ pháp lý hiển thị trên trang lấy từ chính workspace đang mở.
+    // Trước đây ba chỗ gõ cứng "Thông tư /2026/TT-BGDĐT" (thiếu số hiệu, chép
+    // từ bản dự thảo) và không đổi theo đợt kiểm định, nên trang CSGD với trang
+    // CTĐT cùng dẫn một căn cứ sai. WS_CURRENT để bản in dùng lại.
+    window.WS_CURRENT = current;
+    document.querySelectorAll('[data-ws-law]').forEach((el) => {
+      if (current.law) el.textContent = current.law;
+    });
+
     // User info + đăng xuất
     const me = window.__me;
     if (me) {
