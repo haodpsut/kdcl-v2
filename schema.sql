@@ -275,3 +275,11 @@ CREATE TABLE IF NOT EXISTS sessions (
   created_at TIMESTAMPTZ DEFAULT now(),
   expires_at TIMESTAMPTZ NOT NULL
 );
+
+-- ─── Bổ sung cột (chạy lại nhiều lần vẫn an toàn) ───────────────────────────
+-- sug_names: người nộp KHAI minh chứng này phục vụ mục gợi ý nào của tiêu chí.
+-- Trước đây độ bao phủ được ĐOÁN bằng cách dò từ trong mô tả và tên tệp, chỉ
+-- cần một từ dài hơn 4 ký tự trùng nhau là tính "đã có", nên một biên bản rà
+-- soát chương trình đào tạo bị tính là minh chứng cho quy trình tuyển sinh vì
+-- cùng chứa âm "trình". Bao phủ nay đếm từ khai báo thật, không đoán.
+ALTER TABLE evidence ADD COLUMN IF NOT EXISTS sug_names TEXT[] NOT NULL DEFAULT '{}';

@@ -642,6 +642,26 @@ td {
 .cp-item .name { color: var(--text); }
 .cp-item .meta { font-size: 10px; color: var(--muted); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
 .cp-item .meta .ev-type { padding: 1px 6px; border-radius: 3px; background: rgba(0,0,0,.05); font-weight: 600; }
+.cp-note {
+  font-size: 11px; color: #8a5a00; background: rgba(251,174,64,.16);
+  border: 1px solid rgba(178,106,0,.35); border-radius: 4px;
+  padding: 6px 9px; margin-bottom: 6px; line-height: 1.5;
+}
+.cp-attach {
+  flex-shrink: 0; align-self: flex-start; font-size: 10px; font-weight: 700;
+  padding: 3px 9px; border-radius: 4px; cursor: pointer;
+  background: #fff; color: var(--accent); border: 1px solid var(--accent);
+}
+.cp-attach:hover { background: var(--accent); color: #fff; }
+.sug-picker {
+  margin-top: 6px; padding: 7px 9px; border-radius: 4px;
+  background: rgba(0,0,0,.035); border: 1px solid var(--border);
+}
+.sug-picker .sp-head { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.sug-picker .sp-row { display: flex; align-items: baseline; gap: 6px; padding: 3px 0; font-size: 11px; cursor: pointer; }
+.sug-picker .sp-row:hover { color: var(--accent); }
+.sug-picker .sp-row input { cursor: pointer; }
+.sug-picker .sp-row b { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 10px; }
 .cp-item.has .meta .mc-codes { color: var(--green); font-weight: 700; }
 
 .cp-selfcheck { list-style: none; padding: 0; }
@@ -665,9 +685,16 @@ td {
 }
 .modal-suggestions .sug-head { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; font-weight: 700; }
 .modal-suggestions .sug-item {
-  display: block; width: 100%; text-align: left; background: transparent; border: 1px solid var(--border);
+  display: flex; align-items: baseline; gap: 7px; width: 100%; text-align: left;
+  background: transparent; border: 1px solid var(--border);
   color: var(--text); font-size: 11px; padding: 5px 8px; border-radius: 3px; margin-bottom: 3px;
   cursor: pointer; transition: all .12s; font-family: inherit;
+}
+.modal-suggestions .sug-item span { flex: 1; }
+.modal-suggestions .sug-item input { cursor: pointer; flex-shrink: 0; }
+.modal-suggestions .sug-done {
+  flex-shrink: 0; font-style: normal; font-size: 10px; font-weight: 700;
+  color: var(--green); background: rgba(26,127,75,.12); padding: 1px 5px; border-radius: 3px;
 }
 .modal-suggestions .sug-item:hover { border-color: var(--accent); background: rgba(153,0,0,.07); }
 .modal-suggestions .sug-item.used { opacity: .5; text-decoration: line-through; }
@@ -975,6 +1002,57 @@ function clearFilter() {
 // ── Criterion Detail Panel (PL2: chi tiết + minh chứng gợi ý) ────────────────
 let CRITERION_DETAIL_CACHE = {};  // cache theo code "1.1"
 let EVIDENCE_TYPE_MAP = null;
+let CP_STATE = { code: null, sugs: [], uploaded: [], openSug: null };
+
+// ── Gắn minh chứng vào mục gợi ý ────────────────────────────────────────────
+// Khai báo do người dùng bấm, không suy từ chữ. Mở đúng một mục một lúc để
+// bảng chi tiết không dài ra thành khó đọc.
+function toggleSugPicker(i) {
+  CP_STATE.openSug = CP_STATE.openSug === i ? null : i;
+  renderCriterionPanel(CP_STATE.code, CRITERION_DETAIL_CACHE[CP_STATE.code]);
+}
+
+function renderSugPicker(i) {
+  const sug = CP_STATE.sugs[i];
+  if (!sug) return '';
+  if (!CP_STATE.uploaded.length) {
+    return `<div class="sug-picker"><i>Tiêu chí này chưa có minh chứng nào để gắn.</i></div>`;
+  }
+  return `<div class="sug-picker">
+    <div class="sp-head">Minh chứng nào phục vụ mục này?</div>
+    ${CP_STATE.uploaded.map(u => {
+      const on = (u.sug_names || []).includes(sug.name);
+      const label = u.mo_ta || u.file_name || u.link_url || '(không mô tả)';
+      return `<label class="sp-row">
+        <input type="checkbox" ${on ? 'checked' : ''} onchange="onSugToggle(${u.id}, ${i}, this.checked)">
+        <b>${escHtml(u.code || '')}</b> <span>${escHtml(label.slice(0, 90))}</span>
+      </label>`;
+    }).join('')}
+  </div>`;
+}
+
+async function onSugToggle(evId, sugIdx, checked) {
+  const sug = CP_STATE.sugs[sugIdx];
+  const ev = CP_STATE.uploaded.find(e => e.id === evId);
+  if (!sug || !ev) return;
+  const names = new Set(ev.sug_names || []);
+  checked ? names.add(sug.name) : names.delete(sug.name);
+  try {
+    const r = await fetch(`/api/evidence/${evId}/suggestions`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sug_names: [...names] }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Lỗi');
+    // Lấy lại từ máy chủ chứ không tự sửa trong bộ nhớ, để cái hiện trên màn
+    // luôn là cái đã ghi xuống CSDL.
+    ev.sug_names = data.sug_names || [];
+    showToast('success', `✅ ${checked ? 'Đã gắn' : 'Đã bỏ gắn'} ${ev.code}`);
+  } catch (e) {
+    showToast('error', `❌ ${e.message}`);
+  }
+  renderCriterionPanel(CP_STATE.code, CRITERION_DETAIL_CACHE[CP_STATE.code]);
+}
 
 async function loadEvidenceTypes() {
   if (EVIDENCE_TYPE_MAP) return;
@@ -988,6 +1066,7 @@ function hideCriterionPanel() {
 
 async function loadCriterionDetail(code) {
   await loadEvidenceTypes();
+  if (CP_STATE.code !== code) CP_STATE.openSug = null;  // đổi tiêu chí thì đóng ô đang mở
   let detail;
   if (CRITERION_DETAIL_CACHE[code] !== undefined) {
     detail = CRITERION_DETAIL_CACHE[code];
@@ -1014,16 +1093,20 @@ function renderCriterionPanel(code, d) {
     return;
   }
 
-  // Match uploaded evidence vs suggested list (keyword match on mô tả / tên file)
+  // Bao phủ đếm từ KHAI BÁO của người nộp (evidence.sug_names), không đoán chữ.
+  // Bản cũ tách tên mục gợi ý thành các từ dài hơn 4 ký tự rồi chỉ cần MỘT từ
+  // xuất hiện trong mô tả hay tên tệp là tính "đã có". Với tiêu chí 6.1 nó cho
+  // 6/6 và "bao phủ 100%" trong khi thực có 3 tài liệu, mười ba lượt khớp thì
+  // mười lượt chỉ nhờ đúng chữ "tuyển", và một biên bản rà soát chương trình
+  // đào tạo được tính cho mục quy trình tuyển sinh vì cùng chứa âm "trình".
+  // Con số sai kiểu đó nguy hiểm hơn không có số, vì người ta mở màn này lên
+  // chính là để biết mình còn thiếu gì trước khi đoàn đánh giá tới.
   const uploaded = evidenceList.filter(e => e.tieu_chi === code);
-  const matches = d.suggested_evidence.map(sug => {
-    const key = sug.name.toLowerCase().split(/[\s,/\(\)]+/).filter(w => w.length > 4);
-    const found = uploaded.filter(u => {
-      const text = ((u.mo_ta || '') + ' ' + (u.file_name || '')).toLowerCase();
-      return key.some(w => text.includes(w));
-    });
-    return { sug, found };
-  });
+  const matches = d.suggested_evidence.map(sug => ({
+    sug, found: uploaded.filter(u => (u.sug_names || []).includes(sug.name)),
+  }));
+  const chuaKhai = uploaded.filter(u => !(u.sug_names || []).length);
+  CP_STATE = { code, sugs: d.suggested_evidence, uploaded, openSug: CP_STATE.openSug };
   const hasCount = matches.filter(m => m.found.length > 0).length;
   const pct = d.suggested_evidence.length > 0 ? Math.round(hasCount / d.suggested_evidence.length * 100) : 0;
 
@@ -1045,11 +1128,13 @@ function renderCriterionPanel(code, d) {
     </div>
 
     <div class="cp-section">
-      <h4>📑 Minh chứng gợi ý <span class="count">(${hasCount}/${d.suggested_evidence.length} đã có)</span></h4>
+      <h4>📑 Minh chứng gợi ý <span class="count">(${hasCount}/${d.suggested_evidence.length} đã khai)</span></h4>
+      ${chuaKhai.length ? `<div class="cp-note">⚠ ${chuaKhai.length}/${uploaded.length} minh chứng của tiêu chí này <b>chưa khai</b> phục vụ mục nào, nên chưa được tính vào độ bao phủ. Bấm <b>Gắn</b> ở từng mục để khai.</div>` : ''}
       <div class="cp-checklist">
-        ${matches.map(m => {
+        ${matches.map((m, i) => {
           const t = EVIDENCE_TYPE_MAP?.[m.sug.type] || {};
           const hasCls = m.found.length > 0 ? 'has' : '';
+          const open = CP_STATE.openSug === i;
           return `<div class="cp-item ${hasCls}">
             <div class="chk">${m.found.length > 0 ? '✓' : '○'}</div>
             <div class="body">
@@ -1059,7 +1144,9 @@ function renderCriterionPanel(code, d) {
                 <span style="color:var(--muted);">${escHtml(m.sug.category || '')}</span>
                 ${m.found.length > 0 ? `<span class="mc-codes">📎 ${m.found.map(f => escHtml(f.code)).join(', ')}</span>` : ''}
               </div>
+              ${open ? renderSugPicker(i) : ''}
             </div>
+            <button type="button" class="cp-attach" onclick="toggleSugPicker(${i})">${open ? 'Đóng' : 'Gắn'}</button>
           </div>`;
         }).join('')}
       </div>
@@ -1097,17 +1184,20 @@ async function refreshModalSuggestions() {
   if (!detail || !detail.suggested_evidence || detail.suggested_evidence.length === 0) {
     host.style.display = 'none'; return;
   }
+  // Tick = KHAI minh chứng này phục vụ mục nào, đây là thứ tính ra độ bao phủ.
+  // Bấm vào chữ thì điền mô tả như trước. Mục đã có người khai được đánh dấu
+  // "đã có" để khỏi nộp trùng, dấu này đọc từ khai báo thật chứ không dò chữ.
   const uploaded = evidenceList.filter(e => e.tieu_chi === code);
   host.innerHTML = `
-    <div class="sug-head">💡 Minh chứng gợi ý (click để auto-fill mô tả):</div>
+    <div class="sug-head">💡 Minh chứng này phục vụ mục nào? (tick để khai, bấm chữ để điền mô tả)</div>
     ${detail.suggested_evidence.map((s, i) => {
-      const key = s.name.toLowerCase().split(/[\s,/\(\)]+/).filter(w => w.length > 4);
-      const used = uploaded.some(u => {
-        const text = ((u.mo_ta || '') + ' ' + (u.file_name || '')).toLowerCase();
-        return key.some(w => text.includes(w));
-      });
+      const used = uploaded.some(u => (u.sug_names || []).includes(s.name));
       const t = EVIDENCE_TYPE_MAP?.[s.type] || {};
-      return `<button type="button" class="sug-item ${used ? 'used' : ''}" onclick="applySuggestion(${i})">${t.icon || '•'} ${escHtml(s.name)}</button>`;
+      return `<label class="sug-item">
+        <input type="checkbox" class="sug-check" value="${escHtml(s.name)}">
+        <span onclick="event.preventDefault(); applySuggestion(${i});">${t.icon || '•'} ${escHtml(s.name)}</span>
+        ${used ? '<em class="sug-done">đã có</em>' : ''}
+      </label>`;
     }).join('')}
   `;
   host.style.display = 'block';
@@ -1336,6 +1426,9 @@ async function submitEvidence() {
   fd.append('nguon', document.getElementById('f-nguon').value);
   fd.append('ghi_chu', document.getElementById('f-ghichu').value);
   fd.append('file', selectedFile);
+  // Khai báo mục gợi ý mà minh chứng này phục vụ; để trống cũng nộp được.
+  const sugChecked = [...document.querySelectorAll('#modal-suggestions .sug-check:checked')].map(c => c.value);
+  fd.append('sug_names', JSON.stringify(sugChecked));
 
   try {
     const res = await fetch('/api/evidence', { method: 'POST', body: fd });

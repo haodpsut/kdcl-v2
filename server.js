@@ -197,8 +197,20 @@ app.get('/api/evidence', async (req, res) => {
   res.json(rows);
 });
 
+// Người nộp khai minh chứng phục vụ mục gợi ý nào. Gửi lên dạng chuỗi JSON vì
+// đây là multipart. Sai định dạng thì coi như chưa khai, không chặn việc nộp:
+// nộp được minh chứng quan trọng hơn khai đủ, và khai bổ sung sau vẫn được.
+function parseSugNames(raw) {
+  if (!raw) return [];
+  try {
+    const v = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    return Array.isArray(v) ? v.filter((s) => typeof s === 'string' && s.trim()).slice(0, 20) : [];
+  } catch { return []; }
+}
+
 app.post('/api/evidence', auth.requireAuth, upload.single('file'), async (req, res) => {
   const { tieu_chuan, tieu_chi, mo_ta, nguon, ghi_chu, source_type, link_url, unit_id } = req.body;
+  const sugNames = parseSugNames(req.body.sug_names);
   const st = source_type === 'link' ? 'link' : 'file';
   if (!tieu_chuan || !tieu_chi) {
     if (req.file) fs.unlink(req.file.path, () => {});
@@ -224,12 +236,12 @@ app.post('/api/evidence', auth.requireAuth, upload.single('file'), async (req, r
     const code = `H${tc}.${String(tc).padStart(2,'0')}.${String(tieu_chi_so).padStart(2,'0')}.${String(thu_tu).padStart(2,'0')}`;
     const ins = await c.query(
       `INSERT INTO evidence(workspace_id,code,tieu_chuan,tieu_chi,tieu_chi_so,thu_tu,mo_ta,nguon,ghi_chu,
-         source_type,file_name,file_stored,file_size,mime_type,link_url,unit_id,uploaded_by,status,reviewed_by,reviewed_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20) RETURNING id, code`,
+         source_type,file_name,file_stored,file_size,mime_type,link_url,unit_id,uploaded_by,status,reviewed_by,reviewed_at,sug_names)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING id, code`,
       [wsId, code, tc, tieu_chi, tieu_chi_so, thu_tu, mo_ta||'', nguon||'', ghi_chu||'',
        st, req.file?.originalname||null, req.file?.filename||null, req.file?.size||null,
        req.file?.mimetype||null, st==='link'?link_url:null, uId, req.user.id, status,
-       status==='da_xac_nhan'?req.user.id:null, status==='da_xac_nhan'?new Date():null]);
+       status==='da_xac_nhan'?req.user.id:null, status==='da_xac_nhan'?new Date():null, sugNames]);
     return ins.rows[0];
   });
   res.json({ id: record.id, code: record.code, message: 'Thêm minh chứng thành công' });
@@ -255,6 +267,19 @@ app.get('/api/evidence/:id/download', async (req, res) => {
   if (!ev) return res.status(404).json({ error: 'Không tìm thấy' });
   if (ev.source_type === 'link') return res.redirect(ev.link_url);
   res.download(path.join(UPLOADS_DIR, ev.file_stored), ev.file_name);
+});
+
+// ─── Khai minh chứng phục vụ mục gợi ý nào ──────────────────────────────────
+// Dùng cho cả dữ liệu cũ: 57 minh chứng nhập trước khi có cột này đều đang để
+// trống, P.ĐBCL gắn dần từ màn chi tiết tiêu chí.
+app.put('/api/evidence/:id/suggestions', auth.requireAuth, async (req, res) => {
+  const wsId = await getWs(req);
+  const names = parseSugNames(req.body.sug_names);
+  const r = await one(
+    'UPDATE evidence SET sug_names=$3 WHERE id=$1 AND workspace_id=$2 RETURNING id, sug_names',
+    [parseInt(req.params.id), wsId, names]);
+  if (!r) return res.status(404).json({ error: 'Không tìm thấy' });
+  res.json({ id: r.id, sug_names: r.sug_names, message: 'Đã cập nhật khai báo' });
 });
 
 // ─── Duyệt / trả lại (admin) ────────────────────────────────────────────────
