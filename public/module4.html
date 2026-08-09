@@ -621,15 +621,40 @@ function togglePhase(id) {
   document.getElementById(`ph-arr-${id}`).classList.toggle('open');
 }
 
+// ── Gọi API ghi, có kiểm mã trả về ─────────────────────────────────────
+// Trước đây các hàm ghi ở trang này gọi fetch rồi cập nhật giao diện ngay,
+// không xem máy chủ trả gì. Tài khoản chỉ xem bấm Lưu thì máy chủ trả 403 mà
+// màn hình vẫn hiện "Đã cập nhật kế hoạch", ô trạng thái vẫn đổi sang Hoàn
+// thành, dòng công việc vẫn biến mất. Tải lại trang thì mọi thứ quay về cũ.
+// Báo thành công cho một việc không xảy ra còn tệ hơn báo lỗi.
+async function ghi(url, opt) {
+  let res, data = {};
+  try {
+    res = await fetch(url, opt);
+  } catch (e) {
+    showToast('error', 'Không gọi được máy chủ: ' + e.message);
+    return { ok: false, data: {} };
+  }
+  try { data = await res.clone().json(); } catch (e) { data = {}; }
+  if (!res.ok) {
+    showToast('error', data.error
+      || (res.status === 403 ? 'Tài khoản không có quyền thực hiện thao tác này'
+        : res.status === 401 ? 'Phiên đăng nhập đã hết, xin đăng nhập lại'
+          : `Máy chủ từ chối (HTTP ${res.status})`));
+  }
+  return { ok: res.ok, data };
+}
+
 // ── Update task ────────────────────────────────────────────────────────
 async function updateTask(taskId, changes) {
-  await fetch(`/api/tdg/${activePlanId}/tasks/${taskId}`, {
+  const { ok } = await ghi(`/api/tdg/${activePlanId}/tasks/${taskId}`, {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(changes)
   });
-  // Update local state
+  // Máy chủ từ chối thì vẽ lại theo dữ liệu cũ, để ô trên màn hình không nói
+  // một đằng còn kho dữ liệu một nẻo.
+  if (!ok) { renderPlanContent(); return; }
   const t = activePlan.tasks.find(t => t.id === taskId);
   if (t) Object.assign(t, changes);
-  // Refresh stats bar + plan list
   await loadPlans();
 }
 
@@ -640,11 +665,11 @@ async function quickAddTask(input, phaseId) {
   const phase = PHASES.find(p => p.id === phaseId);
   const weekRanges = { 1: [1,4], 2: [5,12], 3: [13,18], 4: [19,22], 5: [23,24] };
   const [ws, we] = weekRanges[phaseId];
-  const res = await fetch(`/api/tdg/${activePlanId}/tasks`, {
+  const { ok } = await ghi(`/api/tdg/${activePlanId}/tasks`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title, phase: phaseId, week_start: ws, week_end: we, priority: 'normal' })
   });
-  if (res.ok) {
+  if (ok) {
     input.value = '';
     const full = await fetch(`/api/tdg/${activePlanId}`).then(r => r.json());
     activePlan = full;
@@ -655,7 +680,8 @@ async function quickAddTask(input, phaseId) {
 
 // ── Delete task ────────────────────────────────────────────────────────
 async function deleteTask(taskId) {
-  await fetch(`/api/tdg/${activePlanId}/tasks/${taskId}`, { method: 'DELETE' });
+  const { ok } = await ghi(`/api/tdg/${activePlanId}/tasks/${taskId}`, { method: 'DELETE' });
+  if (!ok) return;
   activePlan.tasks = activePlan.tasks.filter(t => t.id !== taskId);
   renderPlanContent();
   await loadPlans();
@@ -690,34 +716,34 @@ async function savePlan() {
   if (!name) return;
 
   if (editingPlanId) {
-    await fetch(`/api/tdg/${editingPlanId}`, {
+    const { ok } = await ghi(`/api/tdg/${editingPlanId}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, ngay_bat_dau })
     });
+    if (!ok) return;
     closeModal('modal-plan');
     await loadPlans();
     await selectPlan(editingPlanId);
     showToast('success', 'Đã cập nhật kế hoạch');
   } else {
-    const res = await fetch('/api/tdg', {
+    const { ok: res_ok, data } = await ghi('/api/tdg', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, ngay_bat_dau, use_defaults })
     });
-    const data = await res.json();
+    const res = { ok: res_ok };
     if (res.ok) {
       closeModal('modal-plan');
       await loadPlans();
       await selectPlan(data.id);
       showToast('success', `Đã tạo "${name}" với ${use_defaults ? '20 việc mặc định' : '0 việc'}`);
-    } else {
-      showToast('error', `${data.error}`);
     }
   }
 }
 
 async function deletePlan(id, name) {
   if (!confirm(`Xoá kế hoạch "${name}"?\nTất cả công việc sẽ bị xoá.`)) return;
-  await fetch(`/api/tdg/${id}`, { method: 'DELETE' });
+  const { ok } = await ghi(`/api/tdg/${id}`, { method: 'DELETE' });
+  if (!ok) return;
   if (activePlanId === id) {
     activePlanId = null; activePlan = null;
     document.getElementById('no-plan-msg').style.display = '';
@@ -743,11 +769,11 @@ async function addTask() {
   const assignee = document.getElementById('inp-task-assignee').value;
   if (!title) return;
 
-  const res = await fetch(`/api/tdg/${activePlanId}/tasks`, {
+  const { ok } = await ghi(`/api/tdg/${activePlanId}/tasks`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title, phase, week_start: ws, week_end: we, priority, assignee })
   });
-  if (res.ok) {
+  if (ok) {
     closeModal('modal-task');
     const full = await fetch(`/api/tdg/${activePlanId}`).then(r => r.json());
     activePlan = full;

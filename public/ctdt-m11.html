@@ -153,7 +153,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <script>
 const LEVEL_LABEL = {
   fully_achieved: 'Fully achieved (75–100%)',
-  achieved: 'Achieved (50–75%)',
+  achieved: 'Achieved từ 50% tới dưới 75%',
   not_achieved: 'Not achieved (25–50%)',
   fully_not_achieved: 'Fully not achieved (<25%)',
   no_data: 'Chưa có dữ liệu',
@@ -206,16 +206,20 @@ function render(data) {
       <div class="card"><span class="v">${counts.courses}</span>HP</div>
       <div class="card"><span class="v">${counts.plans_considered}</span>Plan đo</div>
       <div class="card"><span class="v">${counts.mappings_clo_plo}</span>Mapping CLO×PLO</div>
-      <div class="card green"><span class="v">${datCount}</span>PLO ≥ Achieved (50%)</div>
-      <div class="card red"><span class="v">${undCount}</span>PLO &lt; 50%</div>
+      <div class="card green"><span class="v">${datCount}</span>PLO đạt từ 50% trở lên</div>
+      <div class="card red"><span class="v">${undCount}</span>PLO dưới 50%</div>
+      <!-- Trước đây chỉ có hai ô trên, nên PLO chưa đo được rơi khỏi cả hai:
+           đợt nào có PLO chưa có dữ liệu thì 5 + 0 không bằng 6 PLO, người xem
+           không có cách nào biết một chuẩn đầu ra đang không được đo. -->
+      ${lc.no_data > 0 ? `<div class="card"><span class="v">${lc.no_data}</span>PLO chưa có dữ liệu đo</div>` : ''}
     </div>
 
     <div class="aunqa-legend">
-      <span style="color:var(--muted);font-weight:700;">4 mức AUN-QA:</span>
-      <div class="item"><span class="swatch fully_achieved"></span>Fully (75–100%) <b style="color:var(--green);">×${lc.fully_achieved}</b></div>
-      <div class="item"><span class="swatch achieved"></span>Achieved (50–75%) <b style="color:var(--accent);">×${lc.achieved}</b></div>
-      <div class="item"><span class="swatch not_achieved"></span>Not (25–50%) <b style="color:var(--yellow);">×${lc.not_achieved}</b></div>
-      <div class="item"><span class="swatch fully_not_achieved"></span>Fully not (&lt;25%) <b style="color:var(--red);">×${lc.fully_not_achieved}</b></div>
+      <span style="color:var(--muted);font-weight:700;">${lc.no_data > 0 ? '4 mức AUN-QA và nhóm chưa có dữ liệu:' : '4 mức AUN-QA:'}</span>
+      <div class="item"><span class="swatch fully_achieved"></span>Fully từ 75% tới 100% <b style="color:var(--green);">×${lc.fully_achieved}</b></div>
+      <div class="item"><span class="swatch achieved"></span>Achieved từ 50% tới dưới 75% <b style="color:var(--accent);">×${lc.achieved}</b></div>
+      <div class="item"><span class="swatch not_achieved"></span>Not từ 25% tới dưới 50% <b style="color:var(--yellow);">×${lc.not_achieved}</b></div>
+      <div class="item"><span class="swatch fully_not_achieved"></span>Fully not dưới 25% <b style="color:var(--red);">×${lc.fully_not_achieved}</b></div>
       ${lc.no_data > 0 ? `<div class="item"><span class="swatch no_data"></span>Chưa có dữ liệu <b>×${lc.no_data}</b></div>` : ''}
     </div>
 

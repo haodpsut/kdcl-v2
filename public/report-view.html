@@ -30,7 +30,11 @@ body { font-family:'Times New Roman', Times, serif; background:#e8e8e8; color:#1
 
 .page {
   width:210mm; min-height:297mm; background:#fff;
-  padding:20mm 25mm 20mm 30mm;
+  /* Lề trên màn hình phải KHỚP lề in ở @page. Trước đây màn hình dùng
+     20/25/20/30 còn bản in 15/20/15/25, tức bề rộng ruột lệch 10mm, nên chữ
+     ngắt dòng khác nhau và phép chia trang đo trên màn hình không đúng với
+     giấy: 42 khối đo được lại in ra 65 tờ. */
+  padding:15mm 20mm 15mm 25mm;
   box-shadow:0 2px 12px #0003;
   position:relative; page-break-after:always;
 }
@@ -60,6 +64,11 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 .toc-title{ flex:1; }
 .toc-dots { flex:1; border-bottom:1px dotted #888; margin:0 6pt 3pt; min-width:1cm; }
 .toc-page { min-width:1cm; text-align:right; }
+
+/* Số trang, đặt ở đáy vùng ruột của từng tờ. */
+.so-trang { position:absolute; left:0; right:0; bottom:6mm; text-align:center;
+            font-size:10pt; color:#444; }
+@media print { .so-trang { bottom:0; } }
 
 /* ─── Section headings ───────────────────────────────────────────────────────── */
 .section-part { font-size:13pt; font-weight:bold; text-transform:uppercase; margin:16pt 0 8pt; border-bottom:2px solid #111; padding-bottom:4pt; }
@@ -136,10 +145,21 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 
 /* ─── Print media ────────────────────────────────────────────────────────────── */
 @media print {
+  /* Lề phải đặt ở @page chứ không ở .page. Padding của .page chỉ áp MỘT LẦN cho
+     cả khối; khối nào cao hơn một tờ thì từ tờ thứ hai trở đi chữ chạy sát mép,
+     đo trên bản PDF thật ra 1,8 mm trên 28 trong 43 trang. Máy in để bàn không
+     in được trong khoảng 4 tới 6 mm sát mép nên chỗ đó bị cắt thật khi in ra. */
+  @page { size: A4; margin: 15mm 20mm 15mm 25mm; }
   body { background:#fff; }
   .toolbar { display:none !important; }
   .pages { padding:0; gap:0; }
-  .page { width:100%; min-height:0; margin:0; padding:15mm 20mm 15mm 25mm; box-shadow:none; page-break-after:always; }
+  /* min-height đúng bằng vùng ruột của tờ A4 sau khi trừ lề 15mm trên dưới, để
+     dòng số trang nằm ở đáy tờ giấy chứ không dính ngay dưới đoạn văn cuối. */
+  .page { width:100%; min-height:267mm; margin:0; padding:0; box-shadow:none;
+          page-break-after:always; position:relative; }
+  /* Không để bảng hay một tiêu chí bị cắt ngang qua ranh giới trang. */
+  .section-tc, .bieu04 tr, .sum-table tr, .ev-table tr { page-break-inside:avoid; }
+  .section-std, h1, h2, h3 { page-break-after:avoid; }
   .page:last-child { page-break-after:auto; }
   .section-std { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .bieu04 th   { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
@@ -151,7 +171,10 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }
 }
-@page { size:A4; margin:0; }
+/* Trước đây ở đây là `@page { size:A4; margin:0 }`, đặt SAU khối @media print
+   nên nó thắng, và lề của mọi tờ giấy về 0. Lề thật nay đặt trong khối in ở
+   trên; giữ lại đây mỗi khổ giấy. */
+@page { size:A4; }
 </style>
 <link rel="stylesheet" href="/theme-school.css">
 <script src="/icons.js"></script>
@@ -182,23 +205,11 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 <script>
 const reportId = new URLSearchParams(location.search).get('id');
 
-const STANDARDS = [
-  { id:1,  name:'Tầm nhìn, sứ mạng, văn hoá và quản trị',       n:6  },
-  { id:2,  name:'Lãnh đạo và chiến lược',                         n:5  },
-  { id:3,  name:'Nguồn nhân lực',                                 n:5  },
-  { id:4,  name:'Nguồn lực tài chính và vật chất',                n:5  },
-  { id:5,  name:'Mạng lưới và quan hệ đối ngoại',                 n:2  },
-  { id:6,  name:'Chính sách về đào tạo',                          n:7  },
-  { id:7,  name:'Chính sách về nghiên cứu khoa học',              n:5  },
-  { id:8,  name:'Chính sách kết nối và phục vụ cộng đồng',        n:3  },
-  { id:9,  name:'Hệ thống bảo đảm chất lượng',                    n:4  },
-  { id:10, name:'Hệ thống thông tin BĐCL bên trong',              n:2  },
-  { id:11, name:'Nâng cao chất lượng',                             n:2  },
-  { id:12, name:'Kết quả về đào tạo',                              n:4  },
-  { id:13, name:'Kết quả về nghiên cứu khoa học',                 n:4  },
-  { id:14, name:'Kết quả kết nối và phục vụ cộng đồng',           n:4  },
-  { id:15, name:'Kết quả về tài chính và thị trường',             n:2  },
-];
+// Mảng 15 tiêu chuẩn của TT26 từng được gõ cứng ở đây và dùng để dựng mục lục.
+// Hậu quả: báo cáo của một chương trình đào tạo có mục lục liệt kê 15 tiêu
+// chuẩn cơ sở giáo dục, còn ruột ngay sau đó là 8 tiêu chuẩn TT04. Mục lục và
+// ruột mâu thuẫn nhau trong cùng một văn bản đem nộp. Nay mục lục dựng từ
+// data.standards, tức đúng bộ của đợt đang mở.
 
 // ── Trạng thái minh chứng và phiếu đánh giá ──────────────────────────────────
 // Ba giá trị của evidence.status và hai giá trị của assessments.trang_thai được
@@ -239,6 +250,19 @@ function setIncludeUnverified(v) {
       fetch(`/api/reports/${reportId}`).then(r => r.json()),
       fetch('/api/report/data').then(r => r.json()),
     ]);
+    // Mở bản in với mã báo cáo sai, hoặc không kèm mã, thì API trả lỗi nhưng
+    // trước đây màn vẫn dựng đủ báo cáo với số liệu thật của đợt đang mở, bìa
+    // vẫn ghi "Báo cáo Tự đánh giá", không một dòng cảnh báo. Người ta in ra
+    // rồi tưởng đó là bản báo cáo đã lưu.
+    if (!report || report.error || !report.id) {
+      document.getElementById('pages').innerHTML =
+        `<div class="page"><h1>Không mở được báo cáo</h1>
+         <p class="indent">Không tìm thấy báo cáo${reportId ? ` có mã ${h(String(reportId))}` : ''}
+         trong đợt kiểm định đang mở.</p>
+         <p class="indent">Hãy mở lại từ trang Báo cáo tự đánh giá và chọn đúng báo cáo, hoặc kiểm
+         xem bạn có đang ở đúng đợt kiểm định không.</p></div>`;
+      return;
+    }
     RPT = report; DATA = data;
     renderReport(report, data);
   } catch(e) {
@@ -250,6 +274,9 @@ function setIncludeUnverified(v) {
 function renderReport(report, data) {
   const si = data.school_info || {};
   const stats = data.stats || {};
+  // Loại đợt quyết định bìa, căn cứ pháp lý và cách gọi tên trong cả văn bản.
+  const laCTDT = (data.workspace || {}).type === 'CTDT';
+  const tenDot = (data.workspace || {}).name || '';
   const today = new Date().toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
 
   // Số phiếu nháp và số minh chứng chưa duyệt, tính một lần rồi dùng lại cho
@@ -285,7 +312,8 @@ function renderReport(report, data) {
       <div class="school">${h(si.ten_truong || 'Trường Đại học Kiến trúc Đà Nẵng')}</div>
       <div class="hr"></div>
       <div class="report-type">BÁO CÁO</div>
-      <div class="title">TỰ ĐÁNH GIÁ<br>CƠ SỞ GIÁO DỤC ĐẠI HỌC</div>
+      <div class="title">TỰ ĐÁNH GIÁ<br>${laCTDT ? 'CHƯƠNG TRÌNH ĐÀO TẠO' : 'CƠ SỞ GIÁO DỤC ĐẠI HỌC'}</div>
+      ${laCTDT && tenDot ? `<div class="period">Chương trình đào tạo: ${h(tenDot)}</div>` : ''}
       <div class="hr"></div>
       <div class="period">${h(report.title || 'Báo cáo Tự đánh giá')}</div>
       ${report.period ? `<div class="period">Chu kỳ kiểm định: ${h(report.period)}</div>` : ''}
@@ -302,8 +330,8 @@ function renderReport(report, data) {
     ['  1.1','Cơ sở pháp lý'],
     ['  1.2','Mô tả quá trình tự đánh giá'],
     ['  1.3','Thông tin về cơ sở đào tạo'],
-    ['PHẦN II','Tự đánh giá theo tiêu chuẩn'],
-    ...STANDARDS.map(s => [`  TC ${s.id}`, s.name]),
+    ['PHẦN II','Tự đánh giá theo từng Tiêu chuẩn'],
+    ...(data.standards || []).map(s => [`  TC ${s.id}`, s.name]),
     ['PHẦN III','Tổng hợp kết quả và kế hoạch cải tiến'],
     ['  3.1','Tóm tắt kết quả tự đánh giá'],
     ['  3.2','Kế hoạch cải tiến chất lượng'],
@@ -316,10 +344,11 @@ function renderReport(report, data) {
     <h1>MỤC LỤC</h1>
     <div style="margin-top:14pt">
       ${tocItems.map(([n,t]) => `
-        <div class="toc-item">
+        <div class="toc-item" data-toc-title="${h(t)}">
           <span class="toc-num">${n}</span>
           <span class="toc-title">${t}</span>
           <span class="toc-dots"></span>
+          <span class="toc-page"></span>
         </div>`).join('')}
     </div>
   </div>`);
@@ -332,7 +361,9 @@ function renderReport(report, data) {
     <h2>1.1 Cơ sở pháp lý</h2>
     ${report.co_so_phap_ly
       ? `<p class="indent">${h(report.co_so_phap_ly).replace(/\n/g,'</p><p class="indent">')}</p>`
-      : `<p class="indent">Căn cứ Thông tư số …/2026/TT-BGDĐT ngày … tháng … năm 2026 của Bộ Giáo dục và Đào tạo ban hành quy định về kiểm định chất lượng cơ sở giáo dục đại học.</p>
+      : `<p class="indent">${laCTDT
+            ? 'Căn cứ Thông tư số 04/2025/TT-BGDĐT ngày 17 tháng 02 năm 2025 của Bộ trưởng Bộ Giáo dục và Đào tạo ban hành quy định về kiểm định chất lượng chương trình đào tạo các trình độ của giáo dục đại học.'
+            : 'Căn cứ Thông tư số …/2026/TT-BGDĐT ngày … tháng … năm 2026 của Bộ Giáo dục và Đào tạo ban hành quy định về kiểm định chất lượng cơ sở giáo dục đại học.'}</p>
          <p class="indent">Căn cứ Quyết định thành lập Hội đồng tự đánh giá số … ngày … của Hiệu trưởng Trường Đại học Kiến trúc Đà Nẵng.</p>`}
 
     <h2>1.2 Mô tả quá trình tự đánh giá</h2>
@@ -354,21 +385,14 @@ function renderReport(report, data) {
     for (const c of std.criteriaData) assessMap[c.key] = c;
   }
 
+  // Trước đây chỗ này chia trang bằng cách ĐẾM KÝ TỰ HTML, ngưỡng 6000, con số
+  // không liên quan gì tới chiều cao thật của nội dung. Hậu quả đo được trên
+  // bản PDF: 5 trang gần trắng, có trang chỉ hai dòng chữ rồi bỏ trống 97%, còn
+  // Phụ lục 2 thì dồn 184 dòng vào một khối cao hơn 24 nghìn điểm ảnh trải ra 9
+  // tờ giấy. Nay dồn hết vào một khối rồi chia lại theo CHIỀU CAO THẬT sau khi
+  // trình duyệt đã vẽ xong, xem hàm chiaTrangTheoChieuCao.
   let partIIHtml = `<div class="page"><div class="section-part">Phần II: Tự đánh giá theo từng Tiêu chuẩn</div>`;
-  let partIIChars = 0;
-  const PAGE_LIMIT = 6000; // approximate chars per page estimate
-
-  for (const std of data.standards) {
-    const stdBlock = buildStandardBlock(std);
-    partIIChars += stdBlock.length;
-    if (partIIChars > PAGE_LIMIT && partIIHtml.length > 200) {
-      partIIHtml += '</div>';
-      pages.push(partIIHtml);
-      partIIHtml = '<div class="page">';
-      partIIChars = stdBlock.length;
-    }
-    partIIHtml += stdBlock;
-  }
+  for (const std of data.standards) partIIHtml += buildStandardBlock(std);
   partIIHtml += '</div>';
   pages.push(partIIHtml);
 
@@ -408,6 +432,9 @@ function renderReport(report, data) {
   }
 
   document.getElementById('pages').innerHTML = pages.join('');
+  chiaTrangTheoChieuCao();
+  danhSoTrang();
+  dienSoTrangMucLuc();
   document.title = report.title || 'Báo cáo TĐG';
 }
 
@@ -471,6 +498,120 @@ function buildSchoolInfoBlock(si) {
   </table>`;
 }
 
+// ─── Chia lại trang theo chiều cao thật ───────────────────────────────────────
+// Đo sau khi trình duyệt đã vẽ xong, nên biết chính xác chỗ nào tràn. Khối con
+// nào vượt quá vùng ruột của tờ giấy thì chuyển sang tờ mới. Không cắt đôi một
+// khối con: một bảng Biểu 04 hay một dòng minh chứng phải nằm trọn trên một tờ.
+function chiaTrangTheoChieuCao() {
+  const host = document.getElementById('pages');
+  // Vùng ruột của tờ A4 sau khi trừ lề in 15mm trên dưới, quy về điểm ảnh CSS
+  // theo 96 điểm ảnh một inch: (297 - 30) mm = 267 mm ≈ 1009 px. Trừ thêm chỗ
+  // cho dòng số trang.
+  // Vùng ruột tờ A4 sau khi trừ lề in 15mm trên dưới là 267mm. Chừa thêm 10mm
+  // biên an toàn và 26px cho dòng số trang: đo trên màn hình rồi in ra vẫn lệch
+  // vài điểm ảnh do làm tròn và do ngắt dòng, thiếu biên là khối tràn sang tờ
+  // thứ hai và số trang không còn khớp tờ giấy.
+  const CAO = Math.floor((297 - 30 - 10) / 25.4 * 96) - 26;
+
+  // Bảng dài là khối con DUY NHẤT của trang nên vòng chia bên dưới không tách
+  // được: Phụ lục 2 là một bảng 184 dòng, tràn qua chín tờ giấy mà vẫn tính là
+  // một trang. Cắt bảng theo dòng trước, mỗi mảnh giữ lại hàng tiêu đề.
+  for (const bang of [...host.querySelectorAll('.page table')]) {
+    const than = bang.querySelector('tbody') || bang;
+    const dong = [...than.children].filter((r) => r.tagName === 'TR');
+    if (dong.length < 2) continue;   // đủ 2 dòng là cắt được; ngưỡng 12 bỏ sót bảng Biểu 04 dài của một tiêu chí
+    if (bang.getBoundingClientRect().height <= CAO) continue;
+    const dauBang = bang.querySelector('thead');
+    const caoDau = dauBang ? dauBang.getBoundingClientRect().height : 0;
+    // Chia theo CHIỀU CAO CỘNG DỒN của từng dòng. Bản trước chia đều số dòng,
+    // mà dòng cao thấp khác nhau nên vài mảnh vẫn tràn: đo lại thấy 13 khối
+    // còn vượt, toàn là mảnh bảng.
+    const suc = CAO - caoDau - 24;
+    const nhom = [[]];
+    let don = 0;
+    for (const r of dong) {
+      const h = r.getBoundingClientRect().height;
+      if (don + h > suc && nhom[nhom.length - 1].length) { nhom.push([]); don = 0; }
+      nhom[nhom.length - 1].push(r);
+      don += h;
+    }
+    let sau = bang;
+    for (let k = 1; k < nhom.length; k++) {
+      const b2 = document.createElement('table');
+      b2.className = bang.className;
+      if (dauBang) b2.appendChild(dauBang.cloneNode(true));
+      const t2 = document.createElement('tbody');
+      for (const r of nhom[k]) t2.appendChild(r);
+      b2.appendChild(t2);
+      sau.after(b2);
+      sau = b2;
+    }
+  }
+
+  let vong = 0;
+  for (;;) {
+    const trang = [...host.querySelectorAll('.page')];
+    let daTach = false;
+    for (const p of trang) {
+      if (p.classList.contains('khong-chia')) continue;
+      if (p.querySelector('.cover')) continue;   // bìa vốn cao gần trọn tờ, không chia
+      const con = [...p.children].filter((c) => !c.classList.contains('so-trang'));
+      if (con.length < 2) continue;
+      const day = p.getBoundingClientRect().top;
+      let cat = -1;
+      for (let i = 1; i < con.length; i++) {
+        if (con[i].getBoundingClientRect().bottom - day > CAO) { cat = i; break; }
+      }
+      if (cat < 0) continue;
+      const moi = document.createElement('div');
+      moi.className = 'page';
+      while (p.children.length > cat) moi.appendChild(p.children[cat]);
+      p.after(moi);
+      daTach = true;
+    }
+    if (!daTach) break;
+    if (++vong > 60) break;   // chặn vòng lặp vô hạn nếu một khối con tự nó cao hơn một tờ
+  }
+}
+
+// Bản in trước đây không có số trang, mà đây là văn bản mấy chục trang nộp cho
+// đoàn đánh giá ngoài. Trình duyệt không cho đếm trang bằng CSS, nhưng sau khi
+// đã chia lại theo chiều cao thì mỗi khối .page đúng bằng một tờ giấy, nên đánh
+// số ngay trên khối được.
+function danhSoTrang() {
+  const trang = [...document.querySelectorAll('#pages .page')];
+  trang.forEach((p, i) => {
+    p.querySelectorAll('.so-trang').forEach((x) => x.remove());
+    if (i === 0) return;   // bìa không đánh số
+    const d = document.createElement('div');
+    d.className = 'so-trang';
+    d.textContent = `${i + 1} / ${trang.length}`;
+    p.appendChild(d);
+  });
+}
+
+// Mục lục trước đây có dấu chấm dẫn mà không dẫn tới đâu: lớp .toc-page có
+// trong CSS nhưng không phần tử nào được sinh ra. Sau khi chia trang theo chiều
+// cao thì mỗi khối .page đúng bằng một tờ giấy, nên tra được số trang thật.
+function dienSoTrangMucLuc() {
+  const trang = [...document.querySelectorAll('#pages .page')];
+  const chuan = (s) => (s || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  // Chỉ dò trong các tiêu đề, để không khớp nhầm vào một câu văn có cùng chữ.
+  const dau = [];
+  trang.forEach((p, i) => {
+    p.querySelectorAll('.section-part, .section-std, h1, h2').forEach((e) => {
+      dau.push({ chu: chuan(e.textContent), so: i + 1 });
+    });
+  });
+  for (const it of document.querySelectorAll('.toc-item')) {
+    const t = chuan(it.dataset.tocTitle);
+    if (!t) continue;
+    const hit = dau.find((d) => d.chu.includes(t));
+    const o = it.querySelector('.toc-page');
+    if (o) o.textContent = hit ? String(hit.so) : '';
+  }
+}
+
 function buildStandardBlock(std) {
   const assessed = std.assessed || 0;
   const total    = std.criteria.length;
@@ -484,7 +625,7 @@ function buildStandardBlock(std) {
   for (const c of std.criteriaData) {
     const a = c.assess;
     html += `<div class="section-tc">
-      <div class="tc-header">Tiêu chí ${c.key}: ${h(c.name)}</div>`;
+      <div class="tc-header">Tiêu chí ${c.key}: ${h(c.full || c.name)}${c.dieu_kien ? ' <span style="font-weight:normal;font-size:9.5pt">[tiêu chí điều kiện]</span>' : ''}</div>`;
 
     if (a) {
       const kqClass = a.ket_qua === 'DAT' ? 'ket-qua-DAT' : a.ket_qua === 'KHONG_DAT' ? 'ket-qua-KHONG_DAT' : 'ket-qua-CHUA';
@@ -584,7 +725,7 @@ function buildSummaryTable(standards) {
         : '<span class="tt-appr" style="font-size:9.5pt">Đã duyệt</span>';
       rows.push(`<tr>
         <td style="text-align:center">${c.key}</td>
-        <td>${h(c.name)}</td>
+        <td>${h(c.full || c.name)}</td>
         <td>${a ? h(a.nguoi_thuc_hien || '–') : '–'}</td>
         <td style="text-align:center">${kq}</td>
         <td style="text-align:center">${tt}</td>

@@ -498,6 +498,56 @@
     } catch (e) { return true; } // lỗi mạng: không chặn cứng
   }
 
+  // ─── Vai chỉ xem: giấu các nút ghi ───────────────────────────────────────
+  // Máy chủ đã chặn mọi lệnh ghi của vai viewer, nên đây thuần là chuyện giao
+  // diện. Nhưng bày ra cho người ta bấm rồi mới báo "không có quyền" là bắt họ
+  // tự dò xem mình làm được gì, và ở trang Tiến độ 24 tuần thì trước đây bấm
+  // xong màn hình còn báo THÀNH CÔNG trong khi máy chủ trả 403.
+  //
+  // Nhận diện theo NHÃN nút, không theo tên hàm, vì mỗi trang đặt tên hàm một
+  // kiểu. Danh sách giữ hẹp: chỉ những nhãn chắc chắn là hành động ghi. Nút
+  // xem, tải xuống, in, lọc, đóng đều phải giữ nguyên cho vai chỉ xem.
+  const NHAN_GHI = /^(\+|thêm|sửa|xoá|xóa|lưu|cập nhật|duyệt|trả lại|nộp|tải lên|gắn|tạo|ghi|đặt lại|kích hoạt|khoá|khóa)\b/i;
+  const NHAN_GIU = /^(xem|tải xuống|tải về|in |in$|xuất|đóng|huỷ|hủy|lọc|tìm|làm mới|chi tiết|mở|quay|về)/i;
+
+  function giauNutGhi() {
+    if (!window.__me || window.__me.role !== 'viewer') return 0;
+    let n = 0;
+    for (const el of document.querySelectorAll('button, a.btn, .btn, input[type=submit]')) {
+      if (el.dataset.chiXemDaXet) continue;
+      // Chỉ ghi dấu đã xét khi nút ĐANG HIỆN. Nút lúc quét còn ẩn rồi sau mới
+      // được bật lên mà đã bị ghi dấu thì không bao giờ xét lại: hai nút Sửa và
+      // Thêm việc ở trang Tiến độ 24 tuần lọt lưới đúng kiểu đó.
+      if (el.offsetParent === null && el.style.display !== 'none') continue;
+      el.dataset.chiXemDaXet = '1';
+      const chu = (el.innerText || el.value || '').replace(/\s+/g, ' ').trim();
+      if (!chu || NHAN_GIU.test(chu)) continue;
+      if (!NHAN_GHI.test(chu)) continue;
+      el.style.display = 'none';
+      n++;
+    }
+    if (n && !document.getElementById('ws-chi-xem-note')) {
+      const d = document.createElement('div');
+      d.id = 'ws-chi-xem-note';
+      d.style.cssText = 'margin:10px 20px;padding:8px 12px;border:1px solid #d9dce1;border-left:3px solid #b26a00;'
+        + 'border-radius:6px;background:#fffaf2;color:#6b3f00;font-size:12px';
+      d.textContent = 'Tài khoản chỉ xem: các nút thêm, sửa, xoá đã được ẩn. '
+        + 'Cần thay đổi dữ liệu thì liên hệ Phòng Đảm bảo chất lượng.';
+      const main = document.querySelector('#main, .main-body, main, body');
+      if (main) main.insertBefore(d, main.firstChild);
+    }
+    return n;
+  }
+
+  function batDauGiauNutGhi() {
+    if (!window.__me || window.__me.role !== 'viewer') return;
+    giauNutGhi();
+    // Phần lớn màn vẽ nút SAU khi gọi API, nên một lượt quét lúc tải trang là
+    // hụt. Theo dõi cây DOM để nút vẽ sau cũng bị giấu.
+    new MutationObserver(() => giauNutGhi())
+      .observe(document.body, { childList: true, subtree: true });
+  }
+
   function injectFavicon() {
     if (document.querySelector('link[rel="icon"]')) return;
     const l = document.createElement('link');
@@ -535,6 +585,7 @@
     injectFavicon();
     injectDemoBannerIfVercel();
     if (!(await requireLogin())) return;
+    batDauGiauNutGhi();   // phải gọi SAU requireLogin, vì lúc đó mới biết vai
     injectFooter();
     try {
       const data = await loadWorkspaces();

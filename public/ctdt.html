@@ -184,6 +184,20 @@ body {
   const hop = document.getElementById('khung-tt04');
   if (!hop) return;
   try {
+    // Trang này chỉ nói về khung TT04. /api/standards trả khung của ĐỢT ĐANG MỞ,
+    // nên mở trang này trong một đợt cơ sở giáo dục thì nó vẽ 15 tiêu chuẩn của
+    // TT26 xuống dưới tiêu đề "Khung 8 tiêu chuẩn TT04/2025", badge vẫn ghi
+    // TT04 còn con số lại thành 15/60. Một màn hình tự mâu thuẫn ba chỗ. Nay
+    // hỏi loại đợt trước, không phải đợt chương trình đào tạo thì không vẽ.
+    const dsWs = await (await fetch('/api/workspaces')).json();
+    const hienTai = (dsWs.items || []).find((w) => w.current) || (dsWs.items || [])[0];
+    if (hienTai && hienTai.type !== 'CTDT') {
+      hop.innerHTML = `<div style="font-size:12px;color:var(--muted);line-height:1.6">
+        Đợt đang mở là <b>${hienTai.name}</b>, thuộc loại kiểm định cơ sở giáo dục nên chạy bộ
+        tiêu chuẩn khác. Khung 8 tiêu chuẩn của Thông tư 04/2025 chỉ áp dụng cho đợt kiểm định
+        chương trình đào tạo. Hãy chuyển sang một đợt chương trình đào tạo để xem khung này.</div>`;
+      return;
+    }
     const bo = await (await fetch('/api/standards')).json();
     const tongTC = bo.reduce((a, s) => a + s.criteria.length, 0);
     const qm = document.getElementById('tt04-quymo');

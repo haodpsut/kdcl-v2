@@ -13,6 +13,7 @@ const auth = require('./auth');
 const { STANDARDS_DETAIL, EVIDENCE_TYPES } = require('./standards-detail.js');
 const { STANDARDS_TT04 } = require('./standards-tt04.js');
 const { STANDARDS_DETAIL_TT04 } = require('./standards-detail-tt04.js');
+const { TOAN_VAN_TT26 } = require('./standards-full-tt26.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -207,12 +208,30 @@ async function boTieuChuan(req) {
 // phải sửa từng trang: { id, name, criteria: [tên ngắn...] }.
 const BO_TT04 = STANDARDS_TT04.map((s) => ({
   id: s.id, name: s.name, criteria: s.criteria.map((c) => c.short),
+  // Tên NGẮN có 28 trên 52 chỗ tự nó kết thúc bằng dấu ba chấm vì bị cắt cho
+  // vừa cây tiêu chí bên trái. Bản in báo cáo mà dùng tên đó thì in ra "Chuẩn
+  // đầu ra của chương trình đào tạo phù hợp với Khung trình độ…" rồi hết câu,
+  // nộp cho đoàn đánh giá đọc. Gửi kèm toàn văn để bản in dùng.
+  criteria_full: s.criteria.map((c) => c.full),
   // Gửi kèm mã tiêu chí ĐIỀU KIỆN để giao diện khỏi gõ cứng. Trang Tổng quan
   // trước đây gõ tay và ghi sai ở tiêu chuẩn 2 (ghi 2.1 trong khi thông tư
   // chốt 2.2), sai số tiêu chí của tiêu chuẩn 6, 7, 8, và rút gọn sai tên
   // tiêu chuẩn 7 thành "Cơ sở vật chất".
   dieu_kien: s.criteria.filter((c) => c.dieu_kien).map((c) => c.code),
 }));
+// Bộ TT26 cũng phải có hai trường này để giao diện dùng chung một đường, khỏi
+// phải hỏi "đang là bộ nào" ở từng chỗ.
+//
+// Toàn văn KHÔNG lấy từ STANDARDS_DETAIL: đối chiếu 60 tiêu chí thì 54 chỗ tên
+// ngắn khác nhau giữa STANDARDS ở đây và STANDARDS_DETAIL, tức hai tệp đánh số
+// tiêu chí TT26 theo hai thứ tự khác nhau. Lấy nhầm nguồn là gán toàn văn của
+// tiêu chí này cho tiêu chí kia, đúng cái lỗi vừa sửa ở bộ TT04. Nguồn đúng là
+// standards-full-tt26.js, vốn khớp thứ tự của mảng STANDARDS.
+for (const s of STANDARDS) {
+  s.criteria_full = s.criteria.map((ten, i) => TOAN_VAN_TT26[`${s.id}.${i + 1}`] || ten);
+  s.dieu_kien = [];   // TT26 không có khái niệm tiêu chí điều kiện
+}
+
 // Chi tiết từng tiêu chí TT04, tra theo mã, cùng hình dạng với STANDARDS_DETAIL.
 // Bản này bóc từ Phụ lục II của thông tư nên có đủ yêu cầu, minh chứng gợi ý và
 // câu hỏi tự đánh giá. Trước đây ba mảng đó để RỖNG, nên panel tiêu chí của các
@@ -1013,7 +1032,9 @@ app.get('/api/report/data', async (req, res) => {
   const standards = (await boTieuChuan(req)).map(std => {
     const criteriaData = std.criteria.map((name, idx) => {
       const key = `${std.id}.${idx+1}`;
-      return { key, name, idx: idx+1, assess: assessMap[key] || null,
+      return { key, name, full: (std.criteria_full || [])[idx] || name, idx: idx+1,
+               dieu_kien: (std.dieu_kien || []).includes(key),
+               assess: assessMap[key] || null,
                evidence: wsEvidence.filter(e => e.tieu_chi === key) };
     });
     return { ...std, criteriaData,
@@ -1022,8 +1043,15 @@ app.get('/api/report/data', async (req, res) => {
       khong_dat: criteriaData.filter(c=>c.assess?.ket_qua==='KHONG_DAT').length };
   });
   const latestKpi = [...wsKpi].sort((a,b)=>(b.nam_hoc||'').localeCompare(a.nam_hoc||''))[0] || null;
+  // Loại đợt và tên văn bản đi kèm, để bản in khỏi gõ cứng "cơ sở giáo dục đại
+  // học" lên bìa báo cáo của một chương trình đào tạo.
+  const wsInfo = await one('SELECT name, type, law FROM workspaces WHERE id=$1', [wsId]);
   res.json({ school_info: si ? si.data : {}, standards, evidence: wsEvidence, kpi_data: wsKpi, latest_kpi: latestKpi,
-    stats: { total_criteria: 60, assessed: wsAssessments.length,
+    workspace: wsInfo || null,
+    // total_criteria trước đây gõ cứng 60, tức số của TT26. Đợt chương trình
+    // đào tạo chỉ có 52, nên trường này là quả mìn chờ màn nào đó đọc phải.
+    stats: { total_criteria: standards.reduce((a, s) => a + s.criteria.length, 0),
+      assessed: wsAssessments.length,
       dat: wsAssessments.filter(a=>a.ket_qua==='DAT').length,
       khong_dat: wsAssessments.filter(a=>a.ket_qua==='KHONG_DAT').length, total_evidence: wsEvidence.length } });
 });
