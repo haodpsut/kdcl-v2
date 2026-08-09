@@ -332,9 +332,9 @@
     const banner = document.createElement('div');
     banner.className = 'ws-mismatch-banner';
     banner.innerHTML = `
-      ⚠️ <strong>Trang này không thuộc workspace hiện tại</strong> (${type}).
-      <a id="ws-go-home">Về trang chủ workspace</a>
-      <a id="ws-go-csgd">hoặc chuyển sang workspace CSGD</a>
+      ⚠️ <strong>Trang này không thuộc đợt kiểm định hiện tại</strong> (${type}).
+      <a id="ws-go-home">Về trang chủ đợt kiểm định</a>
+      <a id="ws-go-csgd">hoặc chuyển sang đợt kiểm định cơ sở giáo dục</a>
     `;
     const body = document.body;
     body.insertBefore(banner, body.firstChild);
@@ -369,13 +369,17 @@
       <select id="ws-select" title="${current.name} · ${current.law} · bấm để chuyển đợt kiểm định">
         ${data.items.map(w => `<option value="${w.id}" ${w.id === current.id ? 'selected' : ''} title="${w.name} · ${w.law}">${w.name}</option>`).join('')}
       </select>
-      <button id="ws-new" title="Tạo workspace mới">+ Mới</button>
+      ${window.__me && window.__me.role === 'admin'
+        ? '<button id="ws-new" title="Tạo đợt kiểm định mới">+ Mới</button>' : ''}
     `;
     document.getElementById('ws-select').addEventListener('change', (e) => {
       setCookie(COOKIE, e.target.value);
       location.reload();
     });
-    document.getElementById('ws-new').addEventListener('click', openCreateModal);
+    // Nút chỉ dựng cho vai admin: trước đây vai đơn vị vẫn thấy nút, bấm vào mở
+    // hẳn hộp thoại tạo đợt kiểm định, điền xong mới nhận một dòng từ chối.
+    const btnNew = document.getElementById('ws-new');
+    if (btnNew) btnNew.addEventListener('click', openCreateModal);
 
     // Căn cứ pháp lý hiển thị trên trang lấy từ chính workspace đang mở.
     // Trước đây ba chỗ gõ cứng "Thông tư /2026/TT-BGDĐT" (thiếu số hiệu, chép
@@ -432,13 +436,13 @@
     overlay.className = 'ws-modal-overlay';
     overlay.innerHTML = `
       <div class="ws-modal">
-        <h3>Tạo Workspace mới</h3>
-        <label>Loại workspace</label>
+        <h3>Tạo đợt kiểm định mới</h3>
+        <label>Loại đợt kiểm định</label>
         <select id="m-type">
           <option value="CSGD">CSGD · Kiểm định Cơ sở Giáo dục (TT26/2026)</option>
           <option value="CTDT">CTĐT · Kiểm định Chương trình Đào tạo (TT04/2025)</option>
         </select>
-        <label>Tên workspace</label>
+        <label>Tên đợt kiểm định</label>
         <input id="m-name" placeholder="Ví dụ: CTĐT CNTT 2026">
         <label>Mô tả (tuỳ chọn)</label>
         <textarea id="m-desc" placeholder="Ghi chú về kỳ kiểm định, ngành, khóa..."></textarea>
@@ -455,7 +459,7 @@
       const name = overlay.querySelector('#m-name').value.trim();
       const type = overlay.querySelector('#m-type').value;
       const description = overlay.querySelector('#m-desc').value.trim();
-      if (!name) { alert('Vui lòng nhập tên workspace'); return; }
+      if (!name) { alert('Vui lòng nhập tên đợt kiểm định'); return; }
       const r = await fetch('/api/workspaces', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

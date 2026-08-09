@@ -51,6 +51,16 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
    (phiếu, tài liệu) và không có đoạn nào tương ứng nên phải nằm ngoài hàng chú giải. */
 .prog-note { font-size:12px; color:var(--muted); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); display:flex; gap:20px; flex-wrap:wrap; }
 .prog-note b { color:var(--text); font-weight:700; }
+/* Minh chứng tách theo trạng thái duyệt: gộp một số thì không biết bao nhiêu
+   tài liệu thực sự viện dẫn được trong bản in. */
+.mc-chip { font-size:11px; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:4px; white-space:nowrap; }
+.mc-chip.ok   { background:rgba(26,127,75,.13);  color:var(--green); }
+.mc-chip.wait { background:rgba(178,106,0,.16);  color:var(--yellow); }
+.mc-chip.rej  { background:rgba(192,57,43,.13);  color:var(--red); }
+.mc-warn { margin-top:10px; padding:9px 12px; border-radius:8px; font-size:12px; line-height:1.5;
+           background:rgba(178,106,0,.10); border:1px solid rgba(178,106,0,.35); color:var(--text);
+           display:flex; align-items:flex-start; gap:7px; }
+.mc-warn b { color:var(--yellow); }
 
 /* Standard cards */
 .std-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
@@ -214,11 +224,25 @@ function renderSidebar() {
     : '<div style="padding:16px;font-size:12px;color:var(--muted);text-align:center">Chưa có báo cáo</div>';
 }
 
+// Đếm minh chứng theo evidence.status. Ba giá trị: cho_duyet, da_xac_nhan, tra_lai.
+// Giá trị lạ được xếp vào nhóm chờ duyệt chứ không lẳng lặng bỏ qua, để tổng
+// các nhóm luôn bằng tổng số tài liệu.
+function evCounts(list) {
+  const c = { total:0, da_xac_nhan:0, cho_duyet:0, tra_lai:0, chua:0 };
+  for (const e of (list || [])) {
+    c.total++;
+    if (c[e.status] === undefined) c.cho_duyet++; else c[e.status]++;
+    if (e.status !== 'da_xac_nhan') c.chua++;
+  }
+  return c;
+}
+
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard() {
   const d = reportData;
   if (!d) return;
   const s = d.stats;
+  const ev = evCounts(d.evidence);
   const chua = 60 - s.assessed;
   // Nhóm này là tiêu chí ĐÃ CÓ PHIẾU nhưng ket_qua chưa kết luận, nên tên đúng là "Chưa kết luận".
   // Bản cũ gọi nó là "Nháp" và in ra 3 TC, trong khi module2 gọi "nháp" là trang_thai='draft' và
@@ -276,8 +300,17 @@ function renderDashboard() {
       <!-- Hai chỉ báo này đơn vị là phiếu và tài liệu, không phải tiêu chí, nên đứng ngoài chú giải. -->
       <div class="prog-note">
         <span>Phiếu nháp (chưa duyệt): <b>${draftPhieu === null ? '–' : draftPhieu}</b> phiếu, đã tính trong các nhóm kết quả ở trên</span>
-        <span>Minh chứng: <b>${s.total_evidence}</b> tài liệu</span>
+        <!-- Ô này từng chỉ in tổng gộp, làm người soạn tưởng cả kho minh chứng đã được
+             duyệt. Tách theo status để thấy ngay phần chưa dùng viện dẫn được. -->
+        <span>Minh chứng: <b>${ev.total}</b> tài liệu
+          <span class="mc-chip ok">${ev.da_xac_nhan} đã xác nhận</span>
+          <span class="mc-chip wait">${ev.cho_duyet} chờ duyệt</span>
+          <span class="mc-chip rej">${ev.tra_lai} bị trả lại</span>
+        </span>
       </div>
+      ${ev.chua ? `<div class="mc-warn">${KIcon('warning','k-ic sm')}
+        <b>${ev.chua}</b> minh chứng chưa được xác nhận (${ev.cho_duyet} chờ duyệt, ${ev.tra_lai} bị trả lại).
+        Bản in vẫn viện dẫn chúng nhưng có đánh dấu trạng thái; có thể tắt việc viện dẫn ngay trên màn Xem &amp; In Báo cáo.</div>` : ''}
     </div>
 
     <div class="std-grid">${stdCards}</div>
@@ -304,6 +337,7 @@ async function selectReport(id) {
 
 function renderForm(r) {
   const s = reportData?.stats || {};
+  const ev = evCounts(reportData?.evidence);
   const assessed = s.assessed || 0;
   const dat = s.dat || 0;
   const pct = Math.round(assessed / 60 * 100);
@@ -319,6 +353,18 @@ function renderForm(r) {
       <button class="btn btn-danger" onclick="deleteReport(${r.id},'${escHtml(r.title).replace(/'/g,"\\'")}')">Xoá</button>
       <span style="font-size:12px;color:var(--muted);margin-left:8px">Đã đánh giá: <strong>${assessed}/60</strong> TC · <strong>${dat}</strong> ĐẠT · Tiến độ: <strong>${pct}%</strong></span>
     </div>
+
+    <!-- Người soạn phải thấy trước khi bấm In: bao nhiêu phiếu chưa duyệt và bao
+         nhiêu minh chứng chưa xác nhận sẽ đi vào bản in nộp cho đoàn. -->
+    ${(draftPhieu || ev.chua) ? `<div class="mc-warn" style="margin-top:0;margin-bottom:16px">${KIcon('warning','k-ic sm')}
+      <span>Trạng thái hồ sơ sẽ được ghi rõ trong bản in:
+        <b>${draftPhieu === null ? '–' : draftPhieu}</b> phiếu đánh giá còn ở trạng thái nháp;
+        minh chứng <b>${ev.total}</b> tài liệu gồm
+        <span class="mc-chip ok">${ev.da_xac_nhan} đã xác nhận</span>
+        <span class="mc-chip wait">${ev.cho_duyet} chờ duyệt</span>
+        <span class="mc-chip rej">${ev.tra_lai} bị trả lại</span>.
+        Bản in đánh dấu từng mục chưa duyệt; trên màn Xem &amp; In có thể chọn không viện dẫn minh chứng chưa duyệt.</span>
+    </div>` : ''}
 
     <!-- Metadata -->
     <div class="form-section">

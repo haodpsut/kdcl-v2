@@ -226,6 +226,10 @@ body {
 
 .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
 .stat-card .value { font-size: 24px; font-weight: 800; margin-top: 4px; }
+/* Dòng phụ nói rõ ô số đang đếm theo phạm vi nào. Ô "Tổng minh chứng" đếm cả
+   đợt kiểm định trong khi bảng bên dưới có thể đang lọc theo tiêu chí, nên
+   không ghi rõ là người dùng đọc hai con số vênh nhau rồi tưởng hệ sai số. */
+.stat-card .sub { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
 .stat-card.blue  .value { color: var(--accent); }
 .stat-card.green .value { color: var(--green); }
 .stat-card.purple .value { color: var(--accent2); }
@@ -582,6 +586,37 @@ td {
 .btn-submit:hover { opacity: 0.85; }
 .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 
+/* Khối báo lỗi NẰM TRONG hộp thoại. Toast ở góc màn hình biến mất sau vài
+   giây và nằm xa chỗ người dùng đang nhìn, nên báo lỗi nộp tệp phải hiện ngay
+   trong hộp thoại và ở lại cho tới khi người dùng sửa xong. */
+.form-error {
+  border: 1px solid var(--red);
+  border-left: 4px solid var(--red);
+  background: #fbeaea;
+  color: #7d1d13;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.form-error .fe-title { font-weight: 800; display: block; margin-bottom: 2px; }
+.form-error .fe-meta  { display: block; margin-top: 4px; font-size: 11px; color: #8a4038; }
+
+/* Cảnh báo màu vàng: chưa phải lỗi, chỉ báo trước tệp sẽ bị máy chủ từ chối */
+.dz-warn {
+  margin-top: 8px; font-size: 12px; font-weight: 700; line-height: 1.45;
+  color: #8a5a00; background: rgba(251,174,64,.18);
+  border: 1px solid rgba(178,106,0,.4); border-radius: 4px; padding: 6px 9px;
+}
+
+/* Ghi chú tài khoản chỉ xem, thay cho các nút ghi đã ẩn */
+.ro-note {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 12px; white-space: nowrap;
+}
+
 /* Toast */
 .toast {
   position: fixed;
@@ -596,10 +631,17 @@ td {
   z-index: 200;
   display: none;
   box-shadow: 0 8px 30px rgba(0,0,0,.15);
+  max-width: 460px;
 }
-.toast.show { display: flex; align-items: center; gap: 8px; }
+.toast.show { display: flex; align-items: flex-start; gap: 10px; }
 .toast.success { border-color: var(--green); color: var(--green); }
-.toast.error   { border-color: var(--red); color: var(--red); }
+.toast.error   { border-color: var(--red); color: var(--red); border-left-width: 4px; }
+.toast .toast-msg { flex: 1; line-height: 1.45; }
+.toast .toast-close {
+  background: none; border: none; cursor: pointer; color: inherit;
+  font-size: 15px; line-height: 1; padding: 0 2px; opacity: .7;
+}
+.toast .toast-close:hover { opacity: 1; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
@@ -778,8 +820,9 @@ td {
 
   <div class="stats-row">
     <div class="stat-card blue">
-      <div class="label">Tổng minh chứng</div>
+      <div class="label" id="stat-total-label">Minh chứng trong đợt</div>
       <div class="value" id="stat-total">0</div>
+      <div class="sub" id="stat-total-sub"></div>
     </div>
     <div class="stat-card green">
       <div class="label">Tiêu chuẩn có MC</div>
@@ -796,7 +839,8 @@ td {
   <div class="filter-bar">
     <input id="search-input" type="text" placeholder="Tìm theo mô tả, mã minh chứng, tên file, nguồn..." oninput="applySearch()">
     <div id="active-filter"></div>
-    <button class="btn-upload" onclick="openModal()"><span data-ic="plus"></span>Thêm minh chứng</button>
+    <span class="ro-note" id="readonly-note" style="display:none">Tài khoản chỉ xem: không nộp và không xoá minh chứng</span>
+    <button class="btn-upload" id="btn-add-evidence" onclick="openModal()"><span data-ic="plus"></span>Thêm minh chứng</button>
   </div>
 
   <div class="table-wrap">
@@ -829,6 +873,8 @@ td {
       <button class="modal-close" onclick="closeModal()"><span data-ic="x" data-ic-class="k-ic lg"></span></button>
     </div>
     <div class="modal-body">
+
+      <div class="form-error" id="upload-error" role="alert" aria-live="assertive" style="display:none"></div>
 
       <div class="form-row">
         <div class="form-group">
@@ -876,8 +922,11 @@ td {
              ondrop="onDrop(event)">
           <div class="dz-icon"><span data-ic="report" data-ic-class="k-ic xl"></span></div>
           <p>Kéo thả file vào đây hoặc <strong>nhấn để chọn</strong></p>
-          <p style="font-size:11px;margin-top:4px">PDF, Word, Excel, PPT, ảnh... (tối đa 50MB)</p>
+          <!-- Giới hạn dung lượng lấy từ GET /api/gioi-han, không gõ cứng, để
+               đổi giới hạn ở máy chủ là câu này đổi theo. -->
+          <p style="font-size:11px;margin-top:4px" id="dz-limit">PDF, Word, Excel, PPT, ảnh...</p>
           <div class="file-chosen" id="file-chosen"></div>
+          <div class="dz-warn" id="dz-warn" style="display:none"></div>
         </div>
         <input type="file" id="file-input" style="display:none" onchange="onFileSelect(this)">
       </div>
@@ -904,13 +953,74 @@ let searchQuery = '';
 let selectedFile = null;
 let countByTC = {};
 let countByTchi = {};
+// Vai của người đang đăng nhập: admin | unit | viewer. Lấy từ GET /api/me chứ
+// không đoán, vì nút ghi hiện hay ẩn phụ thuộc hẳn vào giá trị này.
+let ME = null;
+// Giới hạn dung lượng tệp do máy chủ công bố (GET /api/gioi-han), tính bằng MB.
+let MAX_FILE_MB = null;
+
+function isViewer() { return !!ME && ME.role === 'viewer'; }
 
 // ── Init ──────────────────────────────────────────────────────
 async function init() {
+  // Phải biết vai TRƯỚC khi vẽ bảng, nếu không vai chỉ xem sẽ thấy nút xoá
+  // loé lên rồi mới biến mất.
+  await loadMe();
   await loadStandards();
+  loadLimit().catch(e => console.error('loadLimit', e));
   // Tải song song, không để 1 lỗi chặn phần còn lại → số liệu hiện ngay khi mở trang
   loadStats().catch(e => console.error('loadStats', e));
   loadEvidence().catch(e => console.error('loadEvidence', e));
+}
+
+async function loadMe() {
+  try { ME = await fetch('/api/me').then(r => (r.ok ? r.json() : null)); }
+  catch { ME = null; }
+  applyRoleVisibility();
+  applyStatScopeLabel();
+}
+
+// Vai `viewer` (lãnh đạo, đoàn đánh giá ngoài) không ghi được gì: máy chủ đã
+// chặn bằng 403, nhưng để nguyên nút thì người ta bấm rồi mới biết mình không
+// có quyền. Vai `unit` VẪN nộp và xoá được minh chứng của đơn vị mình nên
+// tuyệt đối không ẩn nhầm.
+function applyRoleVisibility() {
+  const ro = isViewer();
+  const add  = document.getElementById('btn-add-evidence');
+  const note = document.getElementById('readonly-note');
+  if (add)  add.style.display  = ro ? 'none' : '';
+  if (note) note.style.display = ro ? '' : 'none';
+}
+
+async function loadLimit() {
+  try {
+    const d = await fetch('/api/gioi-han').then(r => (r.ok ? r.json() : null));
+    if (d && Number(d.max_file_mb) > 0) MAX_FILE_MB = Number(d.max_file_mb);
+  } catch { /* không lấy được thì để trống, máy chủ vẫn là nơi chốt chặn */ }
+  renderLimitHint();
+  renderSizeWarning();
+}
+
+function renderLimitHint() {
+  const el = document.getElementById('dz-limit');
+  if (!el) return;
+  el.textContent = MAX_FILE_MB
+    ? `PDF, Word, Excel, PPT, ảnh... · tối đa ${MAX_FILE_MB} MB mỗi tệp`
+    : 'PDF, Word, Excel, PPT, ảnh...';
+}
+
+// Báo trước ngay khi chọn tệp, nhưng KHÔNG chặn nộp: máy chủ mới là nơi quyết
+// định, giao diện chỉ nói trước cho đỡ mất công chờ tải lên.
+function renderSizeWarning() {
+  const el = document.getElementById('dz-warn');
+  if (!el) return;
+  if (selectedFile && MAX_FILE_MB && selectedFile.size > MAX_FILE_MB * 1024 * 1024) {
+    el.textContent = `Tệp này nặng ${formatSize(selectedFile.size)}, vượt giới hạn ${MAX_FILE_MB} MB của máy chủ. Hãy nén lại hoặc tách nhỏ rồi nộp lại.`;
+    el.style.display = '';
+  } else {
+    el.textContent = '';
+    el.style.display = 'none';
+  }
 }
 
 async function loadStandards() {
@@ -920,12 +1030,38 @@ async function loadStandards() {
   populateStandardSelect();
 }
 
+// Ô số phải nói rõ nó đếm cái gì. Máy chủ nay đếm đúng phạm vi người đang xem
+// (đơn vị chỉ đếm minh chứng của mình), nhưng nhãn "Tổng minh chứng" vẫn khiến
+// tài khoản khoa tưởng đó là số toàn trường. Ghi thẳng phạm vi vào nhãn, và
+// khi đang lọc theo tiêu chuẩn/tiêu chí thì nói rõ bảng bên dưới đang lọc nên
+// ít dòng hơn con số này.
+function applyStatScopeLabel() {
+  const lb = document.getElementById('stat-total-label');
+  if (!lb) return;
+  lb.textContent = ME && ME.role === 'unit'
+    ? 'Minh chứng của đơn vị bạn'
+    : 'Minh chứng trong đợt';
+}
+
+function applyStatScopeSub() {
+  const sub = document.getElementById('stat-total-sub');
+  if (!sub) return;
+  const pham_vi = ME && ME.role === 'unit'
+    ? 'Đếm minh chứng do đơn vị bạn nộp trong đợt kiểm định đang chọn.'
+    : 'Đếm toàn bộ minh chứng của đợt kiểm định đang chọn.';
+  const loc = (filterTchi || filterTC)
+    ? ` Bảng bên dưới đang lọc ${filterTchi ? 'tiêu chí ' + filterTchi : 'tiêu chuẩn ' + filterTC}: ${evidenceList.length} dòng.`
+    : '';
+  sub.textContent = pham_vi + loc;
+}
+
 async function loadStats() {
   const res = await fetch('/api/stats');
   const data = await res.json();
   document.getElementById('stat-total').textContent = data.total;
   const covered = Object.values(data.byStandard).filter(v => v > 0).length;
   document.getElementById('stat-covered').textContent = covered;
+  applyStatScopeSub();
   countByTC = data.byStandard;
 
   // Recompute per-criterion counts from current evidence
@@ -944,6 +1080,7 @@ async function loadEvidence() {
   const res = await fetch('/api/evidence?' + params);
   evidenceList = await res.json();
   renderTable();
+  applyStatScopeSub();
   updateTreeCounts();
 }
 
@@ -1095,14 +1232,17 @@ async function onSugToggle(evId, sugIdx, checked) {
       method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sug_names: [...names] }),
     });
+    if (!r.ok) {
+      const { msg, status } = await readServerError(r);
+      throw new Error(`${msg} (mã ${status})`);
+    }
     const data = await r.json();
-    if (!r.ok) throw new Error(data.error || 'Lỗi');
     // Lấy lại từ máy chủ chứ không tự sửa trong bộ nhớ, để cái hiện trên màn
     // luôn là cái đã ghi xuống CSDL.
     ev.sug_names = data.sug_names || [];
     showToast('success', `✅ ${checked ? 'Đã gắn' : 'Đã bỏ gắn'} ${ev.code}`);
   } catch (e) {
-    showToast('error', `❌ ${e.message}`);
+    showToast('error', `❌ Không lưu được khai báo: ${e.message}`);
   }
   renderCriterionPanel(CP_STATE.code, CRITERION_DETAIL_CACHE[CP_STATE.code]);
 }
@@ -1182,7 +1322,7 @@ function renderCriterionPanel(code, d) {
 
     <div class="cp-section">
       <h4>${KIcon('folder', 'k-ic sm')} Minh chứng gợi ý <span class="count">(${hasCount}/${d.suggested_evidence.length} đã khai)</span></h4>
-      ${chuaKhai.length ? `<div class="cp-note">${KIcon('warning', 'k-ic sm')} ${chuaKhai.length}/${uploaded.length} minh chứng của tiêu chí này <b>chưa khai</b> phục vụ mục nào, nên chưa được tính vào độ bao phủ. Bấm <b>Gắn</b> ở từng mục để khai.</div>` : ''}
+      ${chuaKhai.length ? `<div class="cp-note">${KIcon('warning', 'k-ic sm')} ${chuaKhai.length}/${uploaded.length} minh chứng của tiêu chí này <b>chưa khai</b> phục vụ mục nào, nên chưa được tính vào độ bao phủ.${isViewer() ? ' Tài khoản chỉ xem không khai được, đề nghị đơn vị nộp hoặc Phòng Đảm bảo chất lượng khai bổ sung.' : ' Bấm <b>Gắn</b> ở từng mục để khai.'}</div>` : ''}
       <div class="cp-checklist">
         ${matches.map((m, i) => {
           const t = EVIDENCE_TYPE_MAP?.[m.sug.type] || {};
@@ -1199,13 +1339,15 @@ function renderCriterionPanel(code, d) {
               </div>
               ${open ? renderSugPicker(i) : ''}
             </div>
-            <button type="button" class="cp-attach" onclick="toggleSugPicker(${i})">${open ? 'Đóng' : 'Gắn'}</button>
+            ${isViewer() ? '' : `<button type="button" class="cp-attach" onclick="toggleSugPicker(${i})">${open ? 'Đóng' : 'Gắn'}</button>`}
           </div>`;
         }).join('')}
       </div>
+      <!-- Không khẳng định "đủ": con số này chỉ nói mục nào ĐÃ CÓ ít nhất một
+           minh chứng được khai, đủ hay chưa là do người thẩm định kết luận. -->
       <div class="cp-progress">
         <div class="bar"><div class="bar-fill" style="width:${pct}%;"></div></div>
-        <div class="txt">Bao phủ: <b>${pct}%</b></div>
+        <div class="txt">Đã có ít nhất 1 minh chứng khai cho <b>${hasCount}/${d.suggested_evidence.length}</b> mục gợi ý (${pct}%). Số này không kết luận hồ sơ đã đủ.</div>
       </div>
     </div>
 
@@ -1329,7 +1471,7 @@ function renderTable() {
       <td>
         <div class="actions">
           <button class="btn-icon download" title="Tải xuống" onclick="download(${e.id})">${KIcon('download')}</button>
-          <button class="btn-icon delete" title="Xóa" onclick="deleteEvidence(${e.id}, '${escHtml(e.code)}')">${KIcon('trash')}</button>
+          ${isViewer() ? '' : `<button class="btn-icon delete" title="Xoá minh chứng ${escHtml(e.code)}" onclick="deleteEvidence(${e.id}, '${escHtml(e.code)}')">${KIcon('trash')}</button>`}
         </div>
       </td>
     </tr>`;
@@ -1351,21 +1493,83 @@ function download(id) {
   window.open(`/api/evidence/${id}/download`, '_blank');
 }
 
+// Đọc câu lỗi máy chủ gửi về, dù thân trả về là JSON hay không. Trả về cả câu
+// tiếng Việt của máy chủ lẫn mã HTTP để hiện cho người dùng.
+async function readServerError(res) {
+  let msg = '';
+  try {
+    const raw = await res.text();
+    if (raw) {
+      try {
+        const j = JSON.parse(raw);
+        msg = (j && (j.error || j.message)) || '';
+      } catch { msg = raw.replace(/<[^>]*>/g, ' ').trim().slice(0, 300); }
+    }
+  } catch { /* thân rỗng hoặc đứt giữa chừng */ }
+  if (!msg) msg = `Máy chủ từ chối yêu cầu (mã ${res.status}${res.statusText ? ' ' + res.statusText : ''}).`;
+  return { msg, status: res.status };
+}
+
+// Hộp thoại xác nhận phải nêu rõ ĐANG XOÁ CÁI GÌ. Danh sách có nhiều dòng mã
+// gần giống nhau, hỏi trống trơn "Xoá minh chứng này?" là mời người dùng xoá
+// nhầm.
 async function deleteEvidence(id, code) {
-  if (!confirm(`Xoá minh chứng ${code}?\nFile sẽ bị xoá vĩnh viễn.`)) return;
-  const res = await fetch(`/api/evidence/${id}`, { method: 'DELETE' });
-  if (res.ok) {
-    showToast('success', `✅ Đã xoá ${code}`);
-    loadEvidence();
-    loadStats();
-    updateTreeCounts();
-  } else {
-    showToast('error', '❌ Xoá thất bại');
+  if (isViewer()) return showToast('error', '❌ Tài khoản chỉ xem, không xoá được minh chứng');
+  const ev = evidenceList.find(e => e.id === id) || {};
+  const mota = (ev.mo_ta || '').trim();
+  const motaNgan = mota.length > 100 ? mota.slice(0, 100) + '…' : mota;
+  const ten = ev.source_type === 'link' ? (ev.link_url || '') : (ev.file_name || '');
+  const tenNgan = ten.length > 80 ? ten.slice(0, 80) + '…' : ten;
+
+  const dong = [`Xoá minh chứng ${code || ev.code || ''}?`, ''];
+  if (ev.tieu_chi) dong.push(`Tiêu chí: ${ev.tieu_chi}`);
+  dong.push(`Mô tả: ${motaNgan || '(không có mô tả)'}`);
+  if (tenNgan) dong.push(`${ev.source_type === 'link' ? 'Liên kết' : 'Tệp'}: ${tenNgan}`);
+  if (ev.nguon) dong.push(`Nguồn: ${ev.nguon}`);
+  dong.push('', 'Tệp đính kèm sẽ bị xoá vĩnh viễn, không khôi phục được.');
+  if (!confirm(dong.join('\n'))) return;
+
+  try {
+    const res = await fetch(`/api/evidence/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      showToast('success', `✅ Đã xoá ${code}`);
+      loadEvidence();
+      loadStats();
+      updateTreeCounts();
+    } else {
+      // Hiện đúng câu máy chủ trả về (403 không phải MC của đơn vị, 403 MC đã
+      // xác nhận, 404 không tìm thấy...) thay vì câu "Xoá thất bại" vô nghĩa.
+      const { msg, status } = await readServerError(res);
+      showToast('error', `❌ Không xoá được ${code}: ${msg} (mã ${status})`);
+    }
+  } catch (err) {
+    showToast('error', `❌ Không gửi được lệnh xoá tới máy chủ. Kiểm tra kết nối mạng rồi thử lại. (${err.message})`);
   }
 }
 
 // ── Modal ─────────────────────────────────────────────────────
+// ── Báo lỗi ngay trong hộp thoại ──────────────────────────────
+// Toast ở góc màn hình tắt sau vài giây, người đang nhìn vào hộp thoại không
+// kịp thấy. Lỗi nộp tệp phải ở lại trong hộp thoại cho tới khi được xử lý.
+function showFormError(title, meta) {
+  const el = document.getElementById('upload-error');
+  if (!el) return;
+  el.innerHTML = `<span class="fe-title">${escHtml(title)}</span>` +
+                 (meta ? `<span class="fe-meta">${escHtml(meta)}</span>` : '');
+  el.style.display = '';
+  el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function clearFormError() {
+  const el = document.getElementById('upload-error');
+  if (!el) return;
+  el.innerHTML = '';
+  el.style.display = 'none';
+}
+
 function openModal() {
+  if (isViewer()) return showToast('error', '❌ Tài khoản chỉ xem, không nộp được minh chứng');
+  clearFormError();
   document.getElementById('modal').classList.add('open');
   // Pre-fill if filter active
   if (filterTC) {
@@ -1395,7 +1599,10 @@ function resetForm() {
   document.getElementById('file-chosen').textContent = '';
   document.getElementById('code-preview').textContent = 'Hn.ab.cd.ef';
   document.getElementById('modal-suggestions').style.display = 'none';
+  document.getElementById('file-input').value = '';
   selectedFile = null;
+  renderSizeWarning();
+  clearFormError();
 }
 
 function populateStandardSelect() {
@@ -1459,20 +1666,26 @@ function setFile(file) {
   // innerHTML chứ không textContent, vì biểu tượng là SVG chứ không còn là emoji.
   document.getElementById('file-chosen').innerHTML =
     `${KIcon('report', 'k-ic sm')} ${escHtml(file.name)} (${formatSize(file.size)})`;
+  clearFormError();
+  renderSizeWarning();
 }
 
 async function submitEvidence() {
+  if (isViewer()) return showToast('error', '❌ Tài khoản chỉ xem, không nộp được minh chứng');
   const tc = document.getElementById('sel-tc').value;
   const tchi = document.getElementById('sel-tchi').value;
   const mota = document.getElementById('f-mota').value.trim();
 
-  if (!tc || !tchi) return showToast('error', '❌ Chọn tiêu chuẩn và tiêu chí');
-  if (!mota)       return showToast('error', '❌ Nhập mô tả minh chứng');
-  if (!selectedFile) return showToast('error', '❌ Chọn file minh chứng');
+  clearFormError();
+  if (!tc || !tchi)  { showFormError('Chưa chọn tiêu chuẩn và tiêu chí.'); return showToast('error', '❌ Chọn tiêu chuẩn và tiêu chí'); }
+  if (!mota)         { showFormError('Chưa nhập mô tả minh chứng.'); return showToast('error', '❌ Nhập mô tả minh chứng'); }
+  if (!selectedFile) { showFormError('Chưa chọn tệp minh chứng.'); return showToast('error', '❌ Chọn file minh chứng'); }
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
-  btn.textContent = 'Đang lưu...';
+  btn.textContent = selectedFile.size > 2 * 1024 * 1024
+    ? `Đang tải lên ${formatSize(selectedFile.size)}...`
+    : 'Đang lưu...';
 
   const fd = new FormData();
   fd.append('tieu_chuan', tc);
@@ -1487,32 +1700,53 @@ async function submitEvidence() {
 
   try {
     const res = await fetch('/api/evidence', { method: 'POST', body: fd });
-    const data = await res.json();
     if (res.ok) {
-      showToast('success', `✅ Đã thêm ${data.code}`);
+      let data = {};
+      try { data = await res.json(); } catch { data = {}; }
+      showToast('success', `✅ Đã thêm ${data.code || 'minh chứng'}`);
       closeModal();
       loadEvidence();
       loadStats();
       updateTreeCounts();
     } else {
-      showToast('error', `❌ ${data.error}`);
+      // MỌI mã lỗi đều phải hiện ra, không riêng gì 400. Câu chữ lấy đúng từ
+      // trường error của máy chủ: 413 tệp quá lớn, 403 tiêu chí chưa được phân
+      // công, 401 hết phiên đăng nhập...
+      const { msg, status } = await readServerError(res);
+      showFormError(msg, `Máy chủ trả mã HTTP ${status}. Minh chứng CHƯA được lưu.`);
+      showToast('error', `❌ ${msg}`);
     }
   } catch (err) {
-    showToast('error', '❌ Lỗi kết nối server');
+    // Đứt mạng, máy chủ tắt, hoặc kết nối bị cắt giữa lúc đang tải tệp lên.
+    showFormError(
+      'Không gửi được lên máy chủ. Kết nối bị gián đoạn giữa chừng nên minh chứng CHƯA được lưu. Kiểm tra mạng rồi bấm Lưu minh chứng lại.',
+      (MAX_FILE_MB && selectedFile && selectedFile.size > MAX_FILE_MB * 1024 * 1024
+        ? `Lưu ý: tệp đang chọn nặng ${formatSize(selectedFile.size)}, vượt giới hạn ${MAX_FILE_MB} MB. `
+        : '') + `Chi tiết kỹ thuật: ${err.message}`);
+    showToast('error', '❌ Mất kết nối tới máy chủ, minh chứng chưa được lưu');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Lưu minh chứng';
   }
-
-  btn.disabled = false;
-  btn.textContent = 'Lưu minh chứng';
 }
 
 // ── Toast ─────────────────────────────────────────────────────
 let toastTimer;
+// Toast báo lỗi ở lại lâu hơn hẳn và có nút đóng: 3,5 giây là không đủ để đọc
+// hết một câu lỗi, người nộp tệp nặng còn đang nhìn chỗ khác thì nó đã tắt.
 function showToast(type, msg) {
   const el = document.getElementById('toast');
   el.className = `toast show ${type}`;
-  el.textContent = msg;
+  el.innerHTML = `<span class="toast-msg"></span>` +
+    (type === 'error' ? `<button type="button" class="toast-close" title="Đóng" onclick="hideToast()">✕</button>` : '');
+  el.querySelector('.toast-msg').textContent = msg;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+  toastTimer = setTimeout(() => el.classList.remove('show'), type === 'error' ? 15000 : 3500);
+}
+
+function hideToast() {
+  clearTimeout(toastTimer);
+  document.getElementById('toast').classList.remove('show');
 }
 
 // Close modal on overlay click

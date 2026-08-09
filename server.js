@@ -120,7 +120,8 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => cb(null, `${Date.now()}${path.extname(file.originalname)}`),
 });
-const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
+const MAX_FILE_MB = 50;
+const upload = multer({ storage, limits: { fileSize: MAX_FILE_MB * 1024 * 1024 } });
 
 // ─── Workspace helper ───────────────────────────────────────────────────────
 // Đơn vị chỉ được vào những đợt kiểm định mà mình ĐƯỢC PHÂN CÔNG tiêu chí.
@@ -191,6 +192,8 @@ app.get('/api/me', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════
 app.get('/api/standards', (req, res) => res.json(STANDARDS));
 app.get('/api/evidence-types', (req, res) => res.json(EVIDENCE_TYPES));
+// Giao diện hỏi giới hạn thay vì gõ cứng, để đổi một chỗ là cả hệ đổi theo.
+app.get('/api/gioi-han', (req, res) => res.json({ max_file_mb: MAX_FILE_MB }));
 app.get('/api/criteria/:code', (req, res) => res.json(STANDARDS_DETAIL[req.params.code] || null));
 app.get('/api/criteria', (req, res) => res.json(STANDARDS_DETAIL));
 
@@ -244,7 +247,13 @@ app.delete('/api/workspaces/:id', auth.requireRole('admin'), async (req, res) =>
 // ═══════════════════════════════════════════════════════════════════════════
 app.get('/api/stats', async (req, res) => {
   const wsId = await getWs(req);
-  const rows = await q('SELECT tieu_chuan, count(*)::int AS n FROM evidence WHERE workspace_id=$1 GROUP BY tieu_chuan', [wsId]);
+  // Cùng phạm vi với danh sách minh chứng. Trước đây ô "Tổng minh chứng" đếm
+  // TOÀN TRƯỜNG còn bảng ngay bên dưới chỉ hiện minh chứng của đơn vị, nên
+  // tài khoản khoa thấy ô ghi 64 mà bảng có 10 dòng.
+  const mine = unitScope(req);
+  const rows = await q(
+    `SELECT tieu_chuan, count(*)::int AS n FROM evidence
+      WHERE workspace_id=$1 AND ($2::int IS NULL OR unit_id=$2) GROUP BY tieu_chuan`, [wsId, mine]);
   const byStandard = {};
   for (let i = 1; i <= 15; i++) byStandard[i] = 0;
   let total = 0;
@@ -307,6 +316,22 @@ app.post('/api/evidence', auth.requireAuth, upload.single('file'), async (req, r
   const wsId = await getWs(req);
   const tc = parseInt(tieu_chuan);
   const tieu_chi_so = parseInt(tieu_chi.split('.')[1]);
+
+  // Đơn vị chỉ được nộp vào tiêu chí ĐƯỢC PHÂN CÔNG. Trước đây nộp được vào
+  // bất kỳ tiêu chí nào: bản ghi đó không hiện trong Cổng đơn vị nên chính
+  // đơn vị nộp cũng không thấy để quản lý, trong khi bảng Đối soát TOÀN
+  // TRƯỜNG đổi trạng thái tiêu chí của đơn vị khác từ Thiếu sang Đang duyệt.
+  if (req.user.role === 'unit') {
+    const duocGiao = await one(
+      'SELECT id FROM unit_criteria WHERE workspace_id=$1 AND unit_id=$2 AND tieu_chi=$3',
+      [wsId, req.user.unit_id, tieu_chi]);
+    if (!duocGiao) {
+      if (req.file) fs.unlink(req.file.path, () => {});
+      return res.status(403).json({
+        error: `Tiêu chí ${tieu_chi} chưa được phân công cho đơn vị bạn. Đề nghị Phòng Đảm bảo chất lượng phân công trước khi nộp.`,
+      });
+    }
+  }
 
   // Đơn vị: vai unit → chính đơn vị mình; admin có thể chỉ định unit_id
   let uId = req.user.role === 'unit' ? req.user.unit_id : (unit_id ? parseInt(unit_id) : null);
@@ -986,6 +1011,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Error handler
 app.use((err, req, res, next) => {
+  // Tệp vượt giới hạn là lỗi của người gửi, không phải lỗi máy chủ. Trước đây
+  // trả 500 kèm câu tiếng Anh "File too large", còn giao diện thì đứng im
+  // không báo gì, người nộp bấm đi bấm lại mà không hiểu vì sao.
+  if (err && err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ error: `Tệp vượt quá giới hạn ${MAX_FILE_MB} MB. Hãy nén lại hoặc tách nhỏ rồi nộp lại.` });
+  }
+  if (err && err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({ error: 'Sai định dạng biểu mẫu tải lên' });
+  }
   console.error('[err]', err.message);
   res.status(500).json({ error: err.message });
 });

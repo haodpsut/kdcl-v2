@@ -20,6 +20,10 @@ body { font-family:'Times New Roman', Times, serif; background:#e8e8e8; color:#1
 .tb-back { background:#eef1f4; color:#1c1e21; }
 .tb-back:hover { background:#d9dce1; }
 .tb-stat { font-size:12px; color:#606770; font-family:'Segoe UI',sans-serif; }
+.tb-opt { font-size:12px; color:#1c1e21; font-family:'Segoe UI',sans-serif; font-weight:600;
+          display:flex; align-items:center; gap:6px; cursor:pointer; padding:6px 10px;
+          border:1px solid #d9dce1; border-radius:7px; background:#f7f8fa; }
+.tb-opt input { cursor:pointer; }
 
 /* ─── A4 Pages ──────────────────────────────────────────────────────────────── */
 .pages { padding:68px 20px 40px; display:flex; flex-direction:column; align-items:center; gap:20px; }
@@ -73,11 +77,47 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 .ket-qua-CHUA     { color:#7c2d12; background:#fff7ed; }
 .no-data          { font-style:italic; color:#666; font-size:10pt; }
 
+/* ─── Trạng thái minh chứng và phiếu nháp ─────────────────────────────────────
+   Bản in nộp cho đoàn đánh giá ngoài phải phân biệt được cái gì đã được duyệt
+   với cái gì chưa. Trước đây minh chứng chờ duyệt / bị trả lại và phiếu đánh giá
+   còn nháp được in y hệt phần đã duyệt, nên người đọc không có cách nào biết. */
+.ev-line { padding:2pt 0; }
+.ev-line + .ev-line { border-top:1px dotted #dcdcdc; }
+.ev-unverified { background:#fff7ed; border-left:3px solid #b45309; padding-left:5pt; }
+.ev-rejected   { background:#fef2f2; border-left:3px solid #991b1b; padding-left:5pt; }
+.ev-st  { font-size:8.5pt; font-weight:bold; padding:0 4pt; border-radius:3px; white-space:nowrap; margin-left:4pt; border:1px solid; }
+.ev-st.ok   { color:#166534; background:#dcfce7; border-color:#86c99f; }
+.ev-st.wait { color:#7c2d12; background:#ffedd5; border-color:#d19a5f; }
+.ev-st.rej  { color:#7f1d1d; background:#fee2e2; border-color:#d18f8f; }
+.ev-note { font-size:9pt; font-style:italic; color:#7f1d1d; margin-top:1pt; }
+.ev-link { font-size:9pt; color:#1d4ed8; word-break:break-all; }
+.ev-warn { font-size:9.5pt; font-weight:bold; color:#7c2d12; background:#fff7ed;
+           border:1px solid #d19a5f; padding:3pt 5pt; margin-bottom:5pt; }
+.draft-flag { font-size:9.5pt; font-weight:bold; color:#7c2d12; background:#fff7ed;
+              border:1px dashed #b45309; padding:2pt 6pt; margin-bottom:4pt; display:block; }
+.tt-draft { color:#7c2d12; background:#fff7ed; font-weight:bold; }
+.tt-appr  { color:#166534; font-weight:bold; }
+.badge-draft { background:#fff7ed; color:#7c2d12; border:1px solid #d19a5f;
+               padding:0 4pt; border-radius:3px; font-size:8.5pt; font-weight:bold; }
+.notice-box { border:2px solid #7c2d12; background:#fff7ed; padding:9pt 13pt; margin:0 0 14pt; }
+.notice-box h3 { margin:0 0 6pt; font-size:11.5pt; color:#7c2d12; text-transform:uppercase; }
+.notice-box ul { margin:0 0 0 16pt; font-size:10.5pt; line-height:1.6; }
+.notice-box .foot { font-size:10pt; font-style:italic; margin-top:6pt; }
+
 /* ─── Evidence list ──────────────────────────────────────────────────────────── */
 .ev-table { width:100%; border-collapse:collapse; font-size:10pt; margin:4pt 0 10pt; }
 .ev-table th { background:#f1f5f9; font-weight:bold; padding:4pt 6pt; border:1px solid #ccc; text-align:center; }
 .ev-table td { padding:3pt 6pt; border:1px solid #ccc; vertical-align:top; }
 .ev-table tr:nth-child(even) { background:#f8fafc; }
+/* Sọc ngựa vằn có độ ưu tiên cao hơn .ev-unverified nên phải ghi đè đúng bằng
+   mức đó, nếu không thì các dòng chẵn mất hẳn dấu hiệu chưa duyệt. */
+.ev-table tr.ev-unverified, .ev-table tr.ev-unverified:nth-child(even) { background:#fff7ed; }
+.ev-table tr.ev-rejected,   .ev-table tr.ev-rejected:nth-child(even)   { background:#fef2f2; }
+.ev-table tr.ev-unverified td:first-child { border-left:3px solid #b45309; }
+.ev-table tr.ev-rejected   td:first-child { border-left:3px solid #991b1b; }
+/* Ô minh chứng trong Biểu 04 chứa các thẻ div nên phải thoát khỏi pre-wrap của
+   .bieu04 td, nếu không mỗi dòng xuống hàng của mã nguồn thành một dòng trống. */
+.bieu04 td.ev-cell { white-space:normal; }
 
 /* ─── Summary table ──────────────────────────────────────────────────────────── */
 .sum-table { width:100%; border-collapse:collapse; font-size:10.5pt; margin:6pt 0; }
@@ -104,6 +144,12 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
   .section-std { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .bieu04 th   { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .ket-qua-DAT, .ket-qua-KHONG_DAT, .ket-qua-CHUA { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  /* Dấu hiệu "chưa duyệt" mà mất màu khi in thì coi như không có dấu hiệu, nên
+     các lớp dưới đây buộc trình duyệt giữ nguyên nền và viền lúc in. */
+  .ev-unverified, .ev-rejected, .ev-st, .ev-warn, .draft-flag,
+  .tt-draft, .badge-draft, .notice-box, .ev-st-cell {
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
 }
 @page { size:A4; margin:0; }
 </style>
@@ -116,6 +162,13 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 <div class="toolbar">
   <span class="brand"><span data-ic="report" data-ic-class="k-ic sm"></span> Báo cáo TĐG · Xem trước</span>
   <span class="tb-stat" id="tb-stat">Đang tải...</span>
+  <!-- Người soạn được chọn có viện dẫn minh chứng chưa duyệt hay không. Mặc định là CÓ,
+       vì bỏ chúng ra khỏi bản in mà không nói gì cũng là một kiểu giấu. Dù chọn cách nào
+       thì Phụ lục 2 vẫn liệt kê đủ và số lượng vẫn được ghi rõ. -->
+  <label class="tb-opt" id="tb-opt">
+    <input type="checkbox" id="cb-unverified" checked onchange="setIncludeUnverified(this.checked)">
+    Viện dẫn cả minh chứng chưa duyệt (có đánh dấu)
+  </label>
   <button class="tb-btn tb-back" onclick="window.close()"><span data-ic="x" data-ic-class="k-ic sm"></span> Đóng</button>
   <button class="tb-btn tb-print" onclick="window.print()"><span data-ic="print" data-ic-class="k-ic sm"></span> In / Xuất PDF</button>
 </div>
@@ -147,12 +200,46 @@ const STANDARDS = [
   { id:15, name:'Kết quả về tài chính và thị trường',             n:2  },
 ];
 
+// ── Trạng thái minh chứng và phiếu đánh giá ──────────────────────────────────
+// Ba giá trị của evidence.status và hai giá trị của assessments.trang_thai được
+// quy về đây, để mọi chỗ in ra dùng chung một cách gọi tên.
+const EV_STATUS = {
+  da_xac_nhan: { label:'Đã xác nhận', short:'Đã xác nhận', cls:'ok',   ok:true  },
+  cho_duyet:   { label:'CHỜ DUYỆT',   short:'Chờ duyệt',   cls:'wait', ok:false },
+  tra_lai:     { label:'BỊ TRẢ LẠI',  short:'Bị trả lại',  cls:'rej',  ok:false },
+};
+function evSt(e) { return EV_STATUS[e && e.status] || { label:'KHÔNG RÕ TRẠNG THÁI', short:'Không rõ', cls:'wait', ok:false }; }
+function evOk(e) { return evSt(e).ok; }
+function isDraft(a) { return !!a && a.trang_thai !== 'approved'; }
+
+// Đếm minh chứng theo trạng thái. Ô đếm gộp mọi trạng thái làm người đọc tưởng
+// cả 57 tài liệu đều đã được duyệt, nên ở đâu in số cũng phải in bản tách.
+function evCounts(list) {
+  const c = { total:0, da_xac_nhan:0, cho_duyet:0, tra_lai:0, chua:0 };
+  for (const e of (list || [])) {
+    c.total++;
+    if (c[e.status] === undefined) c.cho_duyet++; else c[e.status]++;
+    if (!evOk(e)) c.chua++;
+  }
+  return c;
+}
+
+let RPT = null, DATA = null;
+// Mặc định CÓ đưa minh chứng chưa duyệt vào bản in, kèm đánh dấu.
+let INCLUDE_UNVERIFIED = true;
+
+function setIncludeUnverified(v) {
+  INCLUDE_UNVERIFIED = !!v;
+  if (RPT && DATA) renderReport(RPT, DATA);
+}
+
 (async function init() {
   try {
     const [report, data] = await Promise.all([
       fetch(`/api/reports/${reportId}`).then(r => r.json()),
       fetch('/api/report/data').then(r => r.json()),
     ]);
+    RPT = report; DATA = data;
     renderReport(report, data);
   } catch(e) {
     document.getElementById('pages').innerHTML =
@@ -165,8 +252,28 @@ function renderReport(report, data) {
   const stats = data.stats || {};
   const today = new Date().toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
 
+  // Số phiếu nháp và số minh chứng chưa duyệt, tính một lần rồi dùng lại cho
+  // thanh công cụ, hộp ghi chú đầu báo cáo và các phụ lục, để không lệch số.
+  const ev = evCounts(data.evidence);
+  let phieuTong = 0, phieuNhap = 0, phieuNhapCoKL = 0;
+  // Phần II chỉ in ô "Minh chứng liên quan" cho tiêu chí ĐÃ CÓ PHIẾU, nên số minh
+  // chứng thực sự được viện dẫn nhỏ hơn tổng kho. Ghi chú đầu báo cáo phải nói
+  // đúng con số viện dẫn, không mượn tổng kho cho tiện.
+  let vienDan = 0, vienDanChua = 0;
+  for (const std of data.standards) for (const c of std.criteriaData) {
+    if (!c.assess) continue;
+    phieuTong++;
+    if (isDraft(c.assess)) {
+      phieuNhap++;
+      if (c.assess.ket_qua === 'DAT' || c.assess.ket_qua === 'KHONG_DAT') phieuNhapCoKL++;
+    }
+    for (const e of (c.evidence || [])) { vienDan++; if (!evOk(e)) vienDanChua++; }
+  }
+  const flags = { ev, phieuTong, phieuNhap, phieuNhapCoKL, vienDan, vienDanChua };
+
   document.getElementById('tb-stat').textContent =
-    `${stats.assessed || 0}/60 TC đã đánh giá · ${stats.dat || 0} ĐẠT · ${stats.total_evidence || 0} MC`;
+    `${stats.assessed || 0}/60 TC đã đánh giá · ${stats.dat || 0} ĐẠT · ${phieuNhap} phiếu nháp · ` +
+    `MC: ${ev.total} (${ev.da_xac_nhan} đã xác nhận, ${ev.cho_duyet} chờ duyệt, ${ev.tra_lai} bị trả lại)`;
 
   const pages = [];
 
@@ -218,6 +325,7 @@ function renderReport(report, data) {
 
   // ── Page 3: Part I ───────────────────────────────────────────────────────────
   pages.push(`<div class="page">
+    ${buildStatusNotice(flags)}
     <div class="section-part">Phần I: Mở đầu</div>
 
     <h2>1.1 Cơ sở pháp lý</h2>
@@ -303,6 +411,51 @@ function renderReport(report, data) {
 }
 
 // ── Builder helpers ───────────────────────────────────────────────────────────
+
+// Hộp ghi chú ở đầu báo cáo. Đoàn đánh giá ngoài cầm bản in phải biết ngay từ
+// trang đầu là trong hồ sơ còn bao nhiêu phiếu chưa duyệt và bao nhiêu minh
+// chứng chưa xác nhận, thay vì phải tự dò từng tiêu chí.
+function buildStatusNotice(f) {
+  const { ev, phieuTong, phieuNhap, phieuNhapCoKL, vienDan, vienDanChua } = f;
+  const phieuLine = phieuNhap
+    ? `Có <strong>${phieuTong}</strong> phiếu đánh giá tiêu chí, trong đó <strong>${phieuTong - phieuNhap}</strong> phiếu đã được duyệt và
+       <strong>${phieuNhap}</strong> phiếu còn ở trạng thái <strong>NHÁP, chưa được Hội đồng duyệt</strong>${
+        phieuNhapCoKL ? ` (trong số phiếu nháp này có <strong>${phieuNhapCoKL}</strong> phiếu đã ghi kết luận Đạt hoặc Không đạt)` : ''}.
+       Mỗi tiêu chí có phiếu nháp đều được đánh dấu ngay tại tiêu chí đó ở Phần II và ở Phụ lục 1.`
+    : `Toàn bộ <strong>${phieuTong}</strong> phiếu đánh giá tiêu chí đã được duyệt.`;
+
+  const mcLine = ev.chua
+    ? `Kho minh chứng có <strong>${ev.total}</strong> tài liệu: <strong>${ev.da_xac_nhan}</strong> đã xác nhận,
+       <strong>${ev.cho_duyet}</strong> đang chờ duyệt, <strong>${ev.tra_lai}</strong> bị trả lại.
+       Phụ lục 2 liệt kê đủ cả ${ev.total} tài liệu kèm cột trạng thái.`
+    : `Toàn bộ <strong>${ev.total}</strong> minh chứng trong hồ sơ đã được xác nhận. Phụ lục 2 liệt kê đủ.`;
+
+  const vdLine = INCLUDE_UNVERIFIED
+    ? `Phần II viện dẫn <strong>${vienDan}</strong> minh chứng, trong đó <strong>${vienDanChua}</strong> tài liệu
+       <strong>chưa được xác nhận</strong> (đang chờ duyệt hoặc bị trả lại). Các tài liệu này vẫn được giữ trong bản in
+       nhưng <strong>đều có đánh dấu trạng thái</strong> ngay tại chỗ viện dẫn, kèm lý do trả lại nếu có.`
+    : `Phần II chỉ viện dẫn <strong>${vienDan - vienDanChua}</strong> minh chứng đã xác nhận;
+       <strong>${vienDanChua}</strong> minh chứng chưa xác nhận <strong>không được viện dẫn</strong> theo lựa chọn của
+       người soạn, nhưng số lượng vẫn được ghi tại từng tiêu chí và chi tiết vẫn có ở Phụ lục 2.`;
+
+  if (!phieuNhap && !ev.chua) {
+    return `<div class="notice-box">
+      <h3>Ghi chú về tình trạng hồ sơ tại thời điểm in</h3>
+      <ul><li>${phieuLine}</li><li>${mcLine}</li></ul>
+    </div>`;
+  }
+  return `<div class="notice-box">
+    <h3>Ghi chú về tình trạng hồ sơ tại thời điểm in</h3>
+    <ul>
+      <li>${phieuLine}</li>
+      <li>${mcLine}</li>
+      <li>${vdLine}</li>
+    </ul>
+    <div class="foot">Bản in này phản ánh đúng dữ liệu tại thời điểm kết xuất. Các nội dung chưa được duyệt
+      được giữ lại và đánh dấu để đoàn đánh giá thấy rõ, không lược bỏ khỏi hồ sơ.</div>
+  </div>`;
+}
+
 function buildSchoolInfoBlock(si) {
   if (!si || !Object.keys(si).length) return '<p class="no-data">Chưa nhập thông tin trường (xem Biểu 16, phần Thông tin trường).</p>';
   const rows = [
@@ -335,13 +488,24 @@ function buildStandardBlock(std) {
     if (a) {
       const kqClass = a.ket_qua === 'DAT' ? 'ket-qua-DAT' : a.ket_qua === 'KHONG_DAT' ? 'ket-qua-KHONG_DAT' : 'ket-qua-CHUA';
       const kqLabel = a.ket_qua === 'DAT' ? 'ĐẠT' : a.ket_qua === 'KHONG_DAT' ? 'KHÔNG ĐẠT' : 'Chưa xác định';
+      const draft   = isDraft(a);
+      // Phiếu nháp có kết luận là ca nguy hiểm nhất: nhìn vào ô "Kết quả đánh giá"
+      // thấy ĐẠT y hệt phiếu đã duyệt, nên phải cảnh báo ngay trên đầu tiêu chí.
+      const draftFlag = draft
+        ? `<span class="draft-flag">PHIẾU ĐÁNH GIÁ CÒN Ở TRẠNG THÁI NHÁP, CHƯA ĐƯỢC HỘI ĐỒNG DUYỆT.${
+            (a.ket_qua === 'DAT' || a.ket_qua === 'KHONG_DAT')
+              ? ` Kết luận &ldquo;${kqLabel}&rdquo; dưới đây chỉ là kết luận dự thảo.` : ''}</span>`
+        : '';
+      html += draftFlag;
       html += `<table class="bieu04">
         <tr><th>Hiện trạng</th><td>${h(a.hien_trang || '–')}</td></tr>
         <tr><th>Điểm mạnh</th><td>${h(a.diem_manh || '–')}</td></tr>
         <tr><th>Tồn tại & Hạn chế</th><td>${h(a.ton_tai || '–')}</td></tr>
         <tr><th>Kế hoạch hành động</th><td>${h(a.ke_hoach || '–')}</td></tr>
         <tr><th>Kết quả đánh giá</th><td class="ket-qua ${kqClass}">${kqLabel}</td></tr>
-        ${c.evidence.length ? `<tr><th>Minh chứng liên quan</th><td>${c.evidence.map(e => `<code>${h(e.code)}</code> ${h(e.mo_ta)}`).join('<br>')}</td></tr>` : ''}
+        <tr><th>Trạng thái phiếu</th><td class="${draft ? 'tt-draft' : 'tt-appr'}">${
+          draft ? 'NHÁP · chưa được duyệt' : 'Đã duyệt'}</td></tr>
+        ${buildEvidenceRow(c.evidence)}
       </table>`;
     } else {
       html += `<p class="no-data">Chưa có dữ liệu đánh giá cho tiêu chí này.</p>`;
@@ -349,6 +513,40 @@ function buildStandardBlock(std) {
     html += '</div>';
   }
   return html;
+}
+
+// Ô "Minh chứng liên quan" trong Biểu 04. Mỗi minh chứng in kèm trạng thái; cái
+// chưa xác nhận có nền và viền riêng, cái bị trả lại in luôn lý do trả lại, vì
+// viện dẫn một minh chứng bị trả lại mà không nói gì là sai lệch hồ sơ.
+function buildEvidenceRow(list) {
+  const all = list || [];
+  if (!all.length) return '';
+  const unver = all.filter(e => !evOk(e));
+  const shown = INCLUDE_UNVERIFIED ? all : all.filter(evOk);
+  const nWait = unver.filter(e => e.status === 'cho_duyet').length;
+  const nRej  = unver.filter(e => e.status === 'tra_lai').length;
+  const breakdown = [nWait ? `${nWait} chờ duyệt` : '', nRej ? `${nRej} bị trả lại` : ''].filter(Boolean).join(', ');
+
+  let warn = '';
+  if (unver.length) {
+    warn = INCLUDE_UNVERIFIED
+      ? `<div class="ev-warn">Lưu ý: ${unver.length}/${all.length} minh chứng viện dẫn dưới đây CHƯA ĐƯỢC XÁC NHẬN (${breakdown}).</div>`
+      : `<div class="ev-warn">Lưu ý: ${unver.length}/${all.length} minh chứng của tiêu chí này chưa được xác nhận (${breakdown})
+         nên không được viện dẫn ở đây; xem chi tiết tại Phụ lục 2.</div>`;
+  }
+  if (!shown.length) {
+    return `<tr><th>Minh chứng liên quan</th><td class="ev-cell">${warn}
+      <span class="no-data">Không còn minh chứng đã xác nhận nào để viện dẫn cho tiêu chí này.</span></td></tr>`;
+  }
+  const lines = shown.map(e => {
+    const st = evSt(e);
+    const cls = st.ok ? '' : (e.status === 'tra_lai' ? ' ev-rejected' : ' ev-unverified');
+    const note = (!st.ok && e.status === 'tra_lai' && e.review_note)
+      ? `<div class="ev-note">Lý do trả lại: ${h(e.review_note)}</div>` : '';
+    return `<div class="ev-line${cls}"><code>${h(e.code)}</code> ${h(e.mo_ta)}
+      <span class="ev-st ${st.cls}">${st.label}</span>${note}</div>`;
+  }).join('');
+  return `<tr><th>Minh chứng liên quan</th><td class="ev-cell">${warn}${lines}</td></tr>`;
 }
 
 function buildSummaryParagraph(stats) {
@@ -363,28 +561,40 @@ function buildSummaryParagraph(stats) {
 
 function buildSummaryTable(standards) {
   const rows = [];
+  let nDraft = 0;
   for (const std of standards) {
     rows.push(`<tr class="std-row">
       <td colspan="3" style="font-weight:bold">TC ${std.id}: ${h(std.name)}</td>
-      <td style="text-align:center">${std.dat}/${std.criteria.length} ĐẠT</td>
+      <td colspan="2" style="text-align:center">${std.dat}/${std.criteria.length} ĐẠT</td>
     </tr>`);
     for (const c of std.criteriaData) {
       const a = c.assess;
       const kq = a ? (a.ket_qua === 'DAT' ? '<span class="badge-dat">ĐẠT</span>' : a.ket_qua === 'KHONG_DAT' ? '<span class="badge-kdat">Không ĐẠT</span>' : '<span class="badge-chua">Chưa XĐ</span>') : '<span class="badge-chua">Chưa ĐG</span>';
+      // Cột trạng thái phiếu để bảng tổng hợp không biến phiếu nháp thành kết
+      // quả chính thức chỉ vì nó nằm cạnh các dòng đã duyệt.
+      const draft = isDraft(a);
+      if (a && draft) nDraft++;
+      const tt = !a ? '–'
+        : draft ? '<span class="badge-draft">NHÁP</span>'
+        : '<span class="tt-appr" style="font-size:9.5pt">Đã duyệt</span>';
       rows.push(`<tr>
         <td style="text-align:center">${c.key}</td>
         <td>${h(c.name)}</td>
         <td>${a ? h(a.nguoi_thuc_hien || '–') : '–'}</td>
         <td style="text-align:center">${kq}</td>
+        <td style="text-align:center">${tt}</td>
       </tr>`);
     }
   }
-  return `<table class="sum-table">
+  return `${nDraft ? `<p style="font-size:10.5pt;margin-bottom:6pt"><strong>Lưu ý:</strong> ${nDraft} phiếu trong bảng dưới đây
+    còn ở trạng thái NHÁP, chưa được Hội đồng duyệt; kết quả tương ứng chỉ là kết quả dự thảo.</p>` : ''}
+  <table class="sum-table">
     <thead><tr>
       <th style="width:8%">Tiêu chí</th>
-      <th style="width:48%">Nội dung</th>
-      <th style="width:24%">Người thực hiện</th>
-      <th style="width:20%">Kết quả</th>
+      <th style="width:41%">Nội dung</th>
+      <th style="width:21%">Người thực hiện</th>
+      <th style="width:15%">Kết quả</th>
+      <th style="width:15%">Trạng thái phiếu</th>
     </tr></thead>
     <tbody>${rows.join('')}</tbody>
   </table>`;
@@ -401,19 +611,44 @@ function buildEvidenceAppendix(evidence) {
     if (!byStd[std]) byStd[std] = [];
     byStd[std].push(e);
   }
-  let html = '';
+  const tot = evCounts(evidence);
+  let html = `<p style="font-size:10.5pt;margin-bottom:8pt">
+    Tổng số <strong>${tot.total}</strong> minh chứng, gồm <strong>${tot.da_xac_nhan}</strong> đã xác nhận,
+    <strong>${tot.cho_duyet}</strong> chờ duyệt và <strong>${tot.tra_lai}</strong> bị trả lại.
+    ${tot.chua ? `<strong>${tot.chua}</strong> minh chứng chưa được xác nhận vẫn được liệt kê đầy đủ dưới đây, có nền riêng
+      và đánh dấu ở cột Trạng thái${INCLUDE_UNVERIFIED ? '' : '; theo lựa chọn của người soạn, các minh chứng này KHÔNG được viện dẫn tại Phần II'}.` : ''}
+  </p>`;
+
   for (const std of Object.keys(byStd).sort((a,b) => Number(a)-Number(b))) {
-    html += `<h3>Tiêu chuẩn ${std}</h3>
+    const c = evCounts(byStd[std]);
+    html += `<h3>Tiêu chuẩn ${std}
+      <small style="font-weight:normal;font-size:10pt">(${c.total} minh chứng: ${c.da_xac_nhan} đã xác nhận,
+      ${c.cho_duyet} chờ duyệt, ${c.tra_lai} bị trả lại)</small></h3>
     <table class="ev-table">
-      <thead><tr><th>Mã MC</th><th>Tiêu chí</th><th>Mô tả</th><th>Tên file</th><th>Ngày thêm</th></tr></thead>
+      <thead><tr>
+        <th style="width:13%">Mã MC</th><th style="width:6%">Tiêu chí</th><th style="width:31%">Mô tả</th>
+        <th style="width:28%">Tên file / Địa chỉ liên kết</th><th style="width:12%">Trạng thái</th><th style="width:10%">Ngày thêm</th>
+      </tr></thead>
       <tbody>
-        ${byStd[std].map(e => `<tr>
-          <td><code>${h(e.code)}</code></td>
-          <td style="text-align:center">${h(e.tieu_chi)}</td>
-          <td>${h(e.mo_ta || '–')}</td>
-          <td>${h(e.file_name)}</td>
-          <td>${h(e.created_at)}</td>
-        </tr>`).join('')}
+        ${byStd[std].map(e => {
+          const st = evSt(e);
+          // Minh chứng dạng link không có file_name nên ô này từng bỏ trống hoàn
+          // toàn: đoàn cầm phụ lục không có cách nào truy ra tài liệu. In địa chỉ.
+          const src = e.source_type === 'link'
+            ? (e.link_url ? `<span class="ev-link">${h(e.link_url)}</span>` : '<span class="no-data">Minh chứng dạng liên kết, chưa nhập địa chỉ</span>')
+            : (e.file_name ? h(e.file_name) : '<span class="no-data">Chưa có tệp đính kèm</span>');
+          const note = (e.status === 'tra_lai' && e.review_note)
+            ? `<div class="ev-note">Lý do trả lại: ${h(e.review_note)}</div>` : '';
+          const rowCls = st.ok ? '' : (e.status === 'tra_lai' ? ' class="ev-rejected"' : ' class="ev-unverified"');
+          return `<tr${rowCls}>
+            <td><code>${h(e.code)}</code></td>
+            <td style="text-align:center">${h(e.tieu_chi)}</td>
+            <td>${h(e.mo_ta || '–')}${note}</td>
+            <td>${src}</td>
+            <td style="text-align:center" class="ev-st-cell"><span class="ev-st ${st.cls}" style="margin-left:0">${st.label}</span></td>
+            <td>${h(e.created_at)}</td>
+          </tr>`;
+        }).join('')}
       </tbody>
     </table>`;
   }
