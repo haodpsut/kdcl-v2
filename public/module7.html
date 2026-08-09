@@ -169,11 +169,11 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   <!-- Row 2: Radar + Heatmap -->
   <div class="row-2">
     <div class="card">
-      <div class="card-title"><span data-ic="target" data-ic-class="k-ic sm"></span>Kết quả 15 Tiêu chuẩn <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Chi tiết</a></div>
+      <div class="card-title"><span data-ic="target" data-ic-class="k-ic sm"></span>Kết quả theo Tiêu chuẩn <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Chi tiết</a></div>
       <div class="radar-wrap"><canvas id="chart-radar"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title"><span data-ic="map" data-ic-class="k-ic sm"></span>Bản đồ 60 Tiêu chí <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Đánh giá</a></div>
+      <div class="card-title"><span data-ic="map" data-ic-class="k-ic sm"></span>Bản đồ Tiêu chí <a href="/module2.html"><span data-ic="arrowRight" data-ic-class="k-ic sm"></span>Đánh giá</a></div>
       <div id="heatmap"></div>
       <div class="hm-legend">
         <div class="hm-leg"><div class="hm-dot" style="background:var(--green)"></div>ĐẠT</div>
@@ -217,12 +217,15 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 let radarChart = null;
 let kpiChart   = null;
 
-const STD_NAMES = [
-  'TC1 Tầm nhìn, SM','TC2 Lãnh đạo','TC3 Nhân lực','TC4 TC & CSVC','TC5 Đối ngoại',
-  'TC6 Đào tạo','TC7 NCKH','TC8 Kết nối CĐ','TC9 BĐCL','TC10 TT BĐCL',
-  'TC11 Nâng cao CL','TC12 KQ ĐT','TC13 KQ NCKH','TC14 KQ Kết nối','TC15 TC & TT',
-];
-const STD_N = [6,5,5,5,2,7,5,3,4,2,2,4,4,4,2]; // criteria count per standard
+// Nhãn trục radar dựng từ chính bộ tiêu chuẩn của đợt đang mở. Trước đây đây là
+// mảng 15 tên gõ cứng của TT26, nên mở một đợt chương trình đào tạo là radar vẽ
+// 8 giá trị lên 15 trục mang tên tiêu chuẩn của khung khác.
+function nhanTruc(standards) {
+  return (standards || []).map((std) => {
+    const ten = (std.name || '').replace(/^Tiêu chuẩn\s*\d+[:.]?\s*/i, '');
+    return `TC${std.id} ` + (ten.length > 16 ? ten.slice(0, 15).trim() + '…' : ten);
+  });
+}
 
 const TYPE_COLORS  = { bieu08:'#990000', bieu09:'#1a7f4b', bieu10:'#b26a00', bieu11:'#7c3aed' };
 const TYPE_LABELS  = { bieu08:'Biểu 08 (CB/GV)', bieu09:'Biểu 09 (Người học)', bieu10:'Biểu 10 (NTD)', bieu11:'Biểu 11 (Cựu SV)' };
@@ -256,7 +259,9 @@ async function loadAll() {
 // ── Metrics ───────────────────────────────────────────────────────────────────
 function renderMetrics(rData, tdgList, surveyList, kpiList) {
   const s = rData.stats;
-  const dat = s.dat, total = 60, assessed = s.assessed;
+  // Tổng tiêu chí lấy theo bộ của đợt đang mở (TT26: 60, TT04: 52).
+  const total = (rData.standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;
+  const dat = s.dat, assessed = s.assessed;
   const datPct = Math.round(dat / total * 100);
   const assPct = Math.round(assessed / total * 100);
   const totalResp = surveyList.reduce((a, s) => a + s.response_count, 0);
@@ -271,9 +276,9 @@ function renderMetrics(rData, tdgList, surveyList, kpiList) {
   const tnPct = latestKpi?.pct_tot_nghiep ?? null;
 
   const metrics = [
-    { label:'Tiêu chí đã ĐG', value:`${assessed}/60`, sub:'trên 60 tiêu chí', pct:assPct, color:'#990000' },
+    { label:'Tiêu chí đã ĐG', value:`${assessed}/${total}`, sub:`trên ${total} tiêu chí`, pct:assPct, color:'#990000' },
     { label:'Tiêu chí ĐẠT',   value:dat, sub:`${datPct}% tổng số`, pct:datPct, color:'#1a7f4b' },
-    { label:'Không ĐẠT',      value:s.khong_dat, sub:`${60-assessed} chưa đánh giá`, pct:Math.round(s.khong_dat/total*100), color:'#c0392b' },
+    { label:'Không ĐẠT',      value:s.khong_dat, sub:`${total-assessed} chưa đánh giá`, pct:Math.round(s.khong_dat/total*100), color:'#c0392b' },
     { label:'Minh chứng',     value:s.total_evidence, sub:'tài liệu đã lưu', pct:null, color:'#b26a00' },
     { label:'Phản hồi KS',    value:totalResp, sub:`${surveyList.length} khảo sát`, pct:null, color:'#7c3aed' },
     tnPct != null
@@ -305,7 +310,7 @@ function renderRadar(rData) {
   radarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: STD_NAMES,
+      labels: nhanTruc(rData.standards),
       datasets: [
         {
           label: '% ĐẠT', data: datValues,
@@ -583,12 +588,12 @@ function renderActions(rData) {
 
   const el = document.getElementById('action-items');
   if (!actions.length) {
-    el.innerHTML = `<div class="empty-msg">${KIcon('checkCircle','k-ic sm')} Tất cả 60 tiêu chí đã được đánh giá ĐẠT!</div>`;
+    el.innerHTML = `<div class="empty-msg">${KIcon('checkCircle','k-ic sm')} Tất cả ${(rData.standards||[]).reduce((a,x)=>a+x.criteria.length,0)||60} tiêu chí đã được đánh giá ĐẠT!</div>`;
     return;
   }
 
   const totalKdat = rData.standards.reduce((a, s) => a + s.khong_dat, 0);
-  const totalNone = 60 - rData.stats.assessed;
+  const totalNone = ((rData.standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60) - rData.stats.assessed;
   el.innerHTML = `
     <div style="font-size:11px;color:var(--muted);margin-bottom:8px">
       ${totalKdat ? `<span style="color:var(--red)">${totalKdat} tiêu chí Không ĐẠT</span> · ` : ''}

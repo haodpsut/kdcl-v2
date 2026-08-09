@@ -271,8 +271,9 @@ function renderReport(report, data) {
   }
   const flags = { ev, phieuTong, phieuNhap, phieuNhapCoKL, vienDan, vienDanChua };
 
+  const TONG_TC = (data.standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;
   document.getElementById('tb-stat').textContent =
-    `${stats.assessed || 0}/60 TC đã đánh giá · ${stats.dat || 0} ĐẠT · ${phieuNhap} phiếu nháp · ` +
+    `${stats.assessed || 0}/${TONG_TC} TC đã đánh giá · ${stats.dat || 0} ĐẠT · ${phieuNhap} phiếu nháp · ` +
     `MC: ${ev.total} (${ev.da_xac_nhan} đã xác nhận, ${ev.cho_duyet} chờ duyệt, ${ev.tra_lai} bị trả lại)`;
 
   const pages = [];
@@ -378,7 +379,7 @@ function renderReport(report, data) {
     <h2>3.1 Tóm tắt kết quả tự đánh giá</h2>
     ${report.tom_tat_ket_qua
       ? `<p class="indent">${h(report.tom_tat_ket_qua).replace(/\n/g,'</p><p class="indent">')}</p>`
-      : buildSummaryParagraph(stats)}
+      : buildSummaryParagraph(stats, data.standards)}
 
     <h2>3.2 Kế hoạch cải tiến chất lượng</h2>
     ${report.ke_hoach_cai_tien
@@ -549,13 +550,17 @@ function buildEvidenceRow(list) {
   return `<tr><th>Minh chứng liên quan</th><td class="ev-cell">${warn}${lines}</td></tr>`;
 }
 
-function buildSummaryParagraph(stats) {
+function buildSummaryParagraph(stats, standards) {
   const assessed = stats.assessed || 0;
   const dat      = stats.dat || 0;
   const khong    = stats.khong_dat || 0;
-  const chua     = 60 - assessed;
-  const pct      = Math.round(dat / 60 * 100);
-  return `<p class="indent">Qua quá trình tự đánh giá, Hội đồng TĐG đã hoàn thành đánh giá ${assessed}/60 tiêu chí thuộc 15 tiêu chuẩn theo quy định của Thông tư. Trong đó, có <strong>${dat} tiêu chí ĐẠT</strong> (chiếm ${pct}% tổng số), <strong>${khong} tiêu chí Không ĐẠT</strong>${chua > 0 ? `, và ${chua} tiêu chí chưa hoàn thành đánh giá` : ''}.</p>
+  // Quy mô theo bộ tiêu chuẩn của đợt: TT26 là 15/60, TT04 là 8/52. Câu tóm tắt
+  // này in thẳng vào báo cáo tự đánh giá nộp ra ngoài nên sai số là sai văn bản.
+  const soTC     = (standards || []).length || 15;
+  const TONG     = (standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;
+  const chua     = TONG - assessed;
+  const pct      = Math.round(dat / TONG * 100);
+  return `<p class="indent">Qua quá trình tự đánh giá, Hội đồng TĐG đã hoàn thành đánh giá ${assessed}/${TONG} tiêu chí thuộc ${soTC} tiêu chuẩn theo quy định của Thông tư. Trong đó, có <strong>${dat} tiêu chí ĐẠT</strong> (chiếm ${pct}% tổng số), <strong>${khong} tiêu chí Không ĐẠT</strong>${chua > 0 ? `, và ${chua} tiêu chí chưa hoàn thành đánh giá` : ''}.</p>
   <p class="indent">Kết quả tự đánh giá phản ánh những nỗ lực liên tục của nhà trường trong việc nâng cao chất lượng đào tạo, nghiên cứu khoa học và phục vụ cộng đồng. Các tiêu chí chưa đạt yêu cầu đã được nhận diện và đề xuất kế hoạch cải tiến cụ thể.</p>`;
 }
 

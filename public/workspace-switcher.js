@@ -80,13 +80,16 @@
       // Tiến độ 24 tuần là màn dùng chung cho cả hai loại đợt: cả ba workspace
       // CTĐT đều đã có kế hoạch trong CSDL nhưng menu cũ không có lối vào, nên
       // dữ liệu nằm đó mà không ai tới được.
-      // Cố ý KHÔNG đưa vào đây: Đánh giá tiêu chí và Dashboard, vì cả hai dựng
-      // theo bộ 15 tiêu chuẩn 60 tiêu chí của TT26, không phải bộ của TT04.
+      // Đánh giá tiêu chí và Dashboard trước đây bị để ngoài menu này vì cả hai
+      // gõ cứng bộ 15 tiêu chuẩn 60 tiêu chí của TT26. Nay chúng lấy quy mô từ
+      // bộ tiêu chuẩn của chính đợt đang mở nên chạy đúng với TT04, đưa vào.
       { icon: 'clipboard', label: 'Tự đánh giá', children: [
+        { href: '/module2.html', icon: 'clipboard', label: 'Đánh giá tiêu chí (Biểu 04)' },
         { href: '/module4.html', icon: 'calendar', label: 'Tiến độ 24 tuần' },
         { href: '/module5.html', icon: 'survey', label: 'Khảo sát các bên' },
         { href: '/module6.html', icon: 'report', label: 'Báo cáo' },
       ] },
+      { href: '/module7.html', icon: 'dashboard', label: 'Dashboard' },
     ],
   };
 

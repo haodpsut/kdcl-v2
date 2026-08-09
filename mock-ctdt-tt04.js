@@ -20,6 +20,7 @@
 // tiêu chuẩn nên giữ nguyên.
 const { q, one, pool } = require('./db');
 const { STANDARDS_TT04 } = require('./standards-tt04.js');
+const { STANDARDS_DETAIL_TT04: CHI_TIET } = require('./standards-detail-tt04.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -52,6 +53,39 @@ const MC_CHUNG = (nganh, khoa) => ([
   ['7.3', 'PKHTC', `Danh mục nguồn học liệu và thư viện số phục vụ chương trình`, 'da_xac_nhan', 'file'],
   ['8.2', 'PKHCN', `Khảo sát tình trạng việc làm của người tốt nghiệp sau 12 tháng`, 'cho_duyet', 'file'],
 ]);
+
+// Mười bốn minh chứng trên đây là bản viết tay, tên tài liệu theo lối đơn vị
+// hay đặt. Chúng KHÔNG khai mục gợi ý nào, nên nằm ở nhóm "chưa khai báo" của
+// panel tiêu chí, đúng như hồ sơ thật lúc mới nộp.
+//
+// Phần dưới phủ đều cả 52 tiêu chí. Tên tài liệu lấy nguyên văn từ danh mục
+// MINH CHỨNG GỢI Ý của Phụ lục II, và khai đúng mục đó, nên con số bao phủ là
+// khai báo thật chứ không phải đoán chữ. Không phủ 100%: hồ sơ tự đánh giá
+// thật không bao giờ đủ hết, và màn này sinh ra để chỉ ra chỗ còn thiếu.
+//
+// Đơn vị chủ quản gán theo tiêu chuẩn, bám phân công thường gặp ở trường.
+const DON_VI_THEO_TC = { 1: 'PDT', 2: 'PDT', 3: null, 4: null, 5: 'PTCHC', 6: 'PCTSV', 7: 'PKHTC', 8: 'PKHCN' };
+
+function minhChungTheoGoiY(nganh, khoa) {
+  const ds = [];
+  for (const s of STANDARDS_TT04) {
+    for (const c of s.criteria) {
+      const goiY = (CHI_TIET[c.code] || {}).suggested_evidence || [];
+      // Tiêu chí ĐIỀU KIỆN phủ dày hơn vì chỉ cần nó trượt là cả tiêu chuẩn
+      // trượt; các tiêu chí khác lấy cách quãng để còn chừa chỗ trống thật.
+      const chon = goiY.filter((_, i) => (c.dieu_kien ? i % 3 !== 2 : i % 2 === 0));
+      const dv = DON_VI_THEO_TC[s.id] || khoa;
+      chon.forEach((g, k) => {
+        // Ba trạng thái xen kẽ để cổng duyệt của Phòng ĐBCL có việc thật để làm.
+        const tt = k % 4 === 1 ? 'cho_duyet' : k % 7 === 3 ? 'tra_lai' : 'da_xac_nhan';
+        ds.push([c.code, dv, g.name, tt, k % 3 === 1 ? 'link' : 'file',
+          tt === 'tra_lai' ? 'Tài liệu chưa có số hiệu và ngày ban hành, đề nghị nộp lại bản chính thức.' : '',
+          g.name]);   // cột cuối: khai đúng mục gợi ý này
+      });
+    }
+  }
+  return ds;
+}
 
 // Phiếu đánh giá tiêu chí, cố ý có đủ ba trạng thái và có một tiêu chí ĐIỀU
 // KIỆN không đạt, để thấy luật "một tiêu chí điều kiện không đạt thì cả tiêu
@@ -140,7 +174,7 @@ async function main() {
     await q('DELETE FROM assessments WHERE workspace_id=$1', [W]);
 
     // Phân công tiêu chí theo đúng đơn vị chủ quản trong danh sách minh chứng
-    const ds = MC_CHUNG(nganh, khoa);
+    const ds = [...MC_CHUNG(nganh, khoa), ...minhChungTheoGoiY(nganh, khoa)];
     const giao = new Set(ds.filter(([, u]) => u).map(([tc, u]) => u + '|' + tc));
     giao.add(khoa + '|8.1');      // tiêu chí đã giao mà chưa nộp, để cổng đơn vị có việc đang chờ
     for (const key of giao) {
@@ -151,7 +185,7 @@ async function main() {
 
     // Minh chứng
     const dem = {};
-    for (const [tc, u, mota, tt, loai, note] of ds) {
+    for (const [tc, u, mota, tt, loai, note, khaiMuc] of ds) {
       if (!MA_HOP_LE.has(tc)) throw new Error(`Mã ${tc} không có trong khung TT04`);
       const chuan = parseInt(tc.split('.')[0]), so = parseInt(tc.split('.')[1]);
       dem[tc] = (dem[tc] || 0) + 1;
@@ -162,11 +196,12 @@ async function main() {
       if (loai === 'file') { const m = taoTep(code, tc, mota); f = { source_type: 'file', ...m, link_url: null }; }
       await q(`INSERT INTO evidence(workspace_id,code,tieu_chuan,tieu_chi,tieu_chi_so,thu_tu,mo_ta,nguon,
           source_type,file_name,file_stored,file_size,mime_type,link_url,unit_id,uploaded_by,status,
-          reviewed_by,reviewed_at,review_note)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,${daDuyet ? 'now()' : 'NULL'},$19)`,
+          reviewed_by,reviewed_at,review_note,sug_names)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,${daDuyet ? 'now()' : 'NULL'},$19,$20)`,
         [W, code, chuan, tc, so, dem[tc], mota, u ? 'Đơn vị: ' + u : '',
          f.source_type, f.file_name, f.file_stored, f.file_size, f.mime, f.link_url,
-         U[u] || null, admin, tt, daDuyet ? admin : null, note || '']);
+         U[u] || null, admin, tt, daDuyet ? admin : null, note || '',
+         khaiMuc ? [khaiMuc] : []]);   // cột TEXT[] NOT NULL, không nhận null
     }
 
     // Phiếu đánh giá tiêu chí
@@ -191,6 +226,38 @@ async function main() {
     }
   }
   console.log(loi ? `   CÒN ${loi} mã ngoài khung TT04` : '   Mọi mã tiêu chí của các đợt CTĐT đều nằm trong khung TT04.');
+
+  // Đối soát khai báo bao phủ: mọi tên trong sug_names phải trùng KHÍT một mục
+  // gợi ý của đúng tiêu chí đó. Lệch một chữ là panel đếm 0 mà không báo lỗi,
+  // nên phải kiểm ở đây chứ không tin vào lúc sinh.
+  let sai = 0;
+  for (const ws of dsWs) {
+    const rows = await q(
+      'SELECT tieu_chi, sug_names FROM evidence WHERE workspace_id=$1 AND array_length(sug_names,1) > 0', [ws.id]);
+    for (const r of rows) {
+      const hopLe = new Set(((CHI_TIET[r.tieu_chi] || {}).suggested_evidence || []).map((g) => g.name));
+      for (const n of r.sug_names) {
+        if (!hopLe.has(n)) { sai++; console.log(`   ${ws.name} · ${r.tieu_chi}: khai tên lạ "${n.slice(0, 60)}"`); }
+      }
+    }
+  }
+  console.log(sai ? `   CÓ ${sai} khai báo không khớp danh mục gợi ý` : '   Mọi khai báo bao phủ đều khớp danh mục gợi ý của Phụ lục II.');
+
+  // Bao phủ theo từng đợt: đếm tiêu chí đã có ít nhất một khai báo
+  for (const ws of dsWs) {
+    const r = await one(
+      `SELECT count(DISTINCT tieu_chi)::int AS co_mc,
+              count(DISTINCT tieu_chi) FILTER (WHERE array_length(sug_names,1) > 0)::int AS co_khai,
+              count(*)::int AS tong
+         FROM evidence WHERE workspace_id=$1`, [ws.id]);
+    const khai = await one(
+      `SELECT count(*)::int AS n FROM (
+         SELECT DISTINCT tieu_chi, unnest(sug_names) AS ten FROM evidence WHERE workspace_id=$1) t`, [ws.id]);
+    const tongGoiY = STANDARDS_TT04.reduce((a, s) => a + s.criteria.reduce(
+      (b, c) => b + ((CHI_TIET[c.code] || {}).suggested_evidence || []).length, 0), 0);
+    console.log(`   ${ws.name}: ${r.tong} minh chứng · ${r.co_mc}/52 tiêu chí có minh chứng · `
+      + `${khai.n}/${tongGoiY} mục gợi ý đã được khai (${Math.round(khai.n / tongGoiY * 100)}%)`);
+  }
   const dk = await q(
     `SELECT w.name, a.tieu_chi FROM assessments a JOIN workspaces w ON w.id=a.workspace_id
       WHERE w.type='CTDT' AND a.ket_qua='KHONG_DAT' ORDER BY w.id`);

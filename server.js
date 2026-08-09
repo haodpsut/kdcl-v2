@@ -12,6 +12,7 @@ const { q, one, tx, pool, waitForDb, initSchema } = require('./db');
 const auth = require('./auth');
 const { STANDARDS_DETAIL, EVIDENCE_TYPES } = require('./standards-detail.js');
 const { STANDARDS_TT04 } = require('./standards-tt04.js');
+const { STANDARDS_DETAIL_TT04 } = require('./standards-detail-tt04.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -213,14 +214,18 @@ const BO_TT04 = STANDARDS_TT04.map((s) => ({
   dieu_kien: s.criteria.filter((c) => c.dieu_kien).map((c) => c.code),
 }));
 // Chi tiết từng tiêu chí TT04, tra theo mã, cùng hình dạng với STANDARDS_DETAIL.
-const CHI_TIET_TT04 = {};
+// Bản này bóc từ Phụ lục II của thông tư nên có đủ yêu cầu, minh chứng gợi ý và
+// câu hỏi tự đánh giá. Trước đây ba mảng đó để RỖNG, nên panel tiêu chí của các
+// đợt chương trình đào tạo chỉ hiện mỗi cái tên.
+const CHI_TIET_TT04 = STANDARDS_DETAIL_TT04;
+// Cổng chặn: thiếu tiêu chí nào thì dừng ngay lúc khởi động, đừng để tới lúc
+// người dùng bấm vào tiêu chí mới phát hiện.
 for (const s of STANDARDS_TT04) {
   for (const c of s.criteria) {
-    CHI_TIET_TT04[c.code] = {
-      short_name: c.short, full_name: c.full,
-      dieu_kien: c.dieu_kien,
-      requirements: [], suggested_evidence: [], self_check_questions: [],
-    };
+    const d = CHI_TIET_TT04[c.code];
+    if (!d || !d.requirements.length || !d.suggested_evidence.length) {
+      throw new Error(`standards-detail-tt04.js thiếu nội dung cho tiêu chí ${c.code}`);
+    }
   }
 }
 
@@ -286,6 +291,19 @@ app.delete('/api/workspaces/:id', auth.requireRole('admin'), async (req, res) =>
 // ═══════════════════════════════════════════════════════════════════════════
 // STATS
 // ═══════════════════════════════════════════════════════════════════════════
+// Quy mô bộ tiêu chuẩn của đợt đang mở. Các màn đánh giá và báo cáo trước đây
+// gõ cứng 15 tiêu chuẩn / 60 tiêu chí của TT26, nên mở một đợt chương trình
+// đào tạo là thấy "10 / 60 đã đánh giá", "chưa đánh giá 50" và thanh tiến độ
+// chia cho 60, trong khi khung TT04 chỉ có 8 tiêu chuẩn và 52 tiêu chí. Trả số
+// này từ máy chủ để mọi trang lấy chung một nguồn.
+async function quyMo(req) {
+  const bo = await boTieuChuan(req);
+  return {
+    tong_tieu_chuan: bo.length,
+    tong_tieu_chi: bo.reduce((a, s) => a + s.criteria.length, 0),
+  };
+}
+
 app.get('/api/stats', async (req, res) => {
   const wsId = await getWs(req);
   // Cùng phạm vi với danh sách minh chứng. Trước đây ô "Tổng minh chứng" đếm
@@ -301,7 +319,7 @@ app.get('/api/stats', async (req, res) => {
   for (const std of bo) byStandard[std.id] = 0;
   let total = 0;
   for (const r of rows) { byStandard[r.tieu_chuan] = r.n; total += r.n; }
-  res.json({ total, byStandard });
+  res.json({ total, byStandard, ...(await quyMo(req)) });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -633,7 +651,7 @@ app.get('/api/assess-stats', async (req, res) => {
   const approved = list.filter(a => a.trang_thai === 'approved').length;
   const statusMap = {};
   for (const a of list) statusMap[a.tieu_chi] = { ket_qua: a.ket_qua, trang_thai: a.trang_thai };
-  res.json({ total, dat, khongDat, draft, approved, statusMap });
+  res.json({ total, dat, khongDat, draft, approved, statusMap, ...(await quyMo(req)) });
 });
 app.get('/api/assessments', async (req, res) => {
   const wsId = await getWs(req);

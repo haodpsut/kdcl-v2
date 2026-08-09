@@ -260,7 +260,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <nav id="sidebar">
   <div class="sidebar-header">
     <h2>Tiêu chuẩn / Tiêu chí</h2>
-    <p id="sidebar-prog-text">0 / 60 đã đánh giá</p>
+    <p id="sidebar-prog-text">0 / … đã đánh giá</p>
   </div>
   <div id="tree"></div>
 </nav>
@@ -271,7 +271,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
   <!-- Dashboard (shown when no criterion selected) -->
   <div id="dashboard">
     <div class="dash-title"><span data-ic="clipboard" data-ic-class="k-ic lg"></span> Đánh giá Tiêu chí · Biểu 04</div>
-    <div class="dash-subtitle"><span data-ws-law>Bộ tiêu chuẩn đang áp dụng</span> &nbsp;·&nbsp; 15 Tiêu chuẩn / 60 Tiêu chí</div>
+    <div class="dash-subtitle"><span data-ws-law>Bộ tiêu chuẩn đang áp dụng</span></div>
 
     <div class="stats-grid">
       <div class="stat-card blue">
@@ -288,13 +288,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       </div>
       <div class="stat-card yellow">
         <div class="lbl">Chưa đánh giá</div>
-        <div class="val" id="s-chua">60</div>
+        <div class="val" id="s-chua">…</div>
       </div>
     </div>
 
     <div class="progress-section">
-      <h3>Tiến độ hoàn thành (60 tiêu chí)</h3>
-      <!-- Thanh này chỉ được vẽ bằng các nhóm LOẠI TRỪ NHAU theo ket_qua, tổng luôn đúng 60 tiêu chí.
+      <h3 id="prog-title">Tiến độ hoàn thành</h3>
+      <!-- Thanh này chỉ được vẽ bằng các nhóm LOẠI TRỪ NHAU theo ket_qua, tổng luôn đúng số tiêu chí của bộ đang áp dụng.
            Bản cũ vẽ đoạn thứ ba theo trang_thai='draft' (15 phiếu nháp), mà 15 phiếu đó đã nằm sẵn
            trong 27 Đạt và 2 Không đạt, nên chú giải cộng ra 27+2+15+28 = 72 trên nền 60, còn các đoạn
            chỉ phủ 45%+3,3%+25% = 73,3% bề rộng và nhóm "Chưa đánh giá (28)" không có đoạn nào. -->
@@ -308,7 +308,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
         <span><div class="leg-dot" style="background:var(--green)"></div> Đạt (<span id="leg-dat">0</span>)</span>
         <span><div class="leg-dot" style="background:var(--red)"></div> Không đạt (<span id="leg-kdat">0</span>)</span>
         <span><div class="leg-dot" style="background:var(--yellow)"></div> Chưa kết luận (<span id="leg-chuakl">0</span>)</span>
-        <span><div class="leg-dot" style="background:var(--border);border:1px solid var(--muted)"></div> Chưa đánh giá (<span id="leg-chua">60</span>)</span>
+        <span><div class="leg-dot" style="background:var(--border);border:1px solid var(--muted)"></div> Chưa đánh giá (<span id="leg-chua">…</span>)</span>
       </div>
       <!-- Phiếu nháp là TRẠNG THÁI QUY TRÌNH, không loại trừ với kết quả, nên đứng riêng ngoài thanh. -->
       <div class="prog-note" id="draft-indicator">
@@ -533,17 +533,29 @@ async function init() {
 
 // ── Stats ─────────────────────────────────────────────────────
 function renderStats(s) {
+  // Quy mô lấy theo bộ tiêu chuẩn của chính đợt đang mở: TT26 là 15/60, TT04 là
+  // 8/52. Gõ cứng 60 khiến các đợt chương trình đào tạo hiện "chưa đánh giá 50"
+  // trong khi thực tế còn 42, và thanh tiến độ chia sai mẫu số.
+  const TONG = s.tong_tieu_chi || 60;
   document.getElementById('s-total').textContent = s.total;
   document.getElementById('s-dat').textContent   = s.dat;
   document.getElementById('s-kdat').textContent  = s.khongDat;
-  document.getElementById('s-chua').textContent  = 60 - s.total;
+  document.getElementById('s-chua').textContent  = Math.max(0, TONG - s.total);
 
-  // Bốn nhóm dưới đây loại trừ nhau và cộng lại đúng 60 tiêu chí.
+  const sub = document.querySelector('.dash-subtitle');
+  if (sub && s.tong_tieu_chuan) {
+    sub.innerHTML = `<span data-ws-law>Bộ tiêu chuẩn đang áp dụng</span> &nbsp;·&nbsp; `
+      + `${s.tong_tieu_chuan} Tiêu chuẩn / ${TONG} Tiêu chí`;
+  }
+  const tt = document.getElementById('prog-title');
+  if (tt) tt.textContent = `Tiến độ hoàn thành (${TONG} tiêu chí)`;
+
+  // Bốn nhóm dưới đây loại trừ nhau và cộng lại đúng số tiêu chí của bộ.
   // "Chưa kết luận" = đã có phiếu nhưng ket_qua chưa phải DAT hay KHONG_DAT (ket_qua='CHUA').
   // Cách cũ lấy s.draft (đếm trang_thai='draft') làm nhóm thứ ba là sai loại: draft là trạng thái
   // quy trình, 15 phiếu nháp đã nằm trong 27 Đạt và 2 Không đạt, nên chú giải cộng ra 72 trên nền 60.
   const chuaKetLuan = Math.max(0, s.total - s.dat - s.khongDat);
-  const chuaDanhGia = Math.max(0, 60 - s.total);
+  const chuaDanhGia = Math.max(0, TONG - s.total);
   document.getElementById('leg-dat').textContent    = s.dat;
   document.getElementById('leg-kdat').textContent   = s.khongDat;
   document.getElementById('leg-chuakl').textContent = chuaKetLuan;
@@ -552,7 +564,7 @@ function renderStats(s) {
   document.getElementById('leg-draft').textContent  = s.draft;
 
   // Đoạn cuối lấy phần dư để tổng bề rộng luôn tròn 100%, tránh sai số làm tròn dồn lại.
-  const pct = n => +(n / 60 * 100).toFixed(2);
+  const pct = n => +(n / TONG * 100).toFixed(2);
   const datPct = pct(s.dat), kdatPct = pct(s.khongDat), chuaKlPct = pct(chuaKetLuan);
   const chuaPct = +Math.max(0, 100 - datPct - kdatPct - chuaKlPct).toFixed(2);
   document.getElementById('prog-dat').style.width    = datPct + '%';
@@ -560,7 +572,7 @@ function renderStats(s) {
   document.getElementById('prog-chuakl').style.width = chuaKlPct + '%';
   document.getElementById('prog-chua').style.width   = chuaPct + '%';
 
-  document.getElementById('sidebar-prog-text').textContent = `${s.total} / 60 đã đánh giá`;
+  document.getElementById('sidebar-prog-text').textContent = `${s.total} / ${TONG} đã đánh giá`;
 }
 
 // ── Tree ─────────────────────────────────────────────────────

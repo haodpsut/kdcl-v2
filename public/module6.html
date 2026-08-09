@@ -243,15 +243,17 @@ function renderDashboard() {
   if (!d) return;
   const s = d.stats;
   const ev = evCounts(d.evidence);
-  const chua = 60 - s.assessed;
+  // Quy mô lấy từ chính bộ tiêu chuẩn của đợt (TT26: 60, TT04: 52), không gõ cứng.
+  const TONG = d.standards.reduce((a, x) => a + x.criteria.length, 0) || 60;
+  const chua = TONG - s.assessed;
   // Nhóm này là tiêu chí ĐÃ CÓ PHIẾU nhưng ket_qua chưa kết luận, nên tên đúng là "Chưa kết luận".
   // Bản cũ gọi nó là "Nháp" và in ra 3 TC, trong khi module2 gọi "nháp" là trang_thai='draft' và
   // in ra 15. Hai màn cạnh nhau cho hai con số khác nhau cho cùng một chữ, nên phải tách tên.
   const chuaKetLuan = s.assessed - s.dat - s.khong_dat;
 
-  const datPct    = Math.round(s.dat / 60 * 100);
-  const kdatPct   = Math.round(s.khong_dat / 60 * 100);
-  const chuaKlPct = Math.round(chuaKetLuan / 60 * 100);
+  const datPct    = Math.round(s.dat / TONG * 100);
+  const kdatPct   = Math.round(s.khong_dat / TONG * 100);
+  const chuaKlPct = Math.round(chuaKetLuan / TONG * 100);
 
   const stdCards = d.standards.map(std => {
     const total = std.criteria.length;
@@ -284,7 +286,7 @@ function renderDashboard() {
     <div class="dash-title">${KIcon('chart','k-ic lg')} Sẵn sàng Báo cáo TĐG</div>
 
     <div class="readiness-bar-wrap">
-      <h3>Tiến độ đánh giá 60 tiêu chí</h3>
+      <h3>Tiến độ đánh giá ${TONG} tiêu chí</h3>
       <div class="progress-track">
         <div class="prog-dat"    style="flex:${s.dat}"        title="Đạt">${s.dat > 3 ? s.dat : ''}</div>
         <div class="prog-kdat"   style="flex:${s.khong_dat}"  title="Không đạt">${s.khong_dat > 2 ? s.khong_dat : ''}</div>
@@ -340,18 +342,21 @@ function renderForm(r) {
   const ev = evCounts(reportData?.evidence);
   const assessed = s.assessed || 0;
   const dat = s.dat || 0;
-  const pct = Math.round(assessed / 60 * 100);
-  const ready = assessed >= 30;
+  const TONG = (reportData?.standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;
+  const pct = Math.round(assessed / TONG * 100);
+  // Ngưỡng mở báo cáo là một nửa số tiêu chí của bộ, không phải con số 30 cố định.
+  const nguong = Math.ceil(TONG / 2);
+  const ready = assessed >= nguong;
 
   document.getElementById('form-section').innerHTML = `
     <div class="action-bar">
       <button class="btn btn-ghost" onclick="backToDash()">${KIcon('back','k-ic sm')}Tổng quan</button>
-      <button class="btn btn-success" onclick="viewReport(${r.id})" ${ready ? '' : 'title="Cần đánh giá ít nhất 30/60 tiêu chí"'}>
+      <button class="btn btn-success" onclick="viewReport(${r.id})" ${ready ? '' : 'title="Cần đánh giá ít nhất ${nguong}/${TONG} tiêu chí"'}>
         ${KIcon('eye','k-ic sm')}Xem &amp; In Báo cáo
       </button>
       <button class="btn btn-ghost" onclick="viewReport(${r.id})">${KIcon('report','k-ic sm')}Mở cửa sổ mới ${KIcon('arrowRight','k-ic sm')}</button>
       <button class="btn btn-danger" onclick="deleteReport(${r.id},'${escHtml(r.title).replace(/'/g,"\\'")}')">Xoá</button>
-      <span style="font-size:12px;color:var(--muted);margin-left:8px">Đã đánh giá: <strong>${assessed}/60</strong> TC · <strong>${dat}</strong> ĐẠT · Tiến độ: <strong>${pct}%</strong></span>
+      <span style="font-size:12px;color:var(--muted);margin-left:8px">Đã đánh giá: <strong>${assessed}/${TONG}</strong> TC · <strong>${dat}</strong> ĐẠT · Tiến độ: <strong>${pct}%</strong></span>
     </div>
 
     <!-- Người soạn phải thấy trước khi bấm In: bao nhiêu phiếu chưa duyệt và bao

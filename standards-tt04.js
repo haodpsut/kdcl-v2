@@ -34,7 +34,7 @@ const STANDARDS_TT04 = [
       full: "Chuẩn đầu ra của chương trình đào tạo phản ánh rõ yêu cầu của các bên liên quan, đặc biệt là các bên liên quan bên ngoài.",
       dieu_kien: false },
     { code: "1.6", short: "Chuẩn đầu ra của chương trình đào tạo được đo lường đánh giá tại…",
-      full: "Chuẩn đầu ra của chương trình đào tạo được đo lường đánh giá tại thời điểm người học tốt nghiệp. ### Điều 5. Tiêu chuẩn 2: Cấu trúc và nội dung chương trình đào tạo",
+      full: "Chuẩn đầu ra của chương trình đào tạo được đo lường đánh giá tại thời điểm người học tốt nghiệp.",
       dieu_kien: true },
   ] },
   { id: 2, name: "Cấu trúc và nội dung chương trình đào tạo", criteria: [
@@ -45,7 +45,7 @@ const STANDARDS_TT04 = [
       full: "Cấu trúc và nội dung của chương trình đào tạo được thiết kế và phát triển để bảo đảm người học đạt được chuẩn đầu ra và có khối lượng học tập phù hợp với quy định.",
       dieu_kien: true },
     { code: "2.3", short: "Cấu trúc và nội dung của chương trình đào tạo được thiết kế và p…",
-      full: "Cấu trúc và nội dung của chương trình đào tạo được thiết kế và phát triển dựa trên phản hồi và nhu cầu của các bên liên quan, đặc biệt là các bên liên quan bên ngoài. *(Trang 5 có chữ ký nháy viết tay bằng mực xanh ở góc dưới bên phải.)* <!-- trang 6 -->",
+      full: "Cấu trúc và nội dung của chương trình đào tạo được thiết kế và phát triển dựa trên phản hồi và nhu cầu của các bên liên quan, đặc biệt là các bên liên quan bên ngoài.",
       dieu_kien: false },
     { code: "2.4", short: "Đóng góp của từng học phần trong việc đạt được chuẩn đầu ra của…",
       full: "Đóng góp của từng học phần trong việc đạt được chuẩn đầu ra của chương trình đào tạo là rõ ràng.",
@@ -57,7 +57,7 @@ const STANDARDS_TT04 = [
       full: "Cấu trúc và nội dung của chương trình đào tạo thể hiện rõ các học phần bắt buộc, tự chọn, lý thuyết, thực hành, trải nghiệm, nghiên cứu khoa học, các thành phần chính yếu và bổ trợ; cho phép người học lựa chọn theo định hướng nghề nghiệp của bản thân.",
       dieu_kien: false },
     { code: "2.7", short: "Cấu trúc và nội dung của chương trình đào tạo được rà soát",
-      full: "Cấu trúc và nội dung của chương trình đào tạo được rà soát, đánh giá và cải tiến chất lượng theo quy trình, quy định; bảo đảm tính cập nhật, đáp ứng yêu cầu của thị trường lao động. ### Điều 6. Tiêu chuẩn 3: Hoạt động dạy và học",
+      full: "Cấu trúc và nội dung của chương trình đào tạo được rà soát, đánh giá và cải tiến chất lượng theo quy trình, quy định; bảo đảm tính cập nhật, đáp ứng yêu cầu của thị trường lao động.",
       dieu_kien: false },
   ] },
   { id: 3, name: "Hoạt động dạy và học", criteria: [
@@ -74,7 +74,7 @@ const STANDARDS_TT04 = [
       full: "Hoạt động dạy và học thúc đẩy người học đưa ra ý tưởng mới, sáng kiến, đổi mới sáng tạo và tinh thần khởi nghiệp.",
       dieu_kien: false },
     { code: "3.5", short: "Quá trình dạy và học được cải tiến thường xuyên để đáp ứng yêu c…",
-      full: "Quá trình dạy và học được cải tiến thường xuyên để đáp ứng yêu cầu của thị trường lao động và thúc đẩy việc học tập, đáp ứng chuẩn đầu ra của chương trình đào tạo. ### Điều 7. Tiêu chuẩn 4: Đánh giá kết quả học tập",
+      full: "Quá trình dạy và học được cải tiến thường xuyên để đáp ứng yêu cầu của thị trường lao động và thúc đẩy việc học tập, đáp ứng chuẩn đầu ra của chương trình đào tạo.",
       dieu_kien: false },
   ] },
   { id: 4, name: "Đánh giá kết quả học tập", criteria: [
@@ -88,7 +88,7 @@ const STANDARDS_TT04 = [
       full: "Các tiêu chuẩn và quy trình đánh giá kết quả học tập, xét công nhận kết quả học tập, xét tốt nghiệp được phổ biến đến người học và được triển khai thực hiện một cách nhất quán.",
       dieu_kien: false },
     { code: "4.4", short: "Các phương pháp đánh giá kết quả học tập được thể hiện qua ma tr…",
-      full: "Các phương pháp đánh giá kết quả học tập được thể hiện qua ma trận, tiêu chí và mức độ đánh giá, đáp án, thang điểm chi tiết, kế hoạch đánh giá và các quy định cụ thể để bảo đảm độ giá trị, độ tin cậy và sự công bằng. *(Trang 6 có chữ ký nháy viết tay bằng mực xanh ở góc dưới bên phải.)* <!-- trang 7 -->",
+      full: "Các phương pháp đánh giá kết quả học tập được thể hiện qua ma trận, tiêu chí và mức độ đánh giá, đáp án, thang điểm chi tiết, kế hoạch đánh giá và các quy định cụ thể để bảo đảm độ giá trị, độ tin cậy và sự công bằng.",
       dieu_kien: false },
     { code: "4.5", short: "Các phương pháp đánh giá kết quả học tập bảo đảm đo lường được m…",
       full: "Các phương pháp đánh giá kết quả học tập bảo đảm đo lường được mức độ đạt chuẩn đầu ra của từng học phần và chuẩn đầu ra của chương trình đào tạo.",
@@ -97,7 +97,7 @@ const STANDARDS_TT04 = [
       full: "Kết quả đánh giá được phản hồi kịp thời cho người học để người học cải thiện việc học tập, phương pháp học tập và kết quả học tập.",
       dieu_kien: false },
     { code: "4.7", short: "Việc đánh giá kết quả học tập và các quy định về đánh giá kết qu…",
-      full: "Việc đánh giá kết quả học tập và các quy định về đánh giá kết quả học tập được định kỳ rà soát và cải tiến để bảo đảm đo lường được chuẩn đầu ra của chương trình đào tạo, đáp ứng nhu cầu của các bên liên quan. ### Điều 8. Tiêu chuẩn 5: Đội ngũ giảng viên, nghiên cứu viên",
+      full: "Việc đánh giá kết quả học tập và các quy định về đánh giá kết quả học tập được định kỳ rà soát và cải tiến để bảo đảm đo lường được chuẩn đầu ra của chương trình đào tạo, đáp ứng nhu cầu của các bên liên quan.",
       dieu_kien: false },
   ] },
   { id: 5, name: "Đội ngũ giảng viên, nghiên cứu viên", criteria: [
@@ -123,7 +123,7 @@ const STANDARDS_TT04 = [
       full: "Nhu cầu về đào tạo, bồi dưỡng và phát triển chuyên môn của giảng viên, nghiên cứu viên được xác định có tính hệ thống; các hoạt động đào tạo, bồi dưỡng được triển khai để đáp ứng nhu cầu.",
       dieu_kien: false },
     { code: "5.8", short: "Công tác quản lý để đánh giá chất lượng giảng dạy",
-      full: "Công tác quản lý để đánh giá chất lượng giảng dạy, nghiên cứu khoa học và phục vụ cộng đồng của giảng viên, nghiên cứu viên bao gồm cả việc khen thưởng và công nhận được triển khai theo quy định, quy trình cụ thể. ### Điều 9. Tiêu chuẩn 6: Các dịch vụ hỗ trợ người học",
+      full: "Công tác quản lý để đánh giá chất lượng giảng dạy, nghiên cứu khoa học và phục vụ cộng đồng của giảng viên, nghiên cứu viên bao gồm cả việc khen thưởng và công nhận được triển khai theo quy định, quy trình cụ thể.",
       dieu_kien: false },
   ] },
   { id: 6, name: "Các dịch vụ hỗ trợ người học", criteria: [
@@ -131,7 +131,7 @@ const STANDARDS_TT04 = [
       full: "Chính sách, tiêu chí và quy trình tuyển sinh được xác định rõ ràng theo yêu cầu của chương trình đào tạo; được công bố công khai và được cập nhật.",
       dieu_kien: true },
     { code: "6.2", short: "Năng lực của đội ngũ cung cấp dịch vụ hỗ trợ được xác định rõ rà…",
-      full: "Năng lực của đội ngũ cung cấp dịch vụ hỗ trợ được xác định rõ ràng trong tiêu chuẩn của vị trí việc làm, tiêu chí tuyển dụng, trong phân *(Trang 7 có chữ ký nháy viết tay bằng mực xanh ở góc dưới bên phải.)* <!-- trang 8 --> công nhiệm vụ và được đánh giá để bảo đảm phù hợp với nhu cầu của các bên liên quan.",
+      full: "Năng lực của đội ngũ cung cấp dịch vụ hỗ trợ được xác định rõ ràng trong tiêu chuẩn của vị trí việc làm, tiêu chí tuyển dụng, trong phân công nhiệm vụ và được đánh giá để bảo đảm phù hợp với nhu cầu của các bên liên quan.",
       dieu_kien: false },
     { code: "6.3", short: "Kế hoạch ngắn hạn và dài hạn đối với dịch vụ hỗ trợ người học (h…",
       full: "Kế hoạch ngắn hạn và dài hạn đối với dịch vụ hỗ trợ người học (học thuật và phi học thuật) được xây dựng, triển khai thực hiện để bảo đảm đáp ứng đầy đủ và có chất lượng các dịch vụ hỗ trợ đào tạo, nghiên cứu khoa học và kết nối phục vụ cộng đồng.",
@@ -143,7 +143,7 @@ const STANDARDS_TT04 = [
       full: "Có các hoạt động tư vấn học tập, hoạt động ngoại khóa, các cuộc thi và các dịch vụ hỗ trợ khác để giúp cải thiện việc học tập và tăng khả năng có việc làm của người học.",
       dieu_kien: false },
     { code: "6.6", short: "Các dịch vụ hỗ trợ người học được định kỳ đánh giá",
-      full: "Các dịch vụ hỗ trợ người học được định kỳ đánh giá, đối sánh và cải tiến chất lượng. ### Điều 10. Tiêu chuẩn 7: Cơ sở hạ tầng, cơ sở vật chất và trang thiết bị",
+      full: "Các dịch vụ hỗ trợ người học được định kỳ đánh giá, đối sánh và cải tiến chất lượng.",
       dieu_kien: false },
   ] },
   { id: 7, name: "Cơ sở hạ tầng, cơ sở vật chất và trang thiết bị", criteria: [
@@ -169,7 +169,7 @@ const STANDARDS_TT04 = [
       full: "Năng lực đội ngũ hỗ trợ về cơ sở vật chất và trang thiết bị được xác định và được đánh giá đáp ứng nhu cầu các bên liên quan.",
       dieu_kien: false },
     { code: "7.8", short: "Chất lượng cơ sở vật chất phục vụ chương trình đào tạo được định…",
-      full: "Chất lượng cơ sở vật chất phục vụ chương trình đào tạo được định kỳ đánh giá và cải tiến. *(Trang 8 có chữ ký nháy viết tay bằng mực xanh ở góc dưới bên phải.)* <!-- trang 9 --> ### Điều 11. Tiêu chuẩn 8: Đầu ra và kết quả đầu ra",
+      full: "Chất lượng cơ sở vật chất phục vụ chương trình đào tạo được định kỳ đánh giá và cải tiến.",
       dieu_kien: false },
   ] },
   { id: 8, name: "Đầu ra và kết quả đầu ra", criteria: [
@@ -186,7 +186,7 @@ const STANDARDS_TT04 = [
       full: "Dữ liệu về mức độ người học đạt chuẩn đầu ra của chương trình đào tạo được xác lập và giám sát để cải tiến chất lượng.",
       dieu_kien: false },
     { code: "8.5", short: "Mức độ hài lòng của các bên liên quan được xác lập",
-      full: "Mức độ hài lòng của các bên liên quan được xác lập, giám sát, đối sánh để cải tiến chất lượng. ## Chương III ## QUY TRÌNH, CHU KỲ KIỂM ĐỊNH CHẤT LƯỢNG GIÁO DỤC ### Mục 1 ### QUY TRÌNH, CHU KỲ, CÁCH ĐÁNH GIÁ ###",
+      full: "Mức độ hài lòng của các bên liên quan được xác lập, giám sát, đối sánh để cải tiến chất lượng.",
       dieu_kien: false },
   ] },
 ];
