@@ -92,7 +92,7 @@ body {
     <p>Workspace dành cho 1 đợt kiểm định 1 chương trình đào tạo cụ thể, theo Thông tư 04/2025/TT-BGDĐT.</p>
     <div class="meta">
       <span class="law"><span data-ic="book" data-ic-class="k-ic sm"></span> TT04/2025 BGDĐT</span>
-      <span><span data-ic="clipboard" data-ic-class="k-ic sm"></span> 8 tiêu chuẩn / 52 tiêu chí</span>
+      <span><span data-ic="clipboard" data-ic-class="k-ic sm"></span> <span id="tt04-quymo">8 tiêu chuẩn / 52 tiêu chí</span></span>
       <span><span data-ic="warning" data-ic-class="k-ic sm"></span> 10 TC điều kiện tiên quyết</span>
       <span><span data-ic="target" data-ic-class="k-ic sm"></span> Tiếp cận OBE · đo lường mức độ đạt CĐR</span>
     </div>
@@ -101,17 +101,10 @@ body {
   <div class="section">
     <h2><span data-ic="ruler"></span> Khung 8 tiêu chuẩn TT04/2025</h2>
     <div class="standards-grid">
-      <div class="std-row"><div class="num">1</div><div class="text"><div class="name">Mục tiêu và Chuẩn đầu ra</div><div class="count">6 tiêu chí · TC 1.3, 1.6 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">2</div><div class="text"><div class="name">Cấu trúc và nội dung CTĐT</div><div class="count">7 tiêu chí · TC 2.1, 2.4 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">3</div><div class="text"><div class="name">Hoạt động dạy và học</div><div class="count">5 tiêu chí · TC 3.2 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">4</div><div class="text"><div class="name">Đánh giá kết quả học tập</div><div class="count">7 tiêu chí · TC 4.5 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">5</div><div class="text"><div class="name">Đội ngũ giảng viên & NCV</div><div class="count">8 tiêu chí · TC 5.2 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">6</div><div class="text"><div class="name">Các dịch vụ hỗ trợ người học</div><div class="count">5 tiêu chí · TC 6.1 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">7</div><div class="text"><div class="name">Cơ sở vật chất</div><div class="count">6 tiêu chí · TC 7.3 là tiên quyết</div></div></div>
-      <div class="std-row"><div class="num">8</div><div class="text"><div class="name">Đầu ra và Kết quả đầu ra</div><div class="count">8 tiêu chí · TC 8.2 là tiên quyết</div></div></div>
+      <div id="khung-tt04"><div style="color:var(--muted);font-size:12px">Đang tải khung tiêu chuẩn…</div></div>
     </div>
     <p style="font-size: 11px; color: var(--muted); margin-top: 10px;">
-      Logic: Cấp tiêu chí <em>Đạt/Không đạt</em> <span data-ic="arrowRight" data-ic-class="k-ic sm"></span> Cấp tiêu chuẩn (≤ 02 TC tiên quyết không đạt) <span data-ic="arrowRight" data-ic-class="k-ic sm"></span> Cấp CTĐT (mọi tiêu chuẩn Đạt).
+      Luật xét theo Điều 13: một tiêu chuẩn chỉ đạt khi có <b>không quá 02 tiêu chí không đạt</b> VÀ <b>mọi tiêu chí điều kiện đều đạt</b>, tức tiêu chí điều kiện không nằm trong hạn mức 02 tiêu chí được phép trượt. Cả chương trình chỉ còn mức <b>đạt có điều kiện</b> khi không quá <b>02 tiêu chuẩn và 16 tiêu chí</b> không đạt; vượt quá là không đạt.
     </p>
   </div>
 
@@ -180,5 +173,33 @@ body {
     </div>
   </div>
 </div>
+
+<script>
+// Khung tiêu chuẩn dựng từ API thay vì gõ cứng. Bản gõ tay trước đây sai số
+// tiêu chí của tiêu chuẩn 6, 7, 8 (ghi 5, 6, 8 trong khi thông tư là 6, 8, 5),
+// sai mã tiêu chí điều kiện của tiêu chuẩn 2, và rút gọn tên tiêu chuẩn 7
+// thành "Cơ sở vật chất" trong khi thông tư ghi đủ là "Cơ sở hạ tầng, cơ sở
+// vật chất và trang thiết bị".
+(async function () {
+  const hop = document.getElementById('khung-tt04');
+  if (!hop) return;
+  try {
+    const bo = await (await fetch('/api/standards')).json();
+    const tongTC = bo.reduce((a, s) => a + s.criteria.length, 0);
+    const qm = document.getElementById('tt04-quymo');
+    if (qm) qm.textContent = `${bo.length} tiêu chuẩn / ${tongTC} tiêu chí`;
+    hop.innerHTML = bo.map((s) => {
+      const dk = (s.dieu_kien || []);
+      const ghi = dk.length
+        ? `${s.criteria.length} tiêu chí · điều kiện: ${dk.join(', ')}`
+        : `${s.criteria.length} tiêu chí`;
+      return `<div class="std-row"><div class="num">${s.id}</div><div class="text">
+        <div class="name">${s.name}</div><div class="count">${ghi}</div></div></div>`;
+    }).join('');
+  } catch (e) {
+    hop.innerHTML = '<div style="color:var(--red);font-size:12px">Không tải được khung tiêu chuẩn.</div>';
+  }
+})();
+</script>
 </body>
 </html>

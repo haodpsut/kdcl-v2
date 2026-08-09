@@ -11,6 +11,7 @@ const fs = require('fs');
 const { q, one, tx, pool, waitForDb, initSchema } = require('./db');
 const auth = require('./auth');
 const { STANDARDS_DETAIL, EVIDENCE_TYPES } = require('./standards-detail.js');
+const { STANDARDS_TT04 } = require('./standards-tt04.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -190,12 +191,52 @@ app.get('/api/me', async (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════
 // STANDARDS
 // ═══════════════════════════════════════════════════════════════════════════
-app.get('/api/standards', (req, res) => res.json(STANDARDS));
+// Bộ tiêu chuẩn phải theo LOẠI đợt kiểm định. Trước đây mọi đợt đều nhận bộ 15
+// tiêu chuẩn 60 tiêu chí của TT26, tức khung dành cho cơ sở giáo dục, nên ba
+// đợt chương trình đào tạo gắn minh chứng vào những địa chỉ không tồn tại
+// trong khung của mình như 9.1 hay 11.1, và trang Tổng quan của chính đợt đó
+// lại ghi 8 tiêu chuẩn 52 tiêu chí, tức phần mềm tự mâu thuẫn.
+async function boTieuChuan(req) {
+  const wsId = await getWs(req);
+  if (!wsId) return STANDARDS;
+  const w = await one('SELECT type FROM workspaces WHERE id=$1', [wsId]);
+  return w && w.type === 'CTDT' ? BO_TT04 : STANDARDS;
+}
+// Bộ TT04 quy về cùng hình dạng với bộ TT26 để mọi màn dùng lại được, không
+// phải sửa từng trang: { id, name, criteria: [tên ngắn...] }.
+const BO_TT04 = STANDARDS_TT04.map((s) => ({
+  id: s.id, name: s.name, criteria: s.criteria.map((c) => c.short),
+  // Gửi kèm mã tiêu chí ĐIỀU KIỆN để giao diện khỏi gõ cứng. Trang Tổng quan
+  // trước đây gõ tay và ghi sai ở tiêu chuẩn 2 (ghi 2.1 trong khi thông tư
+  // chốt 2.2), sai số tiêu chí của tiêu chuẩn 6, 7, 8, và rút gọn sai tên
+  // tiêu chuẩn 7 thành "Cơ sở vật chất".
+  dieu_kien: s.criteria.filter((c) => c.dieu_kien).map((c) => c.code),
+}));
+// Chi tiết từng tiêu chí TT04, tra theo mã, cùng hình dạng với STANDARDS_DETAIL.
+const CHI_TIET_TT04 = {};
+for (const s of STANDARDS_TT04) {
+  for (const c of s.criteria) {
+    CHI_TIET_TT04[c.code] = {
+      short_name: c.short, full_name: c.full,
+      dieu_kien: c.dieu_kien,
+      requirements: [], suggested_evidence: [], self_check_questions: [],
+    };
+  }
+}
+
+app.get('/api/standards', async (req, res) => res.json(await boTieuChuan(req)));
 app.get('/api/evidence-types', (req, res) => res.json(EVIDENCE_TYPES));
 // Giao diện hỏi giới hạn thay vì gõ cứng, để đổi một chỗ là cả hệ đổi theo.
 app.get('/api/gioi-han', (req, res) => res.json({ max_file_mb: MAX_FILE_MB }));
-app.get('/api/criteria/:code', (req, res) => res.json(STANDARDS_DETAIL[req.params.code] || null));
-app.get('/api/criteria', (req, res) => res.json(STANDARDS_DETAIL));
+app.get('/api/criteria/:code', async (req, res) => {
+  const bo = await boTieuChuan(req);
+  const chiTiet = bo === STANDARDS ? STANDARDS_DETAIL : CHI_TIET_TT04;
+  res.json(chiTiet[req.params.code] || null);
+});
+app.get('/api/criteria', async (req, res) => {
+  const bo = await boTieuChuan(req);
+  res.json(bo === STANDARDS ? STANDARDS_DETAIL : CHI_TIET_TT04);
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // WORKSPACES
@@ -255,7 +296,9 @@ app.get('/api/stats', async (req, res) => {
     `SELECT tieu_chuan, count(*)::int AS n FROM evidence
       WHERE workspace_id=$1 AND ($2::int IS NULL OR unit_id=$2) GROUP BY tieu_chuan`, [wsId, mine]);
   const byStandard = {};
-  for (let i = 1; i <= 15; i++) byStandard[i] = 0;
+  // Số tiêu chuẩn lấy theo bộ của đợt đang mở, không gán cứng 15.
+  const bo = await boTieuChuan(req);
+  for (const std of bo) byStandard[std.id] = 0;
   let total = 0;
   for (const r of rows) { byStandard[r.tieu_chuan] = r.n; total += r.n; }
   res.json({ total, byStandard });
@@ -555,7 +598,7 @@ app.get('/api/submission/coverage', async (req, res) => {
   const assignBy = {};
   for (const a of assign) (assignBy[a.tieu_chi] ||= []).push(a.unit_name);
 
-  const standards = STANDARDS.map(std => {
+  const standards = (await boTieuChuan(req)).map(std => {
     const criteria = std.criteria.map((name, idx) => {
       const key = `${std.id}.${idx + 1}`;
       const e = byTc[key] || { confirmed: 0, pending: 0, total: 0 };
@@ -949,7 +992,7 @@ app.get('/api/report/data', async (req, res) => {
   const wsKpi = (await q('SELECT * FROM kpi_data WHERE workspace_id=$1', [wsId])).map(flatKpi);
   const si = await one('SELECT data FROM school_info WHERE workspace_id=$1', [wsId]);
   const assessMap = {}; for (const a of wsAssessments) assessMap[a.tieu_chi] = a;
-  const standards = STANDARDS.map(std => {
+  const standards = (await boTieuChuan(req)).map(std => {
     const criteriaData = std.criteria.map((name, idx) => {
       const key = `${std.id}.${idx+1}`;
       return { key, name, idx: idx+1, assess: assessMap[key] || null,

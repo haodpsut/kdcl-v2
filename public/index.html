@@ -830,7 +830,7 @@ td {
     </div>
     <div class="stat-card purple">
       <div class="label">Tiêu chuẩn</div>
-      <div class="value">15</div>
+      <div class="value" id="stat-std-total">0</div>
     </div>
   </div>
 
@@ -1024,8 +1024,13 @@ function renderSizeWarning() {
 }
 
 async function loadStandards() {
+  // Số tiêu chuẩn lấy theo bộ của đợt đang mở. Trước đây gõ cứng 15 nên đợt
+  // chương trình đào tạo, vốn chỉ có 8 tiêu chuẩn theo TT04, vẫn hiện 15.
+
   const res = await fetch('/api/standards');
   standards = await res.json();
+  const oStd = document.getElementById('stat-std-total');
+  if (oStd) oStd.textContent = standards.length;
   renderTree();
   populateStandardSelect();
 }
