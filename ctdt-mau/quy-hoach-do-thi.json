@@ -1,0 +1,286 @@
+{
+  "slug": "quy-hoach-do-thi",
+  "nganh": "Quy hoạch vùng và đô thị",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau ba năm tốt nghiệp, người học làm được vai trò chủ trì phần việc chuyên môn trong đồ án quy hoạch phân khu hoặc quy hoạch chi tiết tại viện quy hoạch, công ty tư vấn hoặc cơ quan quản lý xây dựng."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau ba tới năm năm tốt nghiệp, người học phối hợp được với kỹ sư hạ tầng, chuyên gia kinh tế và cán bộ địa phương để hoàn thiện hồ sơ quy hoạch trình thẩm định."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau năm năm tốt nghiệp, người học tự cập nhật quy chuẩn, công cụ dữ liệu không gian mới và đạt chứng chỉ hành nghề hoạt động xây dựng theo quy định."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được nguyên lý cấu trúc không gian vùng và đô thị, hệ thống phân loại đô thị và trình tự lập quy hoạch theo pháp luật Việt Nam.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng quy chuẩn kỹ thuật quốc gia về quy hoạch xây dựng để kiểm tra chỉ tiêu sử dụng đất, mật độ xây dựng, tầng cao và chỉ tiêu hạ tầng của một đồ án.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Phân tích hiện trạng dân số, sử dụng đất, giao thông và môi trường của một khu vực đô thị dựa trên dữ liệu bản đồ và khảo sát thực địa.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Lập phương án quy hoạch phân khu và thiết kế đô thị cho khu vực quy mô từ 50 tới 200 hecta, kèm bản vẽ và thuyết minh theo quy cách hồ sơ.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Sử dụng phần mềm đồ họa và hệ thông tin địa lý để xử lý dữ liệu không gian và thể hiện bản vẽ quy hoạch đúng tỷ lệ, đúng ký hiệu.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá tác động xã hội và môi trường của phương án quy hoạch, tôn trọng ý kiến cộng đồng dân cư và tuân thủ đạo đức nghề nghiệp khi hành nghề.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "QH101",
+      "name": "Nhập môn quy hoạch vùng và đô thị",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "QH203",
+      "name": "Kinh tế và xã hội học đô thị",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "QH205",
+      "name": "Bản đồ và hệ thông tin địa lý trong quy hoạch",
+      "credits": 3,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "QH302",
+      "name": "Thiết kế đô thị",
+      "credits": 4,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "QH404",
+      "name": "Quy hoạch giao thông và hạ tầng kỹ thuật đô thị",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "QH501",
+      "name": "Đồ án tốt nghiệp quy hoạch đô thị",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "QH101",
+      "code": "CLO1",
+      "content": "Trình bày được các mốc phát triển của đô thị Việt Nam và hệ thống phân loại đô thị từ loại đặc biệt tới loại V.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "QH101",
+      "code": "CLO2",
+      "content": "Giải thích được vai trò của quy hoạch vùng, quy hoạch chung và quy hoạch phân khu trong hệ thống quy hoạch xây dựng.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "QH101",
+      "code": "CLO3",
+      "content": "Mô tả được trách nhiệm của người làm quy hoạch với lợi ích cộng đồng qua ba tình huống tranh chấp đất đai có thật.",
+      "bloom_level": "understand",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    },
+    {
+      "course": "QH203",
+      "code": "CLO1",
+      "content": "Giải thích được quan hệ giữa tăng trưởng dân số, cơ cấu việc làm và nhu cầu sử dụng đất đô thị.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "QH203",
+      "code": "CLO2",
+      "content": "Phân tích số liệu dân số và lao động của một quận để dự báo quy mô dân số sau 10 năm.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "QH203",
+      "code": "CLO3",
+      "content": "Đánh giá ảnh hưởng của một dự án tái thiết đô thị tới nhóm dân cư thu nhập thấp trong khu vực.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO3",
+        "PLO6"
+      ]
+    },
+    {
+      "course": "QH205",
+      "code": "CLO1",
+      "content": "Liệt kê được các lớp dữ liệu nền bắt buộc có trong hồ sơ bản đồ hiện trạng tỷ lệ 1/2000.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "QH205",
+      "code": "CLO2",
+      "content": "Sử dụng phần mềm hệ thông tin địa lý để chồng lớp dữ liệu sử dụng đất và kết xuất bản đồ hiện trạng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO5"
+      ]
+    },
+    {
+      "course": "QH205",
+      "code": "CLO3",
+      "content": "Phân tích khả năng xây dựng của khu đất dựa trên bản đồ độ dốc, bản đồ ngập lụt và hiện trạng sử dụng đất.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "QH302",
+      "code": "CLO1",
+      "content": "Giải thích được các thành phần cấu tạo không gian đường phố, quảng trường và tuyến cảnh quan đô thị.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "QH302",
+      "code": "CLO2",
+      "content": "Vận dụng quy định về khoảng lùi, mật độ xây dựng và tầng cao để kiểm tra một phương án bố cục khối tích.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "QH302",
+      "code": "CLO3",
+      "content": "Thiết kế phương án tổ chức không gian cho một tuyến phố dài 500 mét, có mặt cắt ngang và phối cảnh.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "QH404",
+      "code": "CLO1",
+      "content": "Mô tả được cấu trúc mạng lưới đường đô thị và phân cấp đường theo quy chuẩn hiện hành.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1",
+        "PLO2"
+      ]
+    },
+    {
+      "course": "QH404",
+      "code": "CLO2",
+      "content": "Tính toán nhu cầu cấp nước, thoát nước mưa và chỗ đỗ xe cho khu ở quy mô 5000 dân.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "QH404",
+      "code": "CLO3",
+      "content": "Đề xuất phương án tuyến giao thông và cao độ nền cho một khu vực quy hoạch phân khu.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "QH501",
+      "code": "CLO1",
+      "content": "Phân tích hiện trạng khu vực nghiên cứu và xác định ba vấn đề trọng tâm cần giải quyết trong đồ án.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "QH501",
+      "code": "CLO2",
+      "content": "Lập phương án quy hoạch phân khu hoàn chỉnh cho khu vực từ 50 tới 200 hecta kèm thuyết minh và bản vẽ.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "QH501",
+      "code": "CLO3",
+      "content": "Đánh giá tác động xã hội và môi trường của phương án đề xuất, nêu rõ giới hạn của đồ án trước hội đồng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    }
+  ]
+}

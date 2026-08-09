@@ -1,0 +1,246 @@
+{
+  "slug": "ha-tang",
+  "nganh": "Kỹ thuật cơ sở hạ tầng",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Trong khoảng ba đến năm năm sau khi tốt nghiệp, người học làm kỹ sư thiết kế hoặc kỹ sư vận hành tại công ty cấp thoát nước, ban quản lý hạ tầng đô thị, đơn vị tư vấn môi trường."
+    },
+    {
+      "code": "PEO2",
+      "content": "Người học chủ trì hồ sơ thiết kế một tuyến ống cấp nước, một lưu vực thoát nước hoặc một trạm xử lý quy mô nhỏ, phối hợp được với đơn vị quy hoạch và chính quyền địa phương."
+    },
+    {
+      "code": "PEO3",
+      "content": "Người học theo kịp quy chuẩn kỹ thuật về nước sạch và nước thải, học tiếp hoặc lấy chứng chỉ hành nghề, và cân nhắc tác động môi trường lâu dài khi đề xuất giải pháp hạ tầng."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng nguyên lý thuỷ lực dòng chảy có áp và dòng chảy không áp để tính lưu lượng, cột áp và đường kính ống trong hệ thống hạ tầng.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích các quá trình xử lý nước cấp và nước thải theo cơ chế cơ học, hoá học và sinh học.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Thiết kế mạng lưới cấp nước và mạng lưới thoát nước cho một khu đô thị quy mô nhỏ kèm bản vẽ và thuyết minh.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Sử dụng phần mềm mô phỏng thuỷ lực mạng lưới để kiểm tra phương án thiết kế và đề xuất hiệu chỉnh.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá tác động môi trường của công trình hạ tầng và đề xuất biện pháp giảm thiểu theo quy định hiện hành.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Thực hiện quy định bảo vệ nguồn nước và sức khoẻ cộng đồng khi chọn giải pháp kỹ thuật, chịu trách nhiệm về số liệu quan trắc do mình thu thập.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "HT101",
+      "name": "Thuỷ lực công trình",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "HT202",
+      "name": "Mạng lưới cấp nước đô thị",
+      "credits": 3,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "HT203",
+      "name": "Mạng lưới thoát nước và xử lý nước thải",
+      "credits": 4,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "HT304",
+      "name": "Quy hoạch hạ tầng kỹ thuật đô thị",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "HT305",
+      "name": "Đánh giá tác động môi trường công trình hạ tầng",
+      "credits": 2,
+      "semester": 7,
+      "type": "core"
+    },
+    {
+      "code": "HT406",
+      "name": "Đồ án tốt nghiệp kỹ thuật cơ sở hạ tầng",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "HT101",
+      "code": "CLO1",
+      "content": "Trình bày các phương trình cơ bản của dòng chảy ổn định trong ống có áp và trong kênh hở.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "HT101",
+      "code": "CLO2",
+      "content": "Tính tổn thất cột nước dọc đường và tổn thất cục bộ cho một tuyến ống dẫn nước.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "HT101",
+      "code": "CLO3",
+      "content": "Phân tích dạng đường mặt nước trong kênh hở và điều kiện xuất hiện nước nhảy.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "HT202",
+      "code": "CLO1",
+      "content": "Giải thích sơ đồ cấp nước đô thị từ công trình thu, trạm bơm, bể chứa đến mạng phân phối.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "HT202",
+      "code": "CLO2",
+      "content": "Tính thuỷ lực mạng vòng và mạng cụt, chọn đường kính ống và cột áp bơm cho khu dân cư.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "HT202",
+      "code": "CLO3",
+      "content": "Sử dụng phần mềm mô phỏng mạng lưới để kiểm tra áp lực tại các nút trong giờ dùng nước lớn nhất.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "HT203",
+      "code": "CLO1",
+      "content": "Giải thích các sơ đồ thoát nước chung, thoát nước riêng, thoát nước nửa riêng và điều kiện áp dụng từng sơ đồ.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "HT203",
+      "code": "CLO2",
+      "content": "Phân tích hiệu quả của công trình xử lý sinh học hiếu khí và kỵ khí theo tải trọng hữu cơ đầu vào.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "HT203",
+      "code": "CLO3",
+      "content": "Thiết kế tuyến cống thoát nước mưa và dây chuyền xử lý nước thải cho một khu dân cư.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO2", "PLO3"]
+    },
+    {
+      "course": "HT304",
+      "code": "CLO1",
+      "content": "Trình bày các thành phần hạ tầng kỹ thuật đô thị và quan hệ giữa chúng trong một đồ án quy hoạch.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "HT304",
+      "code": "CLO2",
+      "content": "Phân tích cao độ nền và hướng thoát nước mặt của một khu đất chuẩn bị xây dựng.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "HT304",
+      "code": "CLO3",
+      "content": "Thiết kế phương án bố trí các tuyến kỹ thuật ngầm trong mặt cắt ngang đường đô thị.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "HT305",
+      "code": "CLO1",
+      "content": "Giải thích trình tự lập báo cáo đánh giá tác động môi trường cho dự án hạ tầng kỹ thuật.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "HT305",
+      "code": "CLO2",
+      "content": "Đánh giá tác động của một dự án hạ tầng tới chất lượng nước mặt và nước ngầm trong khu vực.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "HT305",
+      "code": "CLO3",
+      "content": "Thực hiện thứ tự ưu tiên bảo vệ nguồn nước sinh hoạt khi so sánh các phương án giảm thiểu tác động.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "HT406",
+      "code": "CLO1",
+      "content": "Thiết kế trọn vẹn hệ thống cấp nước hoặc hệ thống thoát nước cho một khu vực theo nhiệm vụ đồ án được giao.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "HT406",
+      "code": "CLO2",
+      "content": "Mô phỏng phương án thiết kế bằng phần mềm thuỷ lực và hiệu chỉnh theo kết quả kiểm tra áp lực, lưu lượng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "HT406",
+      "code": "CLO3",
+      "content": "Xây dựng lập luận bảo vệ đồ án trước hội đồng, công khai nguồn số liệu quan trắc và nhận trách nhiệm cá nhân với kết quả tính toán.",
+      "bloom_level": "create",
+      "type": "attitude",
+      "plos": ["PLO5", "PLO6"]
+    }
+  ]
+}

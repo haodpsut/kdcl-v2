@@ -1,0 +1,246 @@
+{
+  "slug": "ngon-ngu-anh",
+  "nganh": "Ngôn ngữ Anh",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 năm tốt nghiệp, người học làm việc ổn định ở vị trí biên dịch, phiên dịch, trợ lý đối ngoại hoặc giáo viên tiếng Anh, sử dụng tiếng Anh ở mức C1 theo khung CEFR trong công việc hằng ngày."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 năm tốt nghiệp, người học chủ trì được bản dịch tài liệu chuyên ngành và biên tập được bản dịch của người khác, bảo đảm thống nhất thuật ngữ và đúng văn phong bản đích."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 5 năm tốt nghiệp, người học học tiếp bậc cao học hoặc lấy chứng chỉ nghề về giảng dạy, biên dịch; giữ nguyên tắc bảo mật và tôn trọng khác biệt văn hoá khi làm việc với đối tác nước ngoài."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được hệ thống ngữ âm, hình thái và cú pháp tiếng Anh; chỉ ra được khác biệt cấu trúc giữa tiếng Anh và tiếng Việt.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích được đặc điểm văn hoá và thể chế của các nước nói tiếng Anh chi phối cách dùng ngôn ngữ trong giao tiếp công việc.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Sử dụng được tiếng Anh bốn kỹ năng ở mức C1 theo khung CEFR trong môi trường học thuật và môi trường công sở.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Tạo lập được bản dịch Anh Việt và Việt Anh cho văn bản hành chính, thương mại và kỹ thuật phổ thông, kèm bảng thuật ngữ thống nhất.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá được chất lượng một bản dịch hoặc một bài viết theo tiêu chí chính xác, tự nhiên, nhất quán thuật ngữ; đề xuất được bản sửa.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Thực hiện đúng quy tắc bảo mật thông tin khách hàng và nguyên tắc trung thực trong biên dịch; tôn trọng ý kiến và khác biệt văn hoá của người đối thoại.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "TA101",
+      "name": "Ngữ âm và thực hành phát âm tiếng Anh",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "TA102",
+      "name": "Ngữ pháp tiếng Anh nâng cao",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "TA201",
+      "name": "Nghe nói học thuật",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "TA202",
+      "name": "Viết luận tiếng Anh",
+      "credits": 3,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "TA301",
+      "name": "Lý thuyết và thực hành biên dịch Anh Việt",
+      "credits": 4,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "TA401",
+      "name": "Khoá luận tốt nghiệp ngành ngôn ngữ Anh",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "TA101",
+      "code": "CLO1",
+      "content": "Nêu được các ký hiệu của bảng phiên âm quốc tế và vị trí cấu âm của từng phụ âm tiếng Anh.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TA101",
+      "code": "CLO2",
+      "content": "Giải thích được quy tắc trọng âm từ và đường nét ngữ điệu của câu hỏi, câu trần thuật trong tiếng Anh.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TA101",
+      "code": "CLO3",
+      "content": "Đọc được đoạn văn 200 từ với trọng âm và hiện tượng nối âm đúng, đạt mức tương đương B2 theo khung CEFR.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TA102",
+      "code": "CLO1",
+      "content": "Phân biệt được các dạng mệnh đề quan hệ, câu điều kiện và cách dùng thì trong văn bản viết.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TA102",
+      "code": "CLO2",
+      "content": "Phân tích được lỗi ngữ pháp trong bài viết của người học Việt Nam và chỉ ra lỗi nào bắt nguồn từ khác biệt cấu trúc với tiếng Việt.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TA102",
+      "code": "CLO3",
+      "content": "Sử dụng được câu phức và cấu trúc bị động để viết lại một đoạn văn cho đúng chuẩn văn viết.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TA201",
+      "code": "CLO1",
+      "content": "Ghi lại được ý chính và các chi tiết hỗ trợ của một bài giảng tiếng Anh dài 10 phút.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TA201",
+      "code": "CLO2",
+      "content": "Phân tích được cách người bản ngữ dùng lối nói giảm và lối nói vòng trong tình huống công sở ở các nước nói tiếng Anh.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TA201",
+      "code": "CLO3",
+      "content": "Thực hiện được phần thuyết trình 7 phút và trả lời câu hỏi mà không cắt lời người nghe, ghi nhận ý kiến trái chiều trước khi phản hồi.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO3", "PLO6"]
+    },
+    {
+      "course": "TA202",
+      "code": "CLO1",
+      "content": "Giải thích được cấu trúc bài luận học thuật gồm luận điểm, luận cứ và phần phản biện ý kiến đối lập.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TA202",
+      "code": "CLO2",
+      "content": "Viết được bài luận 800 từ có trích dẫn nguồn theo một chuẩn trích dẫn thống nhất từ đầu đến cuối bài.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TA202",
+      "code": "CLO3",
+      "content": "Đánh giá được bài luận của bạn học theo phiếu tiêu chí và đề xuất được ba điểm sửa cụ thể.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "TA301",
+      "code": "CLO1",
+      "content": "Giải thích được các thủ pháp dịch như chuyển loại từ, chuyển vế câu, dịch thoát và điều kiện dùng từng thủ pháp.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1", "PLO4"]
+    },
+    {
+      "course": "TA301",
+      "code": "CLO2",
+      "content": "Dịch được một hợp đồng thương mại ngắn từ tiếng Anh sang tiếng Việt và lập kèm bảng thuật ngữ đối chiếu.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TA301",
+      "code": "CLO3",
+      "content": "Đánh giá được một bản dịch mẫu theo tiêu chí chính xác, tự nhiên, nhất quán thuật ngữ và viết lại bản sửa.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO4", "PLO5"]
+    },
+    {
+      "course": "TA401",
+      "code": "CLO1",
+      "content": "Phân tích được cách yếu tố văn hoá chi phối lựa chọn từ ngữ trong khối ngữ liệu song ngữ tự thu thập.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TA401",
+      "code": "CLO2",
+      "content": "Tạo lập được sản phẩm dịch hoặc báo cáo nghiên cứu ngôn ngữ dài 40 trang theo đề cương đã được duyệt.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TA401",
+      "code": "CLO3",
+      "content": "Đánh giá được nguy cơ sai lệch nghĩa trong sản phẩm của mình; ghi rõ nguồn tài liệu đã dùng và phần do người khác thực hiện.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO5", "PLO6"]
+    }
+  ]
+}

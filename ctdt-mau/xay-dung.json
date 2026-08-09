@@ -1,0 +1,246 @@
+{
+  "slug": "xay-dung",
+  "nganh": "Kỹ thuật xây dựng",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Trong khoảng ba đến năm năm sau khi tốt nghiệp, người học đảm nhiệm vị trí kỹ sư thiết kế kết cấu hoặc kỹ sư hiện trường tại doanh nghiệp xây dựng dân dụng và công nghiệp."
+    },
+    {
+      "code": "PEO2",
+      "content": "Người học chủ trì được một hạng mục kết cấu hoặc một gói thầu thi công, làm việc trực tiếp với chủ đầu tư, tư vấn giám sát và nhà thầu phụ để bàn giao đúng tiến độ và chi phí đã cam kết."
+    },
+    {
+      "code": "PEO3",
+      "content": "Người học học tiếp lên bậc cao hơn hoặc lấy chứng chỉ hành nghề xây dựng từ hạng III trở lên, giữ trách nhiệm cá nhân về an toàn lao động và chất lượng công trình mình tham gia."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng kiến thức cơ học vật rắn biến dạng và cơ học kết cấu để xác định nội lực, chuyển vị của hệ dầm, khung, sàn trong công trình dân dụng.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích ứng xử của cấu kiện bê tông cốt thép và cấu kiện thép theo các trạng thái giới hạn của tiêu chuẩn thiết kế hiện hành.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Thiết kế hệ kết cấu chính của nhà dân dụng dưới chín tầng, xuất được bản vẽ bố trí cốt thép và thuyết minh tính toán kèm theo.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Lập biện pháp thi công, tiến độ và mặt bằng công trường cho một hạng mục kết cấu với sự hỗ trợ của phần mềm chuyên ngành.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá chất lượng thi công tại hiện trường, chỉ ra sai lệch so với hồ sơ thiết kế và đề xuất cách xử lý.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Thực hiện đúng quy định an toàn lao động và đạo đức nghề nghiệp khi làm việc trên công trường, chịu trách nhiệm về phần việc được giao.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "XD101",
+      "name": "Sức bền vật liệu",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "XD202",
+      "name": "Kết cấu bê tông cốt thép",
+      "credits": 4,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "XD203",
+      "name": "Kết cấu thép",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "XD304",
+      "name": "Kỹ thuật thi công công trình dân dụng",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "XD305",
+      "name": "Tổ chức và quản lý thi công",
+      "credits": 2,
+      "semester": 7,
+      "type": "core"
+    },
+    {
+      "code": "XD406",
+      "name": "Đồ án tốt nghiệp kỹ thuật xây dựng",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "XD101",
+      "code": "CLO1",
+      "content": "Trình bày các giả thiết cơ bản của sức bền vật liệu và các dạng chịu lực kéo, nén, uốn, xoắn của thanh.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "XD101",
+      "code": "CLO2",
+      "content": "Tính ứng suất và biến dạng của thanh chịu kéo nén đúng tâm và của dầm chịu uốn phẳng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "XD101",
+      "code": "CLO3",
+      "content": "Phân tích trạng thái ứng suất phẳng tại một điểm và kiểm tra bền theo các thuyết bền thông dụng.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1", "PLO2"]
+    },
+    {
+      "course": "XD202",
+      "code": "CLO1",
+      "content": "Giải thích cơ chế làm việc chung của bê tông và cốt thép, phân biệt trạng thái giới hạn về cường độ và về sử dụng.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "XD202",
+      "code": "CLO2",
+      "content": "Tính diện tích cốt thép cho dầm chịu uốn, sàn một phương và cột chịu nén lệch tâm theo tiêu chuẩn hiện hành.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2", "PLO3"]
+    },
+    {
+      "course": "XD202",
+      "code": "CLO3",
+      "content": "Thiết kế bản vẽ bố trí cốt thép cho một ô sàn và một khung phẳng hai tầng, kèm thuyết minh tính toán.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "XD203",
+      "code": "CLO1",
+      "content": "Mô tả đặc trưng cơ học của thép xây dựng và cấu tạo của liên kết hàn, liên kết bu lông cường độ cao.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "XD203",
+      "code": "CLO2",
+      "content": "Phân tích điều kiện ổn định tổng thể và ổn định cục bộ của cấu kiện thép chịu nén và chịu uốn.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1", "PLO2"]
+    },
+    {
+      "course": "XD203",
+      "code": "CLO3",
+      "content": "Thiết kế dàn mái thép nhịp trung bình cùng các liên kết nút chính của dàn.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "XD304",
+      "code": "CLO1",
+      "content": "Trình bày quy trình thi công đất, thi công móng, thi công bê tông toàn khối và lắp ghép cấu kiện.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "XD304",
+      "code": "CLO2",
+      "content": "Vận dụng tiêu chí năng suất và điều kiện mặt bằng để chọn máy thi công cho từng công tác trên công trường nhà cao tầng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "XD304",
+      "code": "CLO3",
+      "content": "Đánh giá chất lượng công tác bê tông và công tác lắp dựng ván khuôn so với yêu cầu của hồ sơ thiết kế.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "XD305",
+      "code": "CLO1",
+      "content": "Lập tiến độ thi công theo sơ đồ ngang và sơ đồ mạng cho một hạng mục công trình dân dụng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "XD305",
+      "code": "CLO2",
+      "content": "Phân tích phương án bố trí mặt bằng công trường gồm kho bãi, đường tạm và thiết bị nâng chuyển.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4", "PLO5"]
+    },
+    {
+      "course": "XD305",
+      "code": "CLO3",
+      "content": "Thực hiện các quy định an toàn lao động và vệ sinh môi trường khi tổ chức thi công trong khu dân cư.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "XD406",
+      "code": "CLO1",
+      "content": "Thiết kế trọn vẹn phương án kết cấu cho một công trình dân dụng theo nhiệm vụ đồ án được giao.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "XD406",
+      "code": "CLO2",
+      "content": "Đánh giá hai phương án thi công theo tiến độ, chi phí và mức độ an toàn để chọn phương án thực hiện.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO4", "PLO5"]
+    },
+    {
+      "course": "XD406",
+      "code": "CLO3",
+      "content": "Xây dựng và bảo vệ thuyết minh đồ án trước hội đồng, nêu rõ nguồn số liệu và phần việc do bản thân chịu trách nhiệm.",
+      "bloom_level": "create",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

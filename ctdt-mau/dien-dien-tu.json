@@ -1,0 +1,210 @@
+{
+  "slug": "dien-dien-tu",
+  "nganh": "Công nghệ kỹ thuật điện, điện tử",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học làm kỹ sư vận hành, bảo trì hệ thống điện hoặc kỹ sư thiết kế mạch điện tử tại doanh nghiệp sản xuất và công ty tư vấn thiết bị."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học chủ trì triển khai giải pháp tự động hoá và tiết kiệm năng lượng cho dây chuyền sản xuất, chịu trách nhiệm về chất lượng và tiến độ lắp đặt."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học cập nhật công nghệ mới của ngành, đạt chứng chỉ nghề nghiệp liên quan và tham gia đào tạo kỹ thuật viên trong đơn vị."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng kiến thức mạch điện, điện tử tương tự và kỹ thuật số để giải thích hoạt động của thiết bị điện thông dụng.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích chế độ làm việc của máy điện và hệ thống cung cấp điện hạ áp trong nhà xưởng.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Sử dụng thiết bị đo và phần mềm mô phỏng để kiểm tra thông số của mạch điện, mạch điện tử.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Thiết kế mạch điều khiển dùng vi điều khiển cho bài toán tự động hoá quy mô nhỏ.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá phương án bảo trì và xử lý sự cố hệ thống điện dựa trên số liệu đo đạc thực tế.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Tuân thủ quy tắc an toàn điện và quy định bảo vệ môi trường khi thi công, vận hành thiết bị.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {"code": "DT101", "name": "Mạch điện", "credits": 3, "semester": 1, "type": "core"},
+    {"code": "DT102", "name": "Điện tử tương tự", "credits": 3, "semester": 3, "type": "core"},
+    {"code": "DT203", "name": "Kỹ thuật số", "credits": 3, "semester": 4, "type": "core"},
+    {"code": "DT204", "name": "Máy điện và truyền động điện", "credits": 4, "semester": 5, "type": "core"},
+    {"code": "DT305", "name": "Vi điều khiển và ứng dụng", "credits": 3, "semester": 6, "type": "core"},
+    {"code": "DT401", "name": "Đồ án tốt nghiệp công nghệ kỹ thuật điện, điện tử", "credits": 4, "semester": 8, "type": "core"}
+  ],
+  "clos": [
+    {
+      "course": "DT101",
+      "code": "CLO1",
+      "content": "Trình bày hai định luật Kirchhoff và cách xác định thông số của mạch điện một chiều.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT101",
+      "code": "CLO2",
+      "content": "Tính dòng điện, điện áp và công suất trong mạch xoay chiều một pha bằng phương pháp số phức.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT101",
+      "code": "CLO3",
+      "content": "Sử dụng đồng hồ vạn năng và máy hiện sóng để đo thông số của mạch điện lắp trên bàn thực hành.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "DT102",
+      "code": "CLO1",
+      "content": "Giải thích nguyên lý khuếch đại của transistor lưỡng cực ở chế độ tín hiệu nhỏ.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT102",
+      "code": "CLO2",
+      "content": "Tính điểm làm việc tĩnh và hệ số khuếch đại của tầng khuếch đại dùng transistor.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT102",
+      "code": "CLO3",
+      "content": "Mô phỏng mạch khuếch đại thuật toán trên phần mềm và đối chiếu kết quả với tính toán bằng tay.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "DT203",
+      "code": "CLO1",
+      "content": "Trình bày các hệ đếm, mã nhị phân và bảng chân trị của những cổng logic cơ bản.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT203",
+      "code": "CLO2",
+      "content": "Rút gọn hàm logic bằng bìa Karnaugh và vẽ sơ đồ mạch tương ứng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "DT203",
+      "code": "CLO3",
+      "content": "Thiết kế mạch đếm đồng bộ dùng flip flop theo dung lượng đếm cho trước.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "DT204",
+      "code": "CLO1",
+      "content": "Giải thích nguyên lý làm việc của máy biến áp và động cơ không đồng bộ ba pha.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "DT204",
+      "code": "CLO2",
+      "content": "Phân tích đặc tính cơ của động cơ không đồng bộ khi thay đổi điện áp và tần số nguồn.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "DT204",
+      "code": "CLO3",
+      "content": "Tuân thủ quy trình an toàn điện khi đấu nối và chạy thử động cơ trong phòng thực hành.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "DT305",
+      "code": "CLO1",
+      "content": "Giải thích cấu trúc bộ nhớ và cơ chế ngắt của vi điều khiển tám bit.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DT305",
+      "code": "CLO2",
+      "content": "Thiết kế mạch điều khiển đèn báo và động cơ nhỏ dùng vi điều khiển kèm chương trình nạp cho mạch.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "DT305",
+      "code": "CLO3",
+      "content": "Đánh giá độ ổn định của mạch điều khiển qua số liệu đo ở các mức tải khác nhau.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "DT401",
+      "code": "CLO1",
+      "content": "Thiết kế và chế tạo một thiết bị điện tử hoàn chỉnh giải quyết bài toán kỹ thuật cụ thể.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4", "PLO2"]
+    },
+    {
+      "course": "DT401",
+      "code": "CLO2",
+      "content": "Đánh giá kết quả đo đạc trên sản phẩm so với chỉ tiêu kỹ thuật đã đặt ra ban đầu.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5", "PLO3"]
+    },
+    {
+      "course": "DT401",
+      "code": "CLO3",
+      "content": "Tuân thủ quy tắc an toàn điện và quy định trích dẫn tài liệu khi thực hiện, báo cáo đồ án.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

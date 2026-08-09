@@ -1,0 +1,210 @@
+{
+  "slug": "qtkd",
+  "nganh": "Quản trị kinh doanh",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học đảm nhận vị trí chuyên viên hoặc trưởng nhóm tại bộ phận kinh doanh, marketing, nhân sự của doanh nghiệp vừa và nhỏ."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học tổ chức triển khai kế hoạch kinh doanh cho một sản phẩm hoặc một thị trường, chịu trách nhiệm về doanh thu và chi phí của bộ phận."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học khởi sự doanh nghiệp riêng hoặc học tiếp bậc thạc sĩ, đồng thời giữ chuẩn mực đạo đức kinh doanh trong các quyết định quản lý."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng kiến thức kinh tế học, kế toán và tài chính để đọc hiểu tình hình hoạt động của một doanh nghiệp.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích môi trường kinh doanh và hành vi khách hàng của một thị trường mục tiêu.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Sử dụng công cụ thống kê mô tả và bảng tính để xử lý số liệu kinh doanh phục vụ ra quyết định.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Xây dựng kế hoạch kinh doanh cho một sản phẩm hoặc dịch vụ kèm dự toán doanh thu và chi phí.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá hiệu quả của phương án kinh doanh theo chỉ tiêu tài chính và mức độ rủi ro.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Thực hiện đầy đủ trách nhiệm cá nhân trong làm việc nhóm và tuân thủ chuẩn mực đạo đức kinh doanh.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {"code": "QT101", "name": "Quản trị học", "credits": 3, "semester": 1, "type": "core"},
+    {"code": "QT102", "name": "Nguyên lý kế toán", "credits": 3, "semester": 2, "type": "core"},
+    {"code": "QT203", "name": "Marketing căn bản", "credits": 3, "semester": 3, "type": "core"},
+    {"code": "QT204", "name": "Quản trị tài chính doanh nghiệp", "credits": 4, "semester": 5, "type": "core"},
+    {"code": "QT305", "name": "Quản trị nguồn nhân lực", "credits": 3, "semester": 6, "type": "core"},
+    {"code": "QT401", "name": "Khoá luận tốt nghiệp quản trị kinh doanh", "credits": 4, "semester": 8, "type": "core"}
+  ],
+  "clos": [
+    {
+      "course": "QT101",
+      "code": "CLO1",
+      "content": "Trình bày bốn chức năng cơ bản của quản trị và vai trò của nhà quản trị ở từng cấp.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QT101",
+      "code": "CLO2",
+      "content": "Phân tích ảnh hưởng của môi trường vĩ mô và vi mô tới hoạt động của một doanh nghiệp cụ thể.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "QT101",
+      "code": "CLO3",
+      "content": "Thực hiện đúng vai trò được phân công trong bài tập nhóm và nộp sản phẩm đúng hạn.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "QT102",
+      "code": "CLO1",
+      "content": "Giải thích ý nghĩa các khoản mục trên bảng cân đối kế toán và báo cáo kết quả kinh doanh.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QT102",
+      "code": "CLO2",
+      "content": "Định khoản các nghiệp vụ kinh tế phát sinh thông dụng của doanh nghiệp thương mại.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QT102",
+      "code": "CLO3",
+      "content": "Sử dụng bảng tính để tổng hợp số phát sinh và lập bảng cân đối tài khoản từ dữ liệu cho trước.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "QT203",
+      "code": "CLO1",
+      "content": "Giải thích nội dung của bốn thành phần trong phối thức marketing.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "QT203",
+      "code": "CLO2",
+      "content": "Phân tích hành vi mua của khách hàng cá nhân đối với một nhóm sản phẩm cụ thể.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "QT203",
+      "code": "CLO3",
+      "content": "Xây dựng kế hoạch marketing cho một sản phẩm mới ở quy mô thị trường địa phương.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "QT204",
+      "code": "CLO1",
+      "content": "Tính các chỉ số thanh khoản, đòn bẩy và khả năng sinh lời từ báo cáo tài chính doanh nghiệp.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "QT204",
+      "code": "CLO2",
+      "content": "Phân tích cơ cấu vốn và chi phí sử dụng vốn của một doanh nghiệp quy mô vừa.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QT204",
+      "code": "CLO3",
+      "content": "Đánh giá hiệu quả một dự án đầu tư bằng chỉ tiêu giá trị hiện tại ròng và tỷ suất hoàn vốn nội bộ.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "QT305",
+      "code": "CLO1",
+      "content": "Trình bày quy trình tuyển dụng, đào tạo và đánh giá kết quả làm việc của nhân viên.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QT305",
+      "code": "CLO2",
+      "content": "Xây dựng bản mô tả công việc và bộ tiêu chí đánh giá cho một vị trí trong doanh nghiệp.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "QT305",
+      "code": "CLO3",
+      "content": "Thực hiện phản hồi tôn trọng và giữ bí mật thông tin cá nhân khi xử lý tình huống nhân sự.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "QT401",
+      "code": "CLO1",
+      "content": "Phân tích số liệu khảo sát hoặc số liệu thứ cấp của một doanh nghiệp bằng thống kê mô tả.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO3", "PLO2"]
+    },
+    {
+      "course": "QT401",
+      "code": "CLO2",
+      "content": "Đề xuất giải pháp cải thiện hoạt động kinh doanh dựa trên kết quả phân tích số liệu.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "QT401",
+      "code": "CLO3",
+      "content": "Đánh giá tính khả thi của giải pháp đề xuất theo chi phí, nguồn lực và thời gian thực hiện.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    }
+  ]
+}

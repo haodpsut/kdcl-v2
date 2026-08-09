@@ -1,0 +1,246 @@
+{
+  "slug": "ngon-ngu-trung",
+  "nganh": "Ngôn ngữ Trung Quốc",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 năm tốt nghiệp, người học làm việc ổn định tại doanh nghiệp có vốn đầu tư Trung Quốc hoặc công ty thương mại xuất nhập khẩu, dùng tiếng Trung ở mức HSK 5 trong nghiệp vụ hằng ngày."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 năm tốt nghiệp, người học đảm nhận được việc biên dịch hợp đồng, chứng từ xuất nhập khẩu và phiên dịch nối tiếp trong các buổi đàm phán thương mại quy mô nhỏ."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 5 năm tốt nghiệp, người học nâng trình độ lên HSK 6 hoặc học tiếp bậc cao học; giữ nguyên tắc bảo mật thông tin đối tác và tôn trọng khác biệt văn hoá Trung Việt."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được cấu tạo chữ Hán theo bộ thủ, quy tắc bút thuận và mối liên hệ giữa hình, âm, nghĩa của chữ hình thanh.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích được hệ thống bốn thanh điệu, các quy tắc biến điệu và cách ghi phiên âm bính âm cho từ đa âm tiết.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Sử dụng được tiếng Trung bốn kỹ năng ở mức HSK 5 và gõ được chữ Hán bằng bính âm khi soạn thảo văn bản công việc.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Tạo lập được bản dịch Trung Việt và Việt Trung cho hợp đồng và chứng từ thương mại, giữ đúng thuật ngữ và đúng thể thức văn bản.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Thực hiện được phiên dịch nối tiếp trong cuộc họp thương mại ngắn, ghi tốc ký đủ để tái hiện lại nội dung người nói.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá được ảnh hưởng của khác biệt văn hoá Trung Việt tới cách xưng hô và cách từ chối trong đàm phán; giữ bảo mật thông tin của đối tác.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "TQ101",
+      "name": "Hán ngữ cơ sở và chữ Hán",
+      "credits": 4,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "TQ102",
+      "name": "Ngữ âm và luyện thanh điệu tiếng Trung",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "TQ201",
+      "name": "Hán ngữ trung cấp nghe nói",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "TQ301",
+      "name": "Biên dịch thương mại Trung Việt",
+      "credits": 4,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "TQ302",
+      "name": "Phiên dịch nối tiếp Trung Việt",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "TQ401",
+      "name": "Khoá luận tốt nghiệp ngành ngôn ngữ Trung Quốc",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "TQ101",
+      "code": "CLO1",
+      "content": "Nêu được các bộ thủ thông dụng và quy tắc bút thuận khi viết chữ Hán.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TQ101",
+      "code": "CLO2",
+      "content": "Giải thích được cách chữ hình thanh ghép bộ biểu nghĩa với bộ biểu âm, qua ít nhất mười ví dụ cụ thể.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TQ101",
+      "code": "CLO3",
+      "content": "Viết tay được 300 chữ Hán thông dụng đúng nét và gõ lại được các chữ đó bằng bính âm trên máy tính.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "TQ102",
+      "code": "CLO1",
+      "content": "Nêu được hệ thống thanh mẫu, vận mẫu và bốn thanh điệu trong bảng bính âm.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TQ102",
+      "code": "CLO2",
+      "content": "Phân tích được quy tắc biến điệu khi hai thanh ba đứng liền nhau và khi thanh nhẹ xuất hiện ở âm tiết cuối.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TQ102",
+      "code": "CLO3",
+      "content": "Đọc được đoạn hội thoại 150 chữ đúng thanh điệu, đạt yêu cầu phát âm của trình độ HSK 3.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2", "PLO3"]
+    },
+    {
+      "course": "TQ201",
+      "code": "CLO1",
+      "content": "Nghe hiểu được đoạn hội thoại công việc dài 3 phút và ghi lại được ý chính bằng tiếng Trung.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TQ201",
+      "code": "CLO2",
+      "content": "Đánh giá được mức phù hợp của cách xưng hô và cách từ chối trong ba tình huống hội thoại thương mại.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "TQ201",
+      "code": "CLO3",
+      "content": "Trao đổi được với đối tác về lịch giao hàng và điều kiện thanh toán trong hội thoại mô phỏng dài 10 phút.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3", "PLO5"]
+    },
+    {
+      "course": "TQ301",
+      "code": "CLO1",
+      "content": "Giải thích được thể thức hợp đồng thương mại tiếng Trung và các cụm từ cố định dùng trong từng điều khoản.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TQ301",
+      "code": "CLO2",
+      "content": "Dịch được hợp đồng mua bán dài 2 trang từ tiếng Trung sang tiếng Việt, kèm bảng thuật ngữ đối chiếu.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TQ301",
+      "code": "CLO3",
+      "content": "Đánh giá được bản dịch chứng từ xuất nhập khẩu theo tiêu chí đúng thuật ngữ và đúng thể thức, rồi viết lại bản sửa.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TQ302",
+      "code": "CLO1",
+      "content": "Giải thích được quy trình phiên dịch nối tiếp gồm nghe, ghi tốc ký, tái hiện và nguyên tắc giữ vai trung lập.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "TQ302",
+      "code": "CLO2",
+      "content": "Ghi được bản tốc ký bằng ký hiệu cho đoạn phát biểu 2 phút và tái hiện lại đủ ý bằng tiếng Việt.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3", "PLO5"]
+    },
+    {
+      "course": "TQ302",
+      "code": "CLO3",
+      "content": "Đánh giá được cách xử lý tình huống người nói dùng thành ngữ khó dịch; nêu rõ giới hạn của bản dịch thay vì tự thêm ý.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "TQ401",
+      "code": "CLO1",
+      "content": "Phân tích được lỗi thanh điệu và lỗi viết chữ Hán trong khối ngữ liệu người học tự thu thập.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1", "PLO2"]
+    },
+    {
+      "course": "TQ401",
+      "code": "CLO2",
+      "content": "Tạo lập được báo cáo khoá luận dài 40 trang hoặc sản phẩm dịch tương đương theo đề cương đã được duyệt.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TQ401",
+      "code": "CLO3",
+      "content": "Đánh giá được độ tin cậy của nguồn ngữ liệu đã dùng; ghi rõ phần trích dẫn và phần do mình thực hiện.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

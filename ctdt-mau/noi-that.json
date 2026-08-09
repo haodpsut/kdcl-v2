@@ -1,0 +1,286 @@
+{
+  "slug": "noi-that",
+  "nganh": "Thiết kế nội thất",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau hai tới ba năm tốt nghiệp, người học đảm nhiệm được vị trí thiết kế nội thất tại công ty tư vấn thiết kế, xưởng sản xuất đồ gỗ hoặc đơn vị thi công hoàn thiện."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau ba tới năm năm tốt nghiệp, người học chủ trì được hồ sơ nội thất một công trình dân dụng, làm việc với chủ đầu tư và đội thi công để kiểm soát chất lượng và chi phí."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau năm năm tốt nghiệp, người học tự cập nhật vật liệu, công nghệ chế tác mới và hướng dẫn được nhân viên thiết kế mới vào nghề."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được nguyên lý tổ chức không gian, tỷ lệ, màu sắc và ánh sáng áp dụng cho công trình nội thất.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng kiến thức vật liệu, cấu tạo chi tiết và quy định an toàn để chọn giải pháp hoàn thiện cho từng loại không gian.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Phân tích nhu cầu sử dụng, thói quen sinh hoạt và điều kiện hiện trạng công trình để lập nhiệm vụ thiết kế nội thất.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Thiết kế phương án nội thất hoàn chỉnh cho công trình nhà ở và công trình công cộng, gồm bản vẽ kỹ thuật và bản vẽ thể hiện.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Sử dụng phần mềm dựng hình ba chiều và phần mềm bản vẽ kỹ thuật để lập hồ sơ thiết kế đúng quy cách bàn giao.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá phương án thiết kế theo tiêu chí công năng, chi phí và an toàn người dùng, chịu trách nhiệm giải trình về giải pháp mình đề xuất.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "NT101",
+      "name": "Cơ sở tạo hình và màu sắc trong nội thất",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "NT202",
+      "name": "Vật liệu và cấu tạo nội thất",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "NT204",
+      "name": "Thiết kế nội thất nhà ở",
+      "credits": 4,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "NT305",
+      "name": "Chiếu sáng và âm học không gian nội thất",
+      "credits": 2,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "NT403",
+      "name": "Thiết kế nội thất công trình công cộng",
+      "credits": 4,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "NT502",
+      "name": "Đồ án tốt nghiệp thiết kế nội thất",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "NT101",
+      "code": "CLO1",
+      "content": "Trình bày được các nguyên tắc bố cục, tỷ lệ và hệ màu cơ bản dùng trong không gian nội thất.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "NT101",
+      "code": "CLO2",
+      "content": "Vận dụng nguyên tắc phối màu để lập bảng màu cho một phòng ở có diện tích dưới 20 mét vuông.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO1",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "NT101",
+      "code": "CLO3",
+      "content": "Sử dụng kỹ thuật vẽ tay và dựng hình cơ bản để thể hiện ý tưởng không gian trên giấy A3.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO5"
+      ]
+    },
+    {
+      "course": "NT202",
+      "code": "CLO1",
+      "content": "Liệt kê được các nhóm vật liệu hoàn thiện sàn, tường, trần và đặc tính kỹ thuật của từng nhóm.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "NT202",
+      "code": "CLO2",
+      "content": "Giải thích được cấu tạo chi tiết liên kết của vách ngăn, trần treo và tủ kệ gỗ công nghiệp.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "NT202",
+      "code": "CLO3",
+      "content": "Đánh giá ba phương án vật liệu cho cùng một hạng mục theo chi phí, độ bền và mức an toàn cháy.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": [
+        "PLO2",
+        "PLO6"
+      ]
+    },
+    {
+      "course": "NT204",
+      "code": "CLO1",
+      "content": "Phân tích nhu cầu và thói quen sinh hoạt của một hộ gia đình để lập nhiệm vụ thiết kế nội thất.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "NT204",
+      "code": "CLO2",
+      "content": "Thiết kế phương án bố trí mặt bằng và nội thất cho căn hộ diện tích từ 60 tới 100 mét vuông.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "NT204",
+      "code": "CLO3",
+      "content": "Sử dụng phần mềm dựng hình ba chiều để thể hiện phối cảnh và bản vẽ triển khai của phương án.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO5"
+      ]
+    },
+    {
+      "course": "NT305",
+      "code": "CLO1",
+      "content": "Mô tả được các loại nguồn sáng, chỉ số hoàn màu và cách bố trí chiếu sáng theo chức năng phòng.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "NT305",
+      "code": "CLO2",
+      "content": "Tính toán độ rọi cần thiết và chọn thiết bị chiếu sáng cho một phòng làm việc 30 mét vuông.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "NT305",
+      "code": "CLO3",
+      "content": "Phân tích nguyên nhân gây vang và ồn trong không gian mở, chọn vật liệu tiêu âm phù hợp.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO2",
+        "PLO3"
+      ]
+    },
+    {
+      "course": "NT403",
+      "code": "CLO1",
+      "content": "Phân tích luồng di chuyển của người dùng và yêu cầu tiếp cận cho người khuyết tật trong công trình công cộng.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "NT403",
+      "code": "CLO2",
+      "content": "Thiết kế phương án nội thất cho một không gian công cộng như quán cà phê, văn phòng hoặc phòng trưng bày.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "NT403",
+      "code": "CLO3",
+      "content": "Đánh giá phương án theo tiêu chí an toàn thoát nạn và chi phí đầu tư, nêu rõ rủi ro còn lại.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    },
+    {
+      "course": "NT502",
+      "code": "CLO1",
+      "content": "Phân tích bối cảnh công trình và đối tượng sử dụng để xác lập ý tưởng chủ đạo cho đồ án tốt nghiệp.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "NT502",
+      "code": "CLO2",
+      "content": "Thiết kế hồ sơ nội thất hoàn chỉnh gồm mặt bằng, mặt cắt, chi tiết cấu tạo và bản vẽ thể hiện.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "NT502",
+      "code": "CLO3",
+      "content": "Đánh giá mức độ đáp ứng nhiệm vụ thiết kế của phương án và giải trình lựa chọn của mình trước hội đồng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    }
+  ]
+}

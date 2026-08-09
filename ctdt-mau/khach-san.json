@@ -1,0 +1,246 @@
+{
+  "slug": "khach-san",
+  "nganh": "Quản trị khách sạn",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 năm tốt nghiệp, người học đảm nhận vị trí giám sát hoặc trưởng bộ phận tại khách sạn, khu nghỉ dưỡng; điều hành được ca làm việc của một nhóm từ 5 nhân viên trở lên."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 năm tốt nghiệp, người học lập và triển khai được kế hoạch kinh doanh dịch vụ lưu trú, kiểm soát doanh thu và chi phí của bộ phận theo chỉ tiêu được giao."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 5 năm tốt nghiệp, người học bổ sung được chứng chỉ nghiệp vụ hoặc chứng chỉ quản trị mới, giữ chuẩn mực đạo đức nghề và tuân thủ quy định pháp luật về du lịch, lưu trú."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được cơ cấu tổ chức và quy trình vận hành của các bộ phận tiền sảnh, buồng phòng, ẩm thực trong một khách sạn.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng được cách tính công suất phòng, giá phòng bình quân và doanh thu trên mỗi phòng sẵn có vào bài toán kinh doanh lưu trú.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Thực hiện được quy trình nhận phòng, trả phòng, làm buồng và xử lý phàn nàn của khách theo bộ tiêu chuẩn dịch vụ của cơ sở lưu trú.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Phân tích được dữ liệu bán phòng và phiếu góp ý của khách để chỉ ra nguyên nhân biến động doanh thu và lỗi chất lượng dịch vụ.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Thiết kế được phương án dịch vụ hoặc phương án bố trí nhân sự cho một bộ phận, kèm dự toán chi phí và chỉ số đo kết quả.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá được tác động của quyết định vận hành tới quyền lợi của khách và của nhân viên; giữ chuẩn mực đạo đức nghề trong tình huống có mâu thuẫn.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "KS101",
+      "name": "Tổng quan du lịch và khách sạn",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "KS201",
+      "name": "Nghiệp vụ lễ tân",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "KS202",
+      "name": "Nghiệp vụ buồng phòng và quản lý chất lượng dịch vụ",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "KS301",
+      "name": "Quản trị doanh thu và giá phòng",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "KS302",
+      "name": "Quản trị nhân sự bộ phận và văn hoá phục vụ",
+      "credits": 2,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "KS401",
+      "name": "Khoá luận tốt nghiệp ngành quản trị khách sạn",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "KS101",
+      "code": "CLO1",
+      "content": "Nêu được các loại hình cơ sở lưu trú và tiêu chí xếp hạng sao theo quy định hiện hành.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KS101",
+      "code": "CLO2",
+      "content": "Giải thích được chức năng của từng bộ phận trong khách sạn và cách các bộ phận phối hợp trong một ngày vận hành.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KS101",
+      "code": "CLO3",
+      "content": "Phân biệt được hành vi phục vụ đúng chuẩn mực nghề và hành vi vi phạm đạo đức nghề trong tình huống đón khách.",
+      "bloom_level": "understand",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "KS201",
+      "code": "CLO1",
+      "content": "Liệt kê được các bước của quy trình nhận phòng, trả phòng và các chứng từ đi kèm từng bước.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KS201",
+      "code": "CLO2",
+      "content": "Thực hiện được thao tác đặt phòng, nhận phòng, trả phòng trên phần mềm quản lý khách sạn với dữ liệu giả lập.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "KS201",
+      "code": "CLO3",
+      "content": "Xử lý được ba tình huống phàn nàn thường gặp tại quầy lễ tân theo kịch bản chuẩn, không đẩy lỗi cho bộ phận khác.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3", "PLO6"]
+    },
+    {
+      "course": "KS202",
+      "code": "CLO1",
+      "content": "Mô tả được quy trình làm buồng, tiêu chuẩn vệ sinh và định mức thời gian cho một phòng khách.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KS202",
+      "code": "CLO2",
+      "content": "Áp dụng được bộ tiêu chí kiểm tra buồng để chấm điểm chất lượng một phòng theo mẫu phiếu của bộ phận.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "KS202",
+      "code": "CLO3",
+      "content": "Phân tích được nguyên nhân của các lỗi chất lượng dịch vụ ghi trong phiếu góp ý của khách trong một tháng.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "KS301",
+      "code": "CLO1",
+      "content": "Giải thích được cách tính công suất phòng, giá phòng bình quân và doanh thu trên mỗi phòng sẵn có.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "KS301",
+      "code": "CLO2",
+      "content": "Tính được ba chỉ số doanh thu nói trên từ bảng dữ liệu bán phòng của một tháng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "KS301",
+      "code": "CLO3",
+      "content": "Phân tích được biến động doanh thu theo mùa để đề xuất mức giá cho hai phân khúc khách.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO2", "PLO4"]
+    },
+    {
+      "course": "KS302",
+      "code": "CLO1",
+      "content": "Giải thích được cách xác định định biên nhân sự và cách xây dựng bảng phân ca cho một bộ phận.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KS302",
+      "code": "CLO2",
+      "content": "Thiết kế được bảng phân ca một tuần cho bộ phận buồng phòng với ràng buộc ngày nghỉ và công suất dự báo.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "KS302",
+      "code": "CLO3",
+      "content": "Đánh giá được cách ứng xử của nhân viên trong tình huống mâu thuẫn với khách, đối chiếu với quy tắc đạo đức nghề.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "KS401",
+      "code": "CLO1",
+      "content": "Phân tích được thực trạng vận hành của một bộ phận tại cơ sở lưu trú thực tập, dựa trên dữ liệu thu thập tại chỗ.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "KS401",
+      "code": "CLO2",
+      "content": "Thiết kế được phương án cải tiến dịch vụ cho bộ phận đó, kèm dự toán chi phí và chỉ số đo kết quả sau ba tháng.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "KS401",
+      "code": "CLO3",
+      "content": "Đánh giá được tính khả thi và rủi ro của phương án đề xuất; nêu rõ giới hạn của dữ liệu đã dùng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

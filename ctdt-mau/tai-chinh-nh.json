@@ -1,0 +1,246 @@
+{
+  "slug": "tai-chinh-nh",
+  "nganh": "Tài chính - Ngân hàng",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 tới 5 năm tốt nghiệp, người học đảm nhiệm vị trí chuyên viên phân tích tài chính, chuyên viên tín dụng hoặc chuyên viên đầu tư tại ngân hàng, công ty chứng khoán và doanh nghiệp, ra quyết định dựa trên số liệu đã kiểm chứng."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 5 năm tốt nghiệp, người học điều hành một nhóm nghiệp vụ, xây dựng và vận hành quy trình kiểm soát rủi ro tín dụng, rủi ro thị trường tại đơn vị công tác."
+    },
+    {
+      "code": "PEO3",
+      "content": "Trong 5 năm đầu đi làm, người học hoàn thành ít nhất một chứng chỉ hành nghề tài chính hoặc chương trình cao học, giữ chuẩn mực đạo đức nghề nghiệp khi xử lý thông tin khách hàng."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích cơ chế vận hành của thị trường tài chính, cấu trúc lãi suất và các nghiệp vụ chính của ngân hàng thương mại.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng mô hình chiết khấu dòng tiền và các mô hình định giá tài sản để xác định giá trị khoản đầu tư, dự án và công cụ nợ.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Phân tích báo cáo tài chính doanh nghiệp và hồ sơ tín dụng để kết luận về khả năng trả nợ của khách hàng vay.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Đánh giá mức độ rủi ro tín dụng, rủi ro thị trường và rủi ro thanh khoản của một danh mục, đề xuất biện pháp phòng ngừa kèm chi phí ước tính.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Xây dựng phương án đầu tư hoặc phương án cấp tín dụng hoàn chỉnh và trình bày phương án đó trước hội đồng chuyên môn.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá tính tuân thủ pháp luật và đạo đức nghề nghiệp trong tình huống có xung đột lợi ích, chủ động từ chối hành vi vi phạm.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "TC101",
+      "name": "Nhập môn tài chính tiền tệ",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "TC202",
+      "name": "Tài chính doanh nghiệp",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "TC205",
+      "name": "Nghiệp vụ ngân hàng thương mại",
+      "credits": 3,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "TC310",
+      "name": "Định giá tài sản và đầu tư chứng khoán",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "TC315",
+      "name": "Quản trị rủi ro tài chính",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "TC450",
+      "name": "Khoá luận tốt nghiệp ngành tài chính ngân hàng",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "TC101",
+      "code": "CLO1",
+      "content": "Trình bày chức năng của tiền tệ, cấu trúc hệ thống tài chính và vai trò của ngân hàng trung ương.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TC101",
+      "code": "CLO2",
+      "content": "Giải thích cơ chế hình thành lãi suất và quan hệ giữa lãi suất với lạm phát, tỷ giá.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TC101",
+      "code": "CLO3",
+      "content": "Tính giá trị hiện tại, giá trị tương lai của dòng tiền và lãi suất hiệu dụng theo các kỳ ghép lãi khác nhau.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TC202",
+      "code": "CLO1",
+      "content": "Giải thích cấu trúc vốn, cách xác định chi phí vốn bình quân và ảnh hưởng của chính sách cổ tức tới giá trị doanh nghiệp.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TC202",
+      "code": "CLO2",
+      "content": "Vận dụng phương pháp chiết khấu dòng tiền để thẩm định một dự án đầu tư qua chỉ tiêu NPV, IRR và thời gian hoàn vốn.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TC202",
+      "code": "CLO3",
+      "content": "Phân tích nhóm chỉ số sinh lời, đòn bẩy và hiệu suất sử dụng tài sản từ báo cáo tài chính ba năm liên tiếp của một doanh nghiệp niêm yết.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TC205",
+      "code": "CLO1",
+      "content": "Liệt kê các nghiệp vụ huy động vốn, cấp tín dụng, thanh toán và bảo lãnh của ngân hàng thương mại.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TC205",
+      "code": "CLO2",
+      "content": "Thực hiện quy trình thẩm định một hồ sơ vay vốn từ khâu tiếp nhận hồ sơ đến khâu đề xuất hạn mức và tài sản bảo đảm.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TC205",
+      "code": "CLO3",
+      "content": "Đánh giá mức độ tuân thủ quy định về bảo mật thông tin khách hàng trong các tình huống tác nghiệp giả định tại quầy giao dịch.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "TC310",
+      "code": "CLO1",
+      "content": "Giải thích cơ chế giao dịch, các loại lệnh và cách hình thành giá khớp lệnh trên thị trường chứng khoán Việt Nam.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "TC310",
+      "code": "CLO2",
+      "content": "Định giá trái phiếu và cổ phiếu bằng mô hình chiết khấu cổ tức và phương pháp so sánh bội số thị trường.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "TC310",
+      "code": "CLO3",
+      "content": "Phân tích quan hệ giữa lợi nhuận kỳ vọng và độ biến động của một danh mục gồm ít nhất năm mã cổ phiếu.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO3", "PLO4"]
+    },
+    {
+      "course": "TC315",
+      "code": "CLO1",
+      "content": "Giải thích cách nhận diện và phân loại rủi ro tín dụng, rủi ro thị trường, rủi ro thanh khoản theo khung Basel II.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TC315",
+      "code": "CLO2",
+      "content": "Phân tích tổn thất dự kiến của một danh mục tín dụng dựa trên xác suất vỡ nợ, dư nợ tại thời điểm vỡ nợ và tỷ lệ thu hồi.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO3", "PLO4"]
+    },
+    {
+      "course": "TC315",
+      "code": "CLO3",
+      "content": "Đánh giá hiệu quả của hợp đồng kỳ hạn và hợp đồng quyền chọn dùng để phòng ngừa rủi ro tỷ giá cho một doanh nghiệp xuất khẩu.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "TC450",
+      "code": "CLO1",
+      "content": "Phân tích số liệu tài chính thu thập tại đơn vị thực tập để nhận diện vấn đề cần giải quyết trong khoá luận.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "TC450",
+      "code": "CLO2",
+      "content": "Xây dựng phương án đầu tư hoặc phương án cấp tín dụng kèm luận cứ định lượng và ít nhất hai kịch bản rủi ro.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "TC450",
+      "code": "CLO3",
+      "content": "Thiết kế bài trình bày bảo vệ khoá luận và trả lời câu hỏi của hội đồng bằng lập luận dựa trên số liệu đã kiểm chứng.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5", "PLO6"]
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "slug": "ke-toan",
+  "nganh": "Kế toán",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 tới 5 năm tốt nghiệp, người học đảm nhiệm vị trí kế toán tổng hợp, kế toán phần hành chính hoặc trợ lý kiểm toán, chịu trách nhiệm về số liệu do mình lập."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 5 năm tốt nghiệp, người học tổ chức được bộ máy kế toán và hệ thống chứng từ cho doanh nghiệp vừa và nhỏ, vận hành phần mềm kế toán và thiết lập thủ tục kiểm soát nội bộ."
+    },
+    {
+      "code": "PEO3",
+      "content": "Trong 5 năm đầu đi làm, người học dự thi chứng chỉ kế toán viên hoặc kiểm toán viên hành nghề, giữ tính trung thực khi lập và công bố số liệu tài chính."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích các nguyên tắc kế toán, chế độ kế toán doanh nghiệp Việt Nam và chuẩn mực kế toán chi phối việc ghi nhận nghiệp vụ.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng quy định pháp luật về thuế giá trị gia tăng, thuế thu nhập doanh nghiệp và thuế thu nhập cá nhân vào công việc kê khai, quyết toán.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Ghi nhận nghiệp vụ kinh tế phát sinh và lập đủ bộ báo cáo tài chính trên sổ sách cũng như trên phần mềm kế toán.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Phân tích báo cáo tài chính và số liệu chi phí để chỉ ra biến động bất thường, sai lệch và rủi ro tài chính của đơn vị.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Thiết kế bộ thủ tục kiểm toán cho một khoản mục, lập hồ sơ kiểm toán và đưa ra kết luận về tính trung thực của khoản mục đó.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá các tình huống chịu sức ép làm sai lệch số liệu, giữ tính độc lập và trung thực theo chuẩn mực đạo đức nghề nghiệp kế toán.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "KT101",
+      "name": "Nguyên lý kế toán",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "KT203",
+      "name": "Kế toán tài chính doanh nghiệp",
+      "credits": 4,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "KT210",
+      "name": "Thuế và kê khai thuế",
+      "credits": 3,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "KT305",
+      "name": "Kế toán quản trị",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "KT320",
+      "name": "Kiểm toán căn bản",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "KT455",
+      "name": "Đồ án tốt nghiệp ngành kế toán",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "KT101",
+      "code": "CLO1",
+      "content": "Trình bày các nguyên tắc kế toán cơ bản, kết cấu tài khoản và hệ thống chứng từ kế toán bắt buộc.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KT101",
+      "code": "CLO2",
+      "content": "Giải thích quan hệ đối ứng tài khoản trong các nghiệp vụ mua hàng, bán hàng, thanh toán và tạm ứng.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KT101",
+      "code": "CLO3",
+      "content": "Định khoản nghiệp vụ kinh tế phát sinh, vào sổ cái và lập bảng cân đối số phát sinh cho một kỳ kế toán.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "KT203",
+      "code": "CLO1",
+      "content": "Giải thích cách ghi nhận và đo lường hàng tồn kho, tài sản cố định, doanh thu, chi phí theo chế độ kế toán hiện hành.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KT203",
+      "code": "CLO2",
+      "content": "Lập bộ báo cáo tài chính gồm bảng cân đối kế toán, báo cáo kết quả kinh doanh, báo cáo lưu chuyển tiền tệ và thuyết minh.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "KT203",
+      "code": "CLO3",
+      "content": "Phân tích ảnh hưởng của phương pháp khấu hao và phương pháp tính giá xuất kho tới lợi nhuận trong kỳ.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "KT210",
+      "code": "CLO1",
+      "content": "Trình bày đối tượng chịu thuế, căn cứ tính thuế và thời hạn kê khai của ba sắc thuế áp dụng phổ biến cho doanh nghiệp.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "KT210",
+      "code": "CLO2",
+      "content": "Lập tờ khai thuế giá trị gia tăng và hồ sơ quyết toán thuế thu nhập doanh nghiệp từ số liệu sổ sách của một đơn vị giả định.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2", "PLO3"]
+    },
+    {
+      "course": "KT210",
+      "code": "CLO3",
+      "content": "Đánh giá ranh giới giữa việc tối ưu nghĩa vụ thuế hợp pháp và hành vi trốn thuế qua các tình huống cụ thể.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "KT305",
+      "code": "CLO1",
+      "content": "Giải thích cách phân loại chi phí theo cách ứng xử, theo đối tượng chịu chi phí và mục đích sử dụng của từng cách phân loại.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KT305",
+      "code": "CLO2",
+      "content": "Tính giá thành sản phẩm theo phương pháp giản đơn và lập dự toán chi phí sản xuất cho một kỳ kế hoạch.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "KT305",
+      "code": "CLO3",
+      "content": "Phân tích điểm hoà vốn và chênh lệch giữa dự toán với thực hiện để chỉ ra nguyên nhân vượt chi.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "KT320",
+      "code": "CLO1",
+      "content": "Giải thích quy trình kiểm toán báo cáo tài chính, khái niệm trọng yếu và ba thành phần của rủi ro kiểm toán.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "KT320",
+      "code": "CLO2",
+      "content": "Thực hiện thủ tục kiểm tra chi tiết và thủ tục phân tích cho khoản mục tiền, khoản phải thu khách hàng.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "KT320",
+      "code": "CLO3",
+      "content": "Đánh giá tính độc lập của kiểm toán viên trong tình huống có quan hệ lợi ích với đơn vị được kiểm toán.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "KT455",
+      "code": "CLO1",
+      "content": "Phân tích thực trạng tổ chức công tác kế toán tại đơn vị thực tập, chỉ ra sai sót số liệu và điểm yếu kiểm soát.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "KT455",
+      "code": "CLO2",
+      "content": "Thiết kế phương án hoàn thiện một phần hành kế toán hoặc bộ thủ tục kiểm toán cho khoản mục đã chọn.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "KT455",
+      "code": "CLO3",
+      "content": "Xây dựng báo cáo đồ án và bảo vệ kết luận trước hội đồng bằng bằng chứng thu thập tại đơn vị thực tập.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO5", "PLO6"]
+    }
+  ]
+}

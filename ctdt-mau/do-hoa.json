@@ -1,0 +1,287 @@
+{
+  "slug": "do-hoa",
+  "nganh": "Thiết kế đồ họa",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau hai tới ba năm tốt nghiệp, người học làm được vị trí thiết kế tại công ty quảng cáo, tòa soạn, xưởng in hoặc bộ phận truyền thông của doanh nghiệp."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau ba tới năm năm tốt nghiệp, người học chủ trì được một dự án nhận diện thương hiệu hoặc chiến dịch truyền thông, làm việc trực tiếp với khách hàng và nhà in."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau năm năm tốt nghiệp, người học tự cập nhật công cụ và xu hướng thị giác mới, xây dựng hồ sơ nghề nghiệp riêng hoặc khởi nghiệp dịch vụ thiết kế."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích được nguyên lý bố cục, màu sắc, chữ và dẫn hướng thị giác dùng trong thiết kế đồ họa.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng quy trình thiết kế từ tóm tắt yêu cầu, phác thảo, thể hiện tới chuẩn bị file cho in ấn và xuất bản số.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Phân tích yêu cầu khách hàng, đặc điểm công chúng mục tiêu và bối cảnh cạnh tranh để xác lập hướng thiết kế.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Thiết kế sản phẩm đồ họa hoàn chỉnh gồm bộ nhận diện thương hiệu, ấn phẩm in và sản phẩm truyền thông số.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Sử dụng phần mềm đồ họa vector, xử lý ảnh và dàn trang để tạo file đúng chuẩn kỹ thuật của nhà in và nền tảng số.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá sản phẩm thiết kế theo tiêu chí hiệu quả truyền thông, tôn trọng bản quyền và ghi rõ nguồn tư liệu đã sử dụng.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "DH101",
+      "name": "Cơ sở tạo hình và bố cục đồ họa",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "DH203",
+      "name": "Chữ và hệ thống chữ trong thiết kế",
+      "credits": 3,
+      "semester": 2,
+      "type": "core"
+    },
+    {
+      "code": "DH205",
+      "name": "Thiết kế nhận diện thương hiệu",
+      "credits": 4,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "DH302",
+      "name": "Thiết kế ấn phẩm và dàn trang",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "DH404",
+      "name": "Đồ họa chuyển động và truyền thông số",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "DH501",
+      "name": "Đồ án tốt nghiệp thiết kế đồ họa",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "DH101",
+      "code": "CLO1",
+      "content": "Trình bày được các nguyên tắc bố cục, cân bằng và tương phản trên mặt phẳng hai chiều.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "DH101",
+      "code": "CLO2",
+      "content": "Vận dụng hệ màu và nguyên tắc tương phản để dựng ba phương án bố cục cho cùng một chủ đề.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO1",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "DH101",
+      "code": "CLO3",
+      "content": "Phân tích bố cục của năm áp phích mẫu và chỉ ra điểm dẫn hướng thị giác của từng bản.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "DH203",
+      "code": "CLO1",
+      "content": "Mô tả được cấu trúc chữ cái, các nhóm chữ thông dụng và quy tắc khoảng cách chữ.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "DH203",
+      "code": "CLO2",
+      "content": "Sử dụng lưới và hệ chữ để dàn trang một tài liệu bốn trang đúng quy cách xuất bản.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO2",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "DH203",
+      "code": "CLO3",
+      "content": "Thiết kế một bộ chữ tiêu đề cho chủ đề cho trước, tối thiểu 26 ký tự chữ cái.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "DH205",
+      "code": "CLO1",
+      "content": "Phân tích công chúng mục tiêu và bộ nhận diện của ba đối thủ để xác lập hướng thiết kế.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "DH205",
+      "code": "CLO2",
+      "content": "Thiết kế logo và bộ nhận diện cơ bản gồm danh thiếp, tiêu đề thư và bao bì cho một thương hiệu giả định.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4"
+      ]
+    },
+    {
+      "course": "DH205",
+      "code": "CLO3",
+      "content": "Đánh giá tính nguyên bản của logo bằng tra cứu nhãn hiệu đã đăng ký và nêu rõ rủi ro trùng lặp.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    },
+    {
+      "course": "DH302",
+      "code": "CLO1",
+      "content": "Giải thích được quy trình chế bản, hệ màu CMYK và yêu cầu tràn lề khi đưa file đi in.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO2"
+      ]
+    },
+    {
+      "course": "DH302",
+      "code": "CLO2",
+      "content": "Vận dụng lưới dàn trang để bố cục một tạp chí 16 trang có cả ảnh và chữ.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO5"
+      ]
+    },
+    {
+      "course": "DH302",
+      "code": "CLO3",
+      "content": "Xây dựng bộ file in hoàn chỉnh kèm bản in thử và bảng kiểm trước khi giao xưởng in.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO2",
+        "PLO4"
+      ]
+    },
+    {
+      "course": "DH404",
+      "code": "CLO1",
+      "content": "Giải thích được nguyên lý chuyển động, nhịp và tiết tấu trong đồ họa chuyển động.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": [
+        "PLO1"
+      ]
+    },
+    {
+      "course": "DH404",
+      "code": "CLO2",
+      "content": "Sử dụng phần mềm dựng chuyển động để tạo một đoạn quảng cáo dài 15 giây theo kịch bản cho trước.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": [
+        "PLO5"
+      ]
+    },
+    {
+      "course": "DH404",
+      "code": "CLO3",
+      "content": "Thiết kế bộ sản phẩm số cho một chiến dịch truyền thông gồm ảnh bìa, bài đăng và video ngắn.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO3",
+        "PLO4"
+      ]
+    },
+    {
+      "course": "DH501",
+      "code": "CLO1",
+      "content": "Phân tích vấn đề truyền thông của chủ đề đồ án và xác định thông điệp chính cần chuyển tải.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": [
+        "PLO3"
+      ]
+    },
+    {
+      "course": "DH501",
+      "code": "CLO2",
+      "content": "Thiết kế hệ thống sản phẩm đồ họa hoàn chỉnh cho đồ án kèm hồ sơ kỹ thuật và bản in thử.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": [
+        "PLO4",
+        "PLO5"
+      ]
+    },
+    {
+      "course": "DH501",
+      "code": "CLO3",
+      "content": "Đánh giá hiệu quả truyền thông của sản phẩm qua phản hồi người dùng và ghi rõ nguồn tư liệu đã dùng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": [
+        "PLO6"
+      ]
+    }
+  ]
+}

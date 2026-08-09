@@ -1,0 +1,210 @@
+{
+  "slug": "ql-xay-dung",
+  "nganh": "Quản lý xây dựng",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học đảm nhận vị trí kỹ sư quản lý thi công hoặc cán bộ quản lý dự án tại doanh nghiệp xây dựng, chịu trách nhiệm về tiến độ và chi phí của gói thầu được giao."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học lập và kiểm soát được hồ sơ dự toán, hợp đồng và thanh quyết toán công trình theo quy định pháp luật hiện hành về xây dựng."
+    },
+    {
+      "code": "PEO3",
+      "content": "Sau 3 đến 5 năm tốt nghiệp, người học đạt chứng chỉ hành nghề định giá xây dựng hoặc quản lý dự án, tham gia hướng dẫn nhân sự mới tại đơn vị công tác."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng kiến thức cơ học kết cấu và vật liệu xây dựng để kiểm tra các cấu kiện thông dụng của công trình dân dụng.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích trình tự đầu tư xây dựng và trách nhiệm của các bên tham gia trong từng giai đoạn của dự án.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Sử dụng định mức và đơn giá hiện hành để tính dự toán chi phí xây dựng công trình dân dụng.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Thiết kế kế hoạch tiến độ, nhân lực và dòng tiền cho một gói thầu xây lắp.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá hồ sơ dự thầu theo tiêu chí kỹ thuật, tài chính và năng lực nhà thầu.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Tuân thủ quy định pháp luật về xây dựng, quy tắc an toàn lao động và đạo đức nghề nghiệp khi thực hiện nhiệm vụ.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {"code": "QL101", "name": "Vẽ kỹ thuật xây dựng", "credits": 3, "semester": 1, "type": "core"},
+    {"code": "QL102", "name": "Vật liệu xây dựng", "credits": 2, "semester": 2, "type": "core"},
+    {"code": "QL203", "name": "Kết cấu bê tông cốt thép", "credits": 4, "semester": 4, "type": "core"},
+    {"code": "QL304", "name": "Đo bóc khối lượng và lập dự toán", "credits": 3, "semester": 5, "type": "core"},
+    {"code": "QL305", "name": "Quản lý dự án xây dựng", "credits": 3, "semester": 6, "type": "core"},
+    {"code": "QL401", "name": "Đồ án tốt nghiệp quản lý xây dựng", "credits": 4, "semester": 8, "type": "core"}
+  ],
+  "clos": [
+    {
+      "course": "QL101",
+      "code": "CLO1",
+      "content": "Trình bày quy ước về nét vẽ, khổ giấy và tỷ lệ dùng trong bản vẽ xây dựng.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QL101",
+      "code": "CLO2",
+      "content": "Vẽ mặt bằng, mặt đứng và mặt cắt của một ngôi nhà một tầng theo tiêu chuẩn bản vẽ hiện hành.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QL101",
+      "code": "CLO3",
+      "content": "Đọc bản vẽ kiến trúc và bản vẽ kết cấu để xác định kích thước, vị trí và số lượng cấu kiện.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "QL102",
+      "code": "CLO1",
+      "content": "Giải thích ảnh hưởng của thành phần cấp phối tới cường độ chịu nén của bê tông.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QL102",
+      "code": "CLO2",
+      "content": "Thực hiện thí nghiệm xác định độ sụt hỗn hợp bê tông và cường độ nén của mẫu bê tông.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1", "PLO3"]
+    },
+    {
+      "course": "QL102",
+      "code": "CLO3",
+      "content": "Tuân thủ quy trình an toàn khi sử dụng thiết bị và hoá chất trong phòng thí nghiệm vật liệu.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "QL203",
+      "code": "CLO1",
+      "content": "Giải thích nguyên lý làm việc của dầm, sàn và cột bê tông cốt thép dưới tải trọng thẳng đứng.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QL203",
+      "code": "CLO2",
+      "content": "Tính diện tích cốt thép dọc cho dầm đơn giản theo tiêu chuẩn thiết kế hiện hành.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "QL203",
+      "code": "CLO3",
+      "content": "Phân tích sơ đồ truyền tải trọng từ sàn xuống móng trong công trình khung bê tông cốt thép.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO1", "PLO2"]
+    },
+    {
+      "course": "QL304",
+      "code": "CLO1",
+      "content": "Trình bày cấu trúc chi phí trong tổng mức đầu tư và trong dự toán xây dựng công trình.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "QL304",
+      "code": "CLO2",
+      "content": "Đo bóc khối lượng công tác đất, bê tông và xây trát từ bản vẽ thi công.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "QL304",
+      "code": "CLO3",
+      "content": "Lập bảng dự toán chi phí xây dựng cho một hạng mục công trình dân dụng bằng phần mềm dự toán.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3", "PLO2"]
+    },
+    {
+      "course": "QL305",
+      "code": "CLO1",
+      "content": "Phân tích trách nhiệm của chủ đầu tư, tư vấn giám sát và nhà thầu trong từng giai đoạn của dự án.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "QL305",
+      "code": "CLO2",
+      "content": "Thiết kế tiến độ thi công dạng sơ đồ ngang và sơ đồ mạng cho một gói thầu xây lắp.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "QL305",
+      "code": "CLO3",
+      "content": "Đánh giá hồ sơ dự thầu của hai nhà thầu theo tiêu chí kỹ thuật, tài chính và năng lực.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "QL401",
+      "code": "CLO1",
+      "content": "Xây dựng hồ sơ quản lý chi phí và tiến độ cho một công trình dân dụng quy mô vừa.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3", "PLO4"]
+    },
+    {
+      "course": "QL401",
+      "code": "CLO2",
+      "content": "Đánh giá phương án thi công đã chọn theo chi phí, thời gian và điều kiện an toàn lao động.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "QL401",
+      "code": "CLO3",
+      "content": "Tuân thủ quy định trích dẫn tài liệu và cam kết liêm chính học thuật khi thực hiện đồ án.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

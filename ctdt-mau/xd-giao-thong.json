@@ -1,0 +1,246 @@
+{
+  "slug": "xd-giao-thong",
+  "nganh": "Kỹ thuật xây dựng công trình giao thông",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Trong khoảng ba đến năm năm sau khi tốt nghiệp, người học làm kỹ sư khảo sát, thiết kế hoặc giám sát tại đơn vị tư vấn và nhà thầu công trình đường bộ, công trình cầu."
+    },
+    {
+      "code": "PEO2",
+      "content": "Người học chủ trì được hồ sơ thiết kế bản vẽ thi công của một đoạn tuyến hoặc một nhịp cầu nhỏ, phối hợp được với ban quản lý dự án và cơ quan quản lý đường bộ địa phương."
+    },
+    {
+      "code": "PEO3",
+      "content": "Người học cập nhật tiêu chuẩn kỹ thuật giao thông đang có hiệu lực, lấy chứng chỉ hành nghề hoặc học sau đại học, và cân nhắc an toàn giao thông cùng chi phí vòng đời khi ra quyết định kỹ thuật."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Vận dụng kiến thức cơ học đất, vật liệu đường và tải trọng xe để xác định thông số tính toán cho nền đường và móng công trình cầu.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Phân tích sự làm việc của kết cấu áo đường mềm, áo đường cứng và kết cấu nhịp cầu dưới tải trọng khai thác.",
+      "bloom_level": "analyze",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Thực hiện công tác khảo sát, đo đạc và xử lý số liệu địa hình, địa chất phục vụ thiết kế tuyến và thi công trên tuyến.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Thiết kế bình đồ, trắc dọc, trắc ngang của một đoạn tuyến đường ô tô và kết cấu nhịp cầu giản đơn kèm bản vẽ cấu tạo.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Đánh giá chất lượng thi công nền đường, mặt đường và kết cấu cầu dựa trên kết quả thí nghiệm hiện trường theo tiêu chuẩn nghiệm thu.",
+      "bloom_level": "evaluate",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Thực hiện biện pháp bảo đảm an toàn giao thông và an toàn lao động khi thi công trên tuyến đang khai thác, chịu trách nhiệm về số liệu khảo sát do mình lập.",
+      "bloom_level": "apply",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "GT102",
+      "name": "Trắc địa công trình giao thông",
+      "credits": 2,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "GT203",
+      "name": "Cơ học đất và nền móng công trình giao thông",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "GT204",
+      "name": "Thiết kế đường ô tô",
+      "credits": 4,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "GT305",
+      "name": "Kết cấu và thiết kế cầu",
+      "credits": 4,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "GT306",
+      "name": "Thi công và khai thác đường",
+      "credits": 3,
+      "semester": 7,
+      "type": "core"
+    },
+    {
+      "code": "GT407",
+      "name": "Đồ án tốt nghiệp kỹ thuật xây dựng công trình giao thông",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "GT102",
+      "code": "CLO1",
+      "content": "Trình bày nguyên lý đo góc, đo dài, đo cao và cấu tạo của máy toàn đạc điện tử.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "GT102",
+      "code": "CLO2",
+      "content": "Thực hiện quy trình đo và bình sai đường chuyền phục vụ khảo sát tuyến đường.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "GT102",
+      "code": "CLO3",
+      "content": "Sử dụng số liệu đo để lập bình đồ tuyến và cắm đường cong tròn ngoài thực địa.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3", "PLO4"]
+    },
+    {
+      "course": "GT203",
+      "code": "CLO1",
+      "content": "Giải thích ý nghĩa của các chỉ tiêu cơ lý của đất đối với nền đường đắp và móng mố trụ cầu.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "GT203",
+      "code": "CLO2",
+      "content": "Tính độ lún và sức chịu tải của nền đất dưới nền đắp cao và dưới móng nông.",
+      "bloom_level": "apply",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "GT203",
+      "code": "CLO3",
+      "content": "Phân tích ổn định mái dốc nền đường đào và nền đường đắp bằng phương pháp mặt trượt trụ tròn.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO1", "PLO2"]
+    },
+    {
+      "course": "GT204",
+      "code": "CLO1",
+      "content": "Giải thích quan hệ giữa các yếu tố hình học của tuyến với tốc độ thiết kế và tầm nhìn xe chạy.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "GT204",
+      "code": "CLO2",
+      "content": "Phân tích kết cấu áo đường mềm nhiều lớp theo mô đun đàn hồi yêu cầu và điều kiện trượt, kéo uốn.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "GT204",
+      "code": "CLO3",
+      "content": "Thiết kế bình đồ, trắc dọc và trắc ngang cho một đoạn tuyến đường ô tô cấp III miền núi.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "GT305",
+      "code": "CLO1",
+      "content": "Trình bày các sơ đồ cầu thông dụng cùng cấu tạo kết cấu nhịp, mố trụ và hệ mặt cầu.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "GT305",
+      "code": "CLO2",
+      "content": "Phân tích nội lực kết cấu nhịp giản đơn dưới hoạt tải xe theo tiêu chuẩn thiết kế cầu hiện hành.",
+      "bloom_level": "analyze",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "GT305",
+      "code": "CLO3",
+      "content": "Thiết kế dầm chủ bê tông cốt thép dự ứng lực cho cầu nhịp giản đơn kèm bản vẽ bố trí cáp.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "GT306",
+      "code": "CLO1",
+      "content": "Lập biện pháp thi công nền đường, lớp móng và lớp mặt bê tông nhựa cho một đoạn tuyến.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "GT306",
+      "code": "CLO2",
+      "content": "Đánh giá chất lượng lu lèn và độ bằng phẳng mặt đường qua kết quả thí nghiệm hiện trường.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "GT306",
+      "code": "CLO3",
+      "content": "Thực hiện phương án phân luồng và bố trí biển báo cảnh giới khi thi công trên tuyến đang khai thác.",
+      "bloom_level": "apply",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "GT407",
+      "code": "CLO1",
+      "content": "Thiết kế trọn vẹn hồ sơ một đoạn tuyến đường hoặc một phương án cầu theo nhiệm vụ đồ án được giao.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "GT407",
+      "code": "CLO2",
+      "content": "Đánh giá hai phương án tuyến theo khối lượng đào đắp, chi phí xây dựng và mức an toàn khai thác.",
+      "bloom_level": "evaluate",
+      "type": "skill",
+      "plos": ["PLO2", "PLO5"]
+    },
+    {
+      "course": "GT407",
+      "code": "CLO3",
+      "content": "Xây dựng bản bảo vệ đồ án trước hội đồng, chỉ rõ tiêu chuẩn thiết kế đã áp dụng và giới hạn của số liệu khảo sát đã dùng.",
+      "bloom_level": "create",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}

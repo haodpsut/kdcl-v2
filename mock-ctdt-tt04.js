@@ -29,55 +29,9 @@ const DATA_DIR = process.env.DATA_DIR || __dirname;
 const UP = path.join(DATA_DIR, 'uploads');
 fs.mkdirSync(UP, { recursive: true });
 
-// ─── Bảy khoa và mười tám ngành đào tạo đại học ─────────────────────────────
-// Danh mục ngành lấy theo kho chương trình đào tạo do chính trường phát hành
-// (DAU-chuong-trinh-dao-tao/CHƯƠNG TRÌNH ĐÀO TẠO/, mỗi ngành một thư mục kèm
-// chuẩn đầu ra, bản mô tả, chương trình dạy học và đề cương chi tiết).
-//
-// Mã ngành đối chiếu từ dữ liệu tuyển sinh của trường. Riêng 7480201 của Công
-// nghệ thông tin xác thực được thẳng trong bản chuẩn đầu ra của trường. Hai
-// ngành Kỹ thuật cơ sở hạ tầng và Quy hoạch vùng và đô thị chưa đối chiếu được
-// mã nên để trống, KHÔNG đoán.
-//
-// Ánh xạ ngành sang khoa là do người dùng chốt khi dựng dữ liệu này, không phải
-// trích từ văn bản của trường: kho tài liệu chỉ nêu rời rạc bốn tên khoa. Sửa
-// tên khoa hay đổi khoa chủ quản trong trang Đơn vị lúc nào cũng được.
-const KHOA = [
-  ['KCNTT', 'Khoa Công nghệ thông tin'],
-  ['KKT', 'Khoa Kiến trúc'],
-  ['KLOG', 'Khoa Logistics và Quản lý chuỗi cung ứng'],
-  ['KXD', 'Khoa Xây dựng'],
-  ['KKTQT', 'Khoa Kinh tế và Quản trị'],
-  ['KNN', 'Khoa Ngoại ngữ'],
-  ['KMT', 'Khoa Mỹ thuật ứng dụng'],
-];
-
-// [nhãn đợt, tên ngành đầy đủ, mã ngành, mã khoa]
-const NGANH = [
-  ['Kiến trúc', 'Kiến trúc', '7580101', 'KKT'],
-  ['Quy hoạch đô thị', 'Quy hoạch vùng và đô thị', '', 'KKT'],
-  ['Nội thất', 'Thiết kế nội thất', '7580108', 'KMT'],
-  ['Đồ họa', 'Thiết kế đồ họa', '7210403', 'KMT'],
-  ['Xây dựng', 'Kỹ thuật xây dựng', '7580201', 'KXD'],
-  ['XD giao thông', 'Kỹ thuật xây dựng công trình giao thông', '7580205', 'KXD'],
-  ['Hạ tầng', 'Kỹ thuật cơ sở hạ tầng', '', 'KXD'],
-  ['QL xây dựng', 'Quản lý xây dựng', '7580302', 'KXD'],
-  ['CNTT', 'Công nghệ thông tin', '7480201', 'KCNTT'],
-  ['Điện - điện tử', 'Công nghệ kỹ thuật điện, điện tử', '7510301', 'KCNTT'],
-  ['Logistics', 'Logistics và Quản lý chuỗi cung ứng', '7510605', 'KLOG'],
-  ['QTKD', 'Quản trị kinh doanh', '7340101', 'KKTQT'],
-  ['Tài chính - NH', 'Tài chính - Ngân hàng', '7340201', 'KKTQT'],
-  ['Kế toán', 'Kế toán', '7340301', 'KKTQT'],
-  ['Du lịch - lữ hành', 'Quản trị dịch vụ du lịch và lữ hành', '7810103', 'KKTQT'],
-  ['Khách sạn', 'Quản trị khách sạn', '7810201', 'KKTQT'],
-  ['Ngôn ngữ Anh', 'Ngôn ngữ Anh', '7220201', 'KNN'],
-  ['Ngôn ngữ Trung', 'Ngôn ngữ Trung Quốc', '7220204', 'KNN'],
-];
-const NAM = 2026;
-
-// Ba đợt dựng từ trước mang tên viết tắt khác, nối vào đúng ngành của chúng để
-// script không tạo đợt trùng rồi nhân đôi dữ liệu.
-const TEN_CU = { 'CNTT 2026': 'CNTT', 'KTr 2026': 'Kiến trúc', 'Logistics 2026': 'Logistics' };
+// Danh mục khoa và ngành dùng chung với mock-cdr-nganh.js, để tên đợt và khoa
+// chủ quản không lệch nhau giữa hai script.
+const { KHOA, NGANH, NAM, TEN_CU } = require('./danh-muc-nganh.js');
 
 const MA_HOP_LE = new Set(STANDARDS_TT04.flatMap((s) => s.criteria.map((c) => c.code)));
 const DIEU_KIEN = new Set(STANDARDS_TT04.flatMap((s) => s.criteria).filter((c) => c.dieu_kien).map((c) => c.code));

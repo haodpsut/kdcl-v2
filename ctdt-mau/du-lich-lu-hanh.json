@@ -1,0 +1,246 @@
+{
+  "slug": "du-lich-lu-hanh",
+  "nganh": "Quản trị dịch vụ du lịch và lữ hành",
+  "peos": [
+    {
+      "code": "PEO1",
+      "content": "Sau 3 tới 5 năm tốt nghiệp, người học đảm nhiệm vị trí điều hành tour, phụ trách bộ phận kinh doanh hoặc bộ phận dịch vụ khách tại doanh nghiệp lữ hành, cơ sở lưu trú, khu du lịch."
+    },
+    {
+      "code": "PEO2",
+      "content": "Sau 5 năm tốt nghiệp, người học đưa ra thị trường được sản phẩm du lịch mới, quản lý nhóm nhân sự tuyến đầu và xử lý dứt điểm sự cố phát sinh trên hành trình."
+    },
+    {
+      "code": "PEO3",
+      "content": "Trong 5 năm đầu đi làm, người học khởi nghiệp dịch vụ du lịch quy mô nhỏ hoặc học tiếp bậc thạc sĩ, hành nghề theo hướng tôn trọng văn hoá bản địa và giữ gìn môi trường điểm đến."
+    }
+  ],
+  "plos": [
+    {
+      "code": "PLO1",
+      "content": "Giải thích cấu trúc ngành du lịch, vai trò của từng bên tham gia và đặc điểm tài nguyên du lịch của các vùng ở Việt Nam.",
+      "bloom_level": "understand",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO2",
+      "content": "Vận dụng quy định pháp luật về kinh doanh lữ hành, hợp đồng du lịch và bảo đảm an toàn cho khách vào tình huống tác nghiệp.",
+      "bloom_level": "apply",
+      "type": "knowledge"
+    },
+    {
+      "code": "PLO3",
+      "content": "Thiết kế chương trình tour trọn gói kèm bảng tính giá thành, giá bán phù hợp với từng phân khúc khách.",
+      "bloom_level": "create",
+      "type": "skill"
+    },
+    {
+      "code": "PLO4",
+      "content": "Điều hành đoàn khách và xử lý sự cố về vận chuyển, lưu trú, y tế phát sinh trong suốt hành trình.",
+      "bloom_level": "apply",
+      "type": "skill"
+    },
+    {
+      "code": "PLO5",
+      "content": "Phân tích dữ liệu thị trường khách và phản hồi của khách để đề xuất điều chỉnh sản phẩm, giá bán và kênh phân phối.",
+      "bloom_level": "analyze",
+      "type": "skill"
+    },
+    {
+      "code": "PLO6",
+      "content": "Đánh giá tác động của hoạt động du lịch tới cộng đồng và môi trường điểm đến, chọn phương án ít gây tổn hại nhất.",
+      "bloom_level": "evaluate",
+      "type": "attitude"
+    }
+  ],
+  "courses": [
+    {
+      "code": "DL102",
+      "name": "Tổng quan du lịch và lữ hành",
+      "credits": 3,
+      "semester": 1,
+      "type": "core"
+    },
+    {
+      "code": "DL204",
+      "name": "Tuyến điểm du lịch Việt Nam",
+      "credits": 3,
+      "semester": 3,
+      "type": "core"
+    },
+    {
+      "code": "DL215",
+      "name": "Thiết kế và điều hành chương trình du lịch",
+      "credits": 4,
+      "semester": 4,
+      "type": "core"
+    },
+    {
+      "code": "DL308",
+      "name": "Nghiệp vụ hướng dẫn du lịch",
+      "credits": 3,
+      "semester": 5,
+      "type": "core"
+    },
+    {
+      "code": "DL312",
+      "name": "Marketing du lịch",
+      "credits": 3,
+      "semester": 6,
+      "type": "core"
+    },
+    {
+      "code": "DL460",
+      "name": "Khoá luận tốt nghiệp ngành quản trị dịch vụ du lịch và lữ hành",
+      "credits": 4,
+      "semester": 8,
+      "type": "core"
+    }
+  ],
+  "clos": [
+    {
+      "course": "DL102",
+      "code": "CLO1",
+      "content": "Trình bày khái niệm du lịch, các loại hình du lịch và chức năng của doanh nghiệp lữ hành nội địa, lữ hành quốc tế.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DL102",
+      "code": "CLO2",
+      "content": "Giải thích quan hệ giữa doanh nghiệp lữ hành với cơ sở lưu trú, đơn vị vận chuyển và ban quản lý điểm đến.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DL102",
+      "code": "CLO3",
+      "content": "Giải thích tác động tích cực và tiêu cực của hoạt động du lịch tới kinh tế, văn hoá, môi trường của địa phương.",
+      "bloom_level": "understand",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "DL204",
+      "code": "CLO1",
+      "content": "Liệt kê các tuyến điểm du lịch chính của ba miền kèm đặc trưng tài nguyên và mùa khai thác của từng điểm.",
+      "bloom_level": "remember",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DL204",
+      "code": "CLO2",
+      "content": "Phân tích khả năng khai thác của một tuyến du lịch dựa trên khoảng cách di chuyển, tính mùa vụ và sức chứa điểm đến.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "DL204",
+      "code": "CLO3",
+      "content": "Lập bản mô tả hành trình ba ngày cho một tuyến cụ thể, ghi rõ thời gian di chuyển và điểm dừng chân.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "DL215",
+      "code": "CLO1",
+      "content": "Giải thích quy định pháp luật về kinh doanh lữ hành, điều khoản hợp đồng du lịch và trách nhiệm bảo hiểm cho khách.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO2"]
+    },
+    {
+      "course": "DL215",
+      "code": "CLO2",
+      "content": "Thiết kế một chương trình tour trọn gói kèm bảng tính giá thành, giá bán và số khách hoà vốn.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3"]
+    },
+    {
+      "course": "DL215",
+      "code": "CLO3",
+      "content": "Điều hành thử một đoàn khách giả định, phân công nhân sự và xử lý tình huống chậm chuyến, đổi lịch trình.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "DL308",
+      "code": "CLO1",
+      "content": "Thực hiện bài thuyết minh mười lăm phút tại một điểm tham quan, có mở đầu, thân bài và phần kết.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO4"]
+    },
+    {
+      "course": "DL308",
+      "code": "CLO2",
+      "content": "Xử lý tình huống khách bị lạc, ốm đau hoặc mất giấy tờ theo đúng quy trình an toàn và quy định pháp luật.",
+      "bloom_level": "apply",
+      "type": "skill",
+      "plos": ["PLO2", "PLO4"]
+    },
+    {
+      "course": "DL308",
+      "code": "CLO3",
+      "content": "Đánh giá cách ứng xử của hướng dẫn viên khi khách vi phạm quy tắc tại di tích, cơ sở tín ngưỡng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    },
+    {
+      "course": "DL312",
+      "code": "CLO1",
+      "content": "Giải thích hành vi mua của khách du lịch và cách phân khúc thị trường khách nội địa, khách quốc tế.",
+      "bloom_level": "understand",
+      "type": "knowledge",
+      "plos": ["PLO1"]
+    },
+    {
+      "course": "DL312",
+      "code": "CLO2",
+      "content": "Phân tích dữ liệu đặt tour và phản hồi của khách để chỉ ra điểm yếu của sản phẩm du lịch hiện có.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "DL312",
+      "code": "CLO3",
+      "content": "Thiết kế kế hoạch truyền thông cho một sản phẩm du lịch kèm ngân sách và chỉ tiêu đo lường kết quả.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3", "PLO5"]
+    },
+    {
+      "course": "DL460",
+      "code": "CLO1",
+      "content": "Phân tích thực trạng khai thác sản phẩm du lịch tại đơn vị thực tập dựa trên số liệu khách và doanh thu ba năm.",
+      "bloom_level": "analyze",
+      "type": "skill",
+      "plos": ["PLO5"]
+    },
+    {
+      "course": "DL460",
+      "code": "CLO2",
+      "content": "Thiết kế một sản phẩm du lịch mới hoặc phương án cải tiến quy trình điều hành kèm dự toán chi phí.",
+      "bloom_level": "create",
+      "type": "skill",
+      "plos": ["PLO3", "PLO4"]
+    },
+    {
+      "course": "DL460",
+      "code": "CLO3",
+      "content": "Đánh giá tác động của phương án đề xuất tới cộng đồng và môi trường điểm đến, bảo vệ kết luận trước hội đồng.",
+      "bloom_level": "evaluate",
+      "type": "attitude",
+      "plos": ["PLO6"]
+    }
+  ]
+}
