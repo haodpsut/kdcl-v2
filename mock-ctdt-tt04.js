@@ -29,6 +29,56 @@ const DATA_DIR = process.env.DATA_DIR || __dirname;
 const UP = path.join(DATA_DIR, 'uploads');
 fs.mkdirSync(UP, { recursive: true });
 
+// ─── Bảy khoa và mười tám ngành đào tạo đại học ─────────────────────────────
+// Danh mục ngành lấy theo kho chương trình đào tạo do chính trường phát hành
+// (DAU-chuong-trinh-dao-tao/CHƯƠNG TRÌNH ĐÀO TẠO/, mỗi ngành một thư mục kèm
+// chuẩn đầu ra, bản mô tả, chương trình dạy học và đề cương chi tiết).
+//
+// Mã ngành đối chiếu từ dữ liệu tuyển sinh của trường. Riêng 7480201 của Công
+// nghệ thông tin xác thực được thẳng trong bản chuẩn đầu ra của trường. Hai
+// ngành Kỹ thuật cơ sở hạ tầng và Quy hoạch vùng và đô thị chưa đối chiếu được
+// mã nên để trống, KHÔNG đoán.
+//
+// Ánh xạ ngành sang khoa là do người dùng chốt khi dựng dữ liệu này, không phải
+// trích từ văn bản của trường: kho tài liệu chỉ nêu rời rạc bốn tên khoa. Sửa
+// tên khoa hay đổi khoa chủ quản trong trang Đơn vị lúc nào cũng được.
+const KHOA = [
+  ['KCNTT', 'Khoa Công nghệ thông tin'],
+  ['KKT', 'Khoa Kiến trúc'],
+  ['KLOG', 'Khoa Logistics và Quản lý chuỗi cung ứng'],
+  ['KXD', 'Khoa Xây dựng'],
+  ['KKTQT', 'Khoa Kinh tế và Quản trị'],
+  ['KNN', 'Khoa Ngoại ngữ'],
+  ['KMT', 'Khoa Mỹ thuật ứng dụng'],
+];
+
+// [nhãn đợt, tên ngành đầy đủ, mã ngành, mã khoa]
+const NGANH = [
+  ['Kiến trúc', 'Kiến trúc', '7580101', 'KKT'],
+  ['Quy hoạch đô thị', 'Quy hoạch vùng và đô thị', '', 'KKT'],
+  ['Nội thất', 'Thiết kế nội thất', '7580108', 'KMT'],
+  ['Đồ họa', 'Thiết kế đồ họa', '7210403', 'KMT'],
+  ['Xây dựng', 'Kỹ thuật xây dựng', '7580201', 'KXD'],
+  ['XD giao thông', 'Kỹ thuật xây dựng công trình giao thông', '7580205', 'KXD'],
+  ['Hạ tầng', 'Kỹ thuật cơ sở hạ tầng', '', 'KXD'],
+  ['QL xây dựng', 'Quản lý xây dựng', '7580302', 'KXD'],
+  ['CNTT', 'Công nghệ thông tin', '7480201', 'KCNTT'],
+  ['Điện - điện tử', 'Công nghệ kỹ thuật điện, điện tử', '7510301', 'KCNTT'],
+  ['Logistics', 'Logistics và Quản lý chuỗi cung ứng', '7510605', 'KLOG'],
+  ['QTKD', 'Quản trị kinh doanh', '7340101', 'KKTQT'],
+  ['Tài chính - NH', 'Tài chính - Ngân hàng', '7340201', 'KKTQT'],
+  ['Kế toán', 'Kế toán', '7340301', 'KKTQT'],
+  ['Du lịch - lữ hành', 'Quản trị dịch vụ du lịch và lữ hành', '7810103', 'KKTQT'],
+  ['Khách sạn', 'Quản trị khách sạn', '7810201', 'KKTQT'],
+  ['Ngôn ngữ Anh', 'Ngôn ngữ Anh', '7220201', 'KNN'],
+  ['Ngôn ngữ Trung', 'Ngôn ngữ Trung Quốc', '7220204', 'KNN'],
+];
+const NAM = 2026;
+
+// Ba đợt dựng từ trước mang tên viết tắt khác, nối vào đúng ngành của chúng để
+// script không tạo đợt trùng rồi nhân đôi dữ liệu.
+const TEN_CU = { 'CNTT 2026': 'CNTT', 'KTr 2026': 'Kiến trúc', 'Logistics 2026': 'Logistics' };
+
 const MA_HOP_LE = new Set(STANDARDS_TT04.flatMap((s) => s.criteria.map((c) => c.code)));
 const DIEU_KIEN = new Set(STANDARDS_TT04.flatMap((s) => s.criteria).filter((c) => c.dieu_kien).map((c) => c.code));
 const TEN = {};
@@ -78,7 +128,9 @@ function minhChungTheoGoiY(nganh, khoa) {
       chon.forEach((g, k) => {
         // Ba trạng thái xen kẽ để cổng duyệt của Phòng ĐBCL có việc thật để làm.
         const tt = k % 4 === 1 ? 'cho_duyet' : k % 7 === 3 ? 'tra_lai' : 'da_xac_nhan';
-        ds.push([c.code, dv, g.name, tt, k % 3 === 1 ? 'link' : 'file',
+        // Phần lớn để dạng liên kết: 18 đợt mà đợt nào cũng 2/3 là tệp thì
+        // sinh ra hơn hai nghìn tệp trên đĩa mà chẳng thêm gì để kiểm.
+        ds.push([c.code, dv, g.name, tt, k % 3 === 0 ? 'file' : 'link',
           tt === 'tra_lai' ? 'Tài liệu chưa có số hiệu và ngày ban hành, đề nghị nộp lại bản chính thức.' : '',
           g.name]);   // cột cuối: khai đúng mục gợi ý này
       });
@@ -90,7 +142,10 @@ function minhChungTheoGoiY(nganh, khoa) {
 // Phiếu đánh giá tiêu chí, cố ý có đủ ba trạng thái và có một tiêu chí ĐIỀU
 // KIỆN không đạt, để thấy luật "một tiêu chí điều kiện không đạt thì cả tiêu
 // chuẩn không đạt" có chỗ để kiểm chứng.
-const PHIEU_CHUNG = (nganh) => ([
+// truot = ngành này cố ý để tiêu chí ĐIỀU KIỆN 4.5 không đạt. Chỉ một phần
+// ngành như vậy, chứ không phải tất cả: dữ liệu mẫu mà ngành nào cũng trượt thì
+// đọc lên thành "cả trường trượt tiêu chuẩn 4", người xem dễ tưởng là số thật.
+const PHIEU_CHUNG = (nganh, truot) => ([
   ['1.1', 'DAT', 'approved',
     `Mục tiêu chương trình ${nganh} được ban hành, gắn với sứ mạng và chiến lược của Trường`,
     'Có quyết định ban hành và được rà soát theo chu kỳ',
@@ -108,11 +163,17 @@ const PHIEU_CHUNG = (nganh) => ([
     'Hoạt động dạy và học được thiết kế bám theo chuẩn đầu ra của từng học phần',
     'Đề cương nêu rõ phương pháp dạy học tương ứng', 'Chưa có minh chứng dự giờ định kỳ',
     'Lập kế hoạch dự giờ và ghi nhận kết quả'],
-  ['4.5', 'KHONG_DAT', 'approved',
-    'Đo lường mức đạt chuẩn đầu ra mới thực hiện ở một phần học phần',
-    'Đã có rubric cho học phần đồ án',
-    'Một học phần đạt dưới ngưỡng, và hồ sơ đo còn thiếu bảng điểm gốc',
-    'Điều chỉnh đề bài, tăng giờ thực hành và bổ sung hồ sơ đo'],
+  truot
+    ? ['4.5', 'KHONG_DAT', 'approved',
+        'Đo lường mức đạt chuẩn đầu ra mới thực hiện ở một phần học phần',
+        'Đã có rubric cho học phần đồ án',
+        'Một học phần đạt dưới ngưỡng, và hồ sơ đo còn thiếu bảng điểm gốc',
+        'Điều chỉnh đề bài, tăng giờ thực hành và bổ sung hồ sơ đo']
+    : ['4.5', 'DAT', 'approved',
+        'Các phương pháp đánh giá kết quả học tập đo lường được mức đạt chuẩn đầu ra',
+        'Có rubric và thang điểm chi tiết cho các học phần cốt lõi',
+        'Hồ sơ đo của một số học phần tự chọn còn mỏng',
+        'Bổ sung hồ sơ đo cho các học phần tự chọn trong kỳ tới'],
   ['5.2', 'DAT', 'approved',
     'Đội ngũ giảng viên cơ hữu đáp ứng quy mô đào tạo của chương trình',
     'Có kế hoạch bồi dưỡng giai đoạn 2026-2028', 'Tỷ lệ giảng viên có trình độ tiến sĩ còn thấp',
@@ -147,24 +208,66 @@ Khi triển khai thật, đơn vị thay bằng văn bản chính thức có ch�
   return { file_name: `${mota}.txt`, file_stored: stored, file_size: Buffer.byteLength(noi, 'utf8'), mime: 'text/plain' };
 }
 
+// Dựng khoa còn thiếu và đợt kiểm định còn thiếu. Chỉ THÊM và ĐỔI TÊN, không
+// xoá khoa hay đợt nào đang có, vì có thể đã có tài khoản và dữ liệu gắn vào.
+async function dungKhoaVaDot() {
+  for (const [code, ten] of KHOA) {
+    const co = await one('SELECT id FROM units WHERE code=$1', [code]);
+    if (co) continue;
+    await q("INSERT INTO units(code,name,type) VALUES ($1,$2,'khoa')", [code, ten]);
+    console.log(`   + khoa mới: ${code} · ${ten}`);
+  }
+
+  const dsCu = await q("SELECT id, name FROM workspaces WHERE type='CTDT'");
+  const theoNhan = {};
+  for (const w of dsCu) theoNhan[TEN_CU[w.name] || w.name.replace(new RegExp(`\\s*${NAM}$`), '')] = w;
+
+  for (const [nhan, ten, ma, khoa] of NGANH) {
+    const mo = `Kiểm định chương trình đào tạo ngành ${ten}` + (ma ? `, mã ngành ${ma}` : '')
+      + `, khóa ${NAM}` + (ma ? '' : ' (chưa đối chiếu được mã ngành)');
+    const cu = theoNhan[nhan];
+    if (cu) {
+      await q('UPDATE workspaces SET name=$2, law=$3, description=$4 WHERE id=$1',
+        [cu.id, `${nhan} ${NAM}`, 'TT04/2025 BGDĐT', mo]);
+      continue;
+    }
+    await q("INSERT INTO workspaces(name,type,law,description) VALUES ($1,'CTDT',$2,$3)",
+      [`${nhan} ${NAM}`, 'TT04/2025 BGDĐT', mo]);
+    console.log(`   + đợt mới: ${nhan} ${NAM} · ${ten}${ma ? ' · ' + ma : ''} · ${khoa}`);
+  }
+}
+
 async function main() {
   const admin = (await one("SELECT id FROM users WHERE role='admin' ORDER BY id LIMIT 1")).id;
-  const U = {}; for (const u of await q('SELECT id, code FROM units')) U[u.code] = u.id;
-  const dsWs = await q("SELECT id, name FROM workspaces WHERE type='CTDT' ORDER BY id");
+  let dsWs = await q("SELECT id, name FROM workspaces WHERE type='CTDT' ORDER BY id");
 
   // Khảo sát trước: mã nào đang nằm ngoài khung TT04
   console.log('TRƯỚC KHI SỬA, mã tiêu chí đang dùng ở các đợt CTĐT:');
   for (const ws of dsWs) {
     const ev = await q('SELECT DISTINCT tieu_chi FROM evidence WHERE workspace_id=$1 ORDER BY tieu_chi', [ws.id]);
     const ngoai = ev.map((x) => x.tieu_chi).filter((c) => !MA_HOP_LE.has(c));
-    console.log(`   ${ws.name.padEnd(16)} ${ev.length} mã, ngoài khung TT04: ${ngoai.length ? ngoai.join(', ') : 'không'}`);
+    console.log(`   ${ws.name.padEnd(18)} ${ev.length} mã, ngoài khung TT04: ${ngoai.length ? ngoai.join(', ') : 'không'}`);
   }
+  const coKhoa = (await q('SELECT code FROM units')).map((u) => u.code);
+  console.log(`   khoa còn thiếu: ${KHOA.filter(([c]) => !coKhoa.includes(c)).map(([c]) => c).join(' ') || 'không'}`
+    + ` · đợt cần có: ${NGANH.length}, đang có: ${dsWs.length}`);
   if (THU) { console.log('\nChạy thử, chưa ghi gì. Bỏ --thu để dựng lại theo khung TT04.'); return; }
+
+  console.log('\nDỰNG KHOA VÀ ĐỢT:');
+  await dungKhoaVaDot();
+  const U = {}; for (const u of await q('SELECT id, code FROM units')) U[u.code] = u.id;
+  dsWs = await q("SELECT id, name FROM workspaces WHERE type='CTDT' ORDER BY id");
+  console.log(`   tổng số đợt CTĐT sau khi dựng: ${dsWs.length}`);
+  console.log('');
 
   for (const ws of dsWs) {
     const W = ws.id;
-    const nganh = ws.name.replace(/\s*20\d\d$/, '').trim();
-    const khoa = nganh.includes('Logistics') ? 'KLOG' : nganh.includes('KTr') || nganh.includes('Kiến') ? 'KKT' : 'KCNTT';
+    // Tra ngành và khoa chủ quản từ danh mục, không đoán theo chữ trong tên đợt.
+    const nhan = ws.name.replace(new RegExp(`\\s*${NAM}$`), '').trim();
+    const muc = NGANH.find(([n]) => n === nhan);
+    if (!muc) throw new Error(`Đợt "${ws.name}" không khớp ngành nào trong danh mục`);
+    const nganh = muc[1];
+    const khoa = muc[3];
 
     // Dọn đúng ba bảng gắn với khung tiêu chuẩn, chỉ trong workspace này
     for (const f of await q("SELECT file_stored FROM evidence WHERE workspace_id=$1 AND file_stored IS NOT NULL", [W]))
@@ -205,14 +308,18 @@ async function main() {
     }
 
     // Phiếu đánh giá tiêu chí
-    for (const [tc, kq, tt, ht, dm, tn, kh] of PHIEU_CHUNG(nganh)) {
+    // Cứ bốn ngành thì một ngành để tiêu chí điều kiện 4.5 không đạt.
+    const truot = NGANH.findIndex(([n]) => n === nhan) % 4 === 0;
+    for (const [tc, kq, tt, ht, dm, tn, kh] of PHIEU_CHUNG(nganh, truot)) {
       if (!MA_HOP_LE.has(tc)) throw new Error(`Mã phiếu ${tc} không có trong khung TT04`);
       await q(`INSERT INTO assessments(workspace_id,tieu_chuan,tieu_chi,hien_trang,diem_manh,ton_tai,ke_hoach,
           ket_qua,trang_thai,nguoi_thuc_hien)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
         [W, parseInt(tc.split('.')[0]), tc, ht, dm, tn, kh, kq, tt, 'Đơn vị chủ quản CTĐT']);
     }
-    console.log(`   ${ws.name}: ${ds.length} minh chứng · ${giao.size} phân công · ${PHIEU_CHUNG(nganh).length} phiếu`);
+    console.log(`   ${ws.name.padEnd(18)} ${String(ds.length).padStart(4)} minh chứng · ${giao.size} phân công · `
+      + `${PHIEU_CHUNG(nganh, truot).length} phiếu · khoa ${khoa}`
+      + (truot ? ' · 4.5 KHÔNG ĐẠT' : ''));
   }
 
   // Đối chứng sau khi ghi: không còn mã nào ngoài khung
