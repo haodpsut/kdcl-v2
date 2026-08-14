@@ -24,6 +24,8 @@ const MA04 = STANDARDS_TT04.flatMap((s) => s.criteria.map((c) => c.code));
 
 // Quét mã nguồn tìm chuỗi "TT26" sót lại. Bốn tệp dưới đây được phép chứa nó
 // vì chúng đang GIẢI THÍCH cú nhầm số hiệu, không phải dùng nó làm nhãn.
+// Lưu ý khi chạy trong container: .dockerignore bỏ docs/ và RESUME.md nên số
+// tệp soi được ít hơn khi chạy trên máy cá nhân. Bản slide phải kiểm ở máy.
 const MIEN_TRU = ['qa-kiem-tra.js', 'README.md', 'standards-full-tt20.js', 'standards-detail.js'];
 function quetNguon(goc = __dirname) {
   const fs = require('fs'), path = require('path');
@@ -45,7 +47,7 @@ function quetNguon(goc = __dirname) {
 }
 
 async function main() {
-  const ws = await q('SELECT id, name, type FROM workspaces ORDER BY id');
+  const ws = await q('SELECT id, name, type, law FROM workspaces ORDER BY id');
   console.log(`\n━━ 1. ĐỢT KIỂM ĐỊNH ━━ ${ws.length} đợt`);
   const ctdt = ws.filter((w) => w.type === 'CTDT');
   const csgd = ws.filter((w) => w.type === 'CSGD');
@@ -75,9 +77,13 @@ async function main() {
   // (26/2026 là chuẩn nghề nghiệp giảng viên). Kiểm cả CSDL lẫn mã nguồn vì
   // chuỗi hiện trên màn hình lấy từ cột law trong CSDL, sửa mã nguồn không đủ.
   const nhanSai = await q("SELECT id, name, law FROM workspaces WHERE law LIKE '%TT26%'");
-  bao('nhãn thông tư trong CSDL không còn TT26', !nhanSai.length,
+  // Không đọc ra nhãn nào cũng là HỎNG: phép kiểm im lặng vì đang soi chỗ
+  // trống trông y hệt phép kiểm im lặng vì dữ liệu sạch.
+  const nhanDung = [...new Set(ws.map((w) => w.law).filter(Boolean))];
+  bao('nhãn thông tư trong CSDL không còn TT26', !nhanSai.length && nhanDung.length > 0,
     nhanSai.length ? nhanSai.map((w) => `${w.name}="${w.law}"`).join(', ')
-      : `${ws.length} đợt, nhãn: ${[...new Set(ws.map((w) => w.law))].join(' · ')}`);
+      : nhanDung.length ? `${ws.length} đợt, nhãn: ${nhanDung.join(' · ')}`
+        : 'KHÔNG đọc được nhãn nào, phép kiểm đang soi chỗ trống');
   const cs = await q("SELECT count(*)::int n FROM workspaces WHERE type='CSGD' AND law LIKE '%TT20%'");
   bao('đợt CSGD gắn đúng TT20/2026', csgd.length === 0 || cs[0].n === csgd.length,
     `${cs[0].n}/${csgd.length} đợt CSGD ghi TT20`);
