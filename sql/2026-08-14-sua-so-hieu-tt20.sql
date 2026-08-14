@@ -14,68 +14,77 @@
 -- Nhánh CHƯƠNG TRÌNH ĐÀO TẠO giữ nguyên TT04/2025: Thông tư 20 chỉ điều chỉnh
 -- kiểm định cơ sở giáo dục, không đụng tới TT04.
 --
--- Chạy: docker exec -i kdcl-db psql -U kdcl -d kdcl < sql/2026-08-14-sua-so-hieu-tt20.sql
+-- Chạy:
+--   docker exec -i kdcl-db psql -U kdcl -d kdcl -v ON_ERROR_STOP=1 \
+--     < sql/2026-08-14-sua-so-hieu-tt20.sql
+--
+-- Cách làm: quét MỌI cột kiểu text của mọi bảng trong schema public thay vì
+-- liệt kê tên cột bằng tay. Liệt kê tay là chỗ dễ sai nhất (bảng evidence
+-- không có cột `ten` như tưởng), và mỗi lần thêm cột mới lại phải nhớ sửa
+-- tệp này. Chỉ những dòng thực sự chứa chuỗi sai mới bị đụng tới.
 -- Idempotent: chạy lại nhiều lần không sao.
 
 BEGIN;
 
-UPDATE workspaces
-   SET law = replace(law, 'TT26', 'TT20')
- WHERE law LIKE '%TT26%';
-
-UPDATE workspaces
-   SET description = replace(replace(description, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20')
- WHERE description LIKE '%TT26%' OR description LIKE '%Thông tư 26%';
-
-UPDATE reports
-   SET co_so_phap_ly     = replace(replace(co_so_phap_ly,     'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       mo_ta_qua_trinh   = replace(replace(mo_ta_qua_trinh,   'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       mo_ta_csdt        = replace(replace(mo_ta_csdt,        'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       tom_tat_ket_qua   = replace(replace(tom_tat_ket_qua,   'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       ke_hoach_cai_tien = replace(replace(ke_hoach_cai_tien, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20')
- WHERE co_so_phap_ly     LIKE '%26%'
-    OR mo_ta_qua_trinh   LIKE '%26%'
-    OR mo_ta_csdt        LIKE '%26%'
-    OR tom_tat_ket_qua   LIKE '%26%'
-    OR ke_hoach_cai_tien LIKE '%26%';
-
-UPDATE evidence
-   SET ten     = replace(replace(ten,     'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       mo_ta   = replace(replace(mo_ta,   'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       nguon   = replace(replace(nguon,   'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       ghi_chu = replace(replace(ghi_chu, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20')
- WHERE ten     LIKE '%TT26%' OR ten     LIKE '%Thông tư 26%'
-    OR mo_ta   LIKE '%TT26%' OR mo_ta   LIKE '%Thông tư 26%'
-    OR nguon   LIKE '%TT26%' OR nguon   LIKE '%Thông tư 26%'
-    OR ghi_chu LIKE '%TT26%' OR ghi_chu LIKE '%Thông tư 26%';
-
-UPDATE assessments
-   SET hien_trang = replace(replace(hien_trang, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       diem_manh  = replace(replace(diem_manh,  'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       ton_tai    = replace(replace(ton_tai,    'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       ke_hoach   = replace(replace(ke_hoach,   'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       mc_bo_sung = replace(replace(mc_bo_sung, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20')
- WHERE hien_trang LIKE '%TT26%' OR hien_trang LIKE '%Thông tư 26%'
-    OR diem_manh  LIKE '%TT26%' OR diem_manh  LIKE '%Thông tư 26%'
-    OR ton_tai    LIKE '%TT26%' OR ton_tai    LIKE '%Thông tư 26%'
-    OR ke_hoach   LIKE '%TT26%' OR ke_hoach   LIKE '%Thông tư 26%'
-    OR mc_bo_sung LIKE '%TT26%' OR mc_bo_sung LIKE '%Thông tư 26%';
-
-UPDATE surveys
-   SET title       = replace(replace(title,       'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20'),
-       description = replace(replace(description, 'Thông tư 26', 'Thông tư 20'), 'TT26', 'TT20')
- WHERE title       LIKE '%TT26%' OR title       LIKE '%Thông tư 26%'
-    OR description LIKE '%TT26%' OR description LIKE '%Thông tư 26%';
+DO $$
+DECLARE r record; n bigint; tong bigint := 0;
+BEGIN
+  FOR r IN
+    SELECT c.table_name, c.column_name
+      FROM information_schema.columns c
+      JOIN information_schema.tables t
+        ON t.table_schema = c.table_schema AND t.table_name = c.table_name
+     WHERE c.table_schema = 'public'
+       AND t.table_type   = 'BASE TABLE'
+       AND c.data_type IN ('text', 'character varying')
+     ORDER BY c.table_name, c.column_name
+  LOOP
+    EXECUTE format(
+      'UPDATE %I SET %I = replace(replace(%I, %L, %L), %L, %L)
+        WHERE %I LIKE %L OR %I LIKE %L',
+      r.table_name, r.column_name, r.column_name,
+      'Thông tư 26', 'Thông tư 20', 'TT26', 'TT20',
+      r.column_name, '%TT26%', r.column_name, '%Thông tư 26%');
+    GET DIAGNOSTICS n = ROW_COUNT;
+    IF n > 0 THEN
+      RAISE NOTICE 'sửa % dòng ở %.%', n, r.table_name, r.column_name;
+      tong := tong + n;
+    END IF;
+  END LOOP;
+  RAISE NOTICE '── tổng cộng % dòng đã sửa ──', tong;
+END $$;
 
 COMMIT;
 
--- ─── Cổng kiểm: phải trả về 0 dòng ──────────────────────────────────────────
-SELECT 'workspaces.law'      AS cho, count(*) AS con_sot FROM workspaces  WHERE law         LIKE '%TT26%'
-UNION ALL SELECT 'workspaces.description', count(*) FROM workspaces WHERE description LIKE '%TT26%' OR description LIKE '%Thông tư 26%'
-UNION ALL SELECT 'reports',    count(*) FROM reports    WHERE co_so_phap_ly LIKE '%TT26%' OR co_so_phap_ly LIKE '%Thông tư 26%'
-UNION ALL SELECT 'evidence',   count(*) FROM evidence   WHERE ten LIKE '%TT26%' OR mo_ta LIKE '%TT26%' OR ghi_chu LIKE '%TT26%' OR nguon LIKE '%TT26%'
-UNION ALL SELECT 'assessments',count(*) FROM assessments WHERE hien_trang LIKE '%TT26%' OR diem_manh LIKE '%TT26%' OR ton_tai LIKE '%TT26%' OR ke_hoach LIKE '%TT26%'
-UNION ALL SELECT 'surveys',    count(*) FROM surveys    WHERE title LIKE '%TT26%' OR description LIKE '%TT26%';
+-- ─── Cổng kiểm, chặn kiểu fail-closed ───────────────────────────────────────
+-- Còn sót một dòng là báo lỗi chứ không im lặng. Đếm lại bằng chính vòng quét
+-- ở trên nên không có chỗ nào lọt khỏi tầm soi.
+DO $$
+DECLARE r record; n bigint; con bigint := 0; ds text := ''; soCot int := 0;
+BEGIN
+  FOR r IN
+    SELECT c.table_name, c.column_name
+      FROM information_schema.columns c
+      JOIN information_schema.tables t
+        ON t.table_schema = c.table_schema AND t.table_name = c.table_name
+     WHERE c.table_schema = 'public'
+       AND t.table_type   = 'BASE TABLE'
+       AND c.data_type IN ('text', 'character varying')
+  LOOP
+    soCot := soCot + 1;
+    EXECUTE format('SELECT count(*) FROM %I WHERE %I LIKE %L OR %I LIKE %L',
+      r.table_name, r.column_name, '%TT26%', r.column_name, '%Thông tư 26%')
+      INTO n;
+    IF n > 0 THEN
+      con := con + n;
+      ds  := ds || format(' %s.%s=%s', r.table_name, r.column_name, n);
+    END IF;
+  END LOOP;
+  IF con > 0 THEN
+    RAISE EXCEPTION 'CỔNG KIỂM HỎNG: còn % dòng mang số hiệu cũ:%', con, ds;
+  END IF;
+  RAISE NOTICE 'CỔNG KIỂM ĐẠT: soi % cột text, không còn chuỗi TT26 nào', soCot;
+END $$;
 
--- Xem lại nhãn sau khi sửa
+-- Xem lại nhãn sau khi sửa: nhánh CSGD phải là TT20/2026, CTĐT là TT04/2025.
 SELECT id, name, type, law FROM workspaces ORDER BY id;
