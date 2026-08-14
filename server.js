@@ -13,7 +13,7 @@ const auth = require('./auth');
 const { STANDARDS_DETAIL, EVIDENCE_TYPES } = require('./standards-detail.js');
 const { STANDARDS_TT04 } = require('./standards-tt04.js');
 const { STANDARDS_DETAIL_TT04 } = require('./standards-detail-tt04.js');
-const { TOAN_VAN_TT26 } = require('./standards-full-tt26.js');
+const { TOAN_VAN_TT20 } = require('./standards-full-tt20.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -194,7 +194,7 @@ app.get('/api/me', async (req, res) => {
 // STANDARDS
 // ═══════════════════════════════════════════════════════════════════════════
 // Bộ tiêu chuẩn phải theo LOẠI đợt kiểm định. Trước đây mọi đợt đều nhận bộ 15
-// tiêu chuẩn 60 tiêu chí của TT26, tức khung dành cho cơ sở giáo dục, nên ba
+// tiêu chuẩn 60 tiêu chí của TT20, tức khung dành cho cơ sở giáo dục, nên ba
 // đợt chương trình đào tạo gắn minh chứng vào những địa chỉ không tồn tại
 // trong khung của mình như 9.1 hay 11.1, và trang Tổng quan của chính đợt đó
 // lại ghi 8 tiêu chuẩn 52 tiêu chí, tức phần mềm tự mâu thuẫn.
@@ -204,7 +204,7 @@ async function boTieuChuan(req) {
   const w = await one('SELECT type FROM workspaces WHERE id=$1', [wsId]);
   return w && w.type === 'CTDT' ? BO_TT04 : STANDARDS;
 }
-// Bộ TT04 quy về cùng hình dạng với bộ TT26 để mọi màn dùng lại được, không
+// Bộ TT04 quy về cùng hình dạng với bộ TT20 để mọi màn dùng lại được, không
 // phải sửa từng trang: { id, name, criteria: [tên ngắn...] }.
 const BO_TT04 = STANDARDS_TT04.map((s) => ({
   id: s.id, name: s.name, criteria: s.criteria.map((c) => c.short),
@@ -219,17 +219,17 @@ const BO_TT04 = STANDARDS_TT04.map((s) => ({
   // tiêu chuẩn 7 thành "Cơ sở vật chất".
   dieu_kien: s.criteria.filter((c) => c.dieu_kien).map((c) => c.code),
 }));
-// Bộ TT26 cũng phải có hai trường này để giao diện dùng chung một đường, khỏi
+// Bộ TT20 cũng phải có hai trường này để giao diện dùng chung một đường, khỏi
 // phải hỏi "đang là bộ nào" ở từng chỗ.
 //
 // Toàn văn KHÔNG lấy từ STANDARDS_DETAIL: đối chiếu 60 tiêu chí thì 54 chỗ tên
 // ngắn khác nhau giữa STANDARDS ở đây và STANDARDS_DETAIL, tức hai tệp đánh số
-// tiêu chí TT26 theo hai thứ tự khác nhau. Lấy nhầm nguồn là gán toàn văn của
+// tiêu chí TT20 theo hai thứ tự khác nhau. Lấy nhầm nguồn là gán toàn văn của
 // tiêu chí này cho tiêu chí kia, đúng cái lỗi vừa sửa ở bộ TT04. Nguồn đúng là
-// standards-full-tt26.js, vốn khớp thứ tự của mảng STANDARDS.
+// standards-full-tt20.js, vốn khớp thứ tự của mảng STANDARDS.
 for (const s of STANDARDS) {
-  s.criteria_full = s.criteria.map((ten, i) => TOAN_VAN_TT26[`${s.id}.${i + 1}`] || ten);
-  s.dieu_kien = [];   // TT26 không có khái niệm tiêu chí điều kiện
+  s.criteria_full = s.criteria.map((ten, i) => TOAN_VAN_TT20[`${s.id}.${i + 1}`] || ten);
+  s.dieu_kien = [];   // TT20 không có khái niệm tiêu chí điều kiện
 }
 
 // Chi tiết từng tiêu chí TT04, tra theo mã, cùng hình dạng với STANDARDS_DETAIL.
@@ -285,7 +285,7 @@ app.post('/api/workspaces', auth.requireRole('admin'), async (req, res) => {
   if (!['CSGD','CTDT'].includes(type)) return res.status(400).json({ error: 'Loại không hợp lệ' });
   const ws = await one(
     `INSERT INTO workspaces(name,type,law,description) VALUES ($1,$2,$3,$4) RETURNING id`,
-    [name, type, law || (type==='CSGD'?'TT26/2026 BGDĐT':'TT04/2025 BGDĐT'), description || '']);
+    [name, type, law || (type==='CSGD'?'TT20/2026 BGDĐT':'TT04/2025 BGDĐT'), description || '']);
   res.json({ id: ws.id, message: 'Đã tạo workspace' });
 });
 app.put('/api/workspaces/:id', auth.requireRole('admin'), async (req, res) => {
@@ -311,7 +311,7 @@ app.delete('/api/workspaces/:id', auth.requireRole('admin'), async (req, res) =>
 // STATS
 // ═══════════════════════════════════════════════════════════════════════════
 // Quy mô bộ tiêu chuẩn của đợt đang mở. Các màn đánh giá và báo cáo trước đây
-// gõ cứng 15 tiêu chuẩn / 60 tiêu chí của TT26, nên mở một đợt chương trình
+// gõ cứng 15 tiêu chuẩn / 60 tiêu chí của TT20, nên mở một đợt chương trình
 // đào tạo là thấy "10 / 60 đã đánh giá", "chưa đánh giá 50" và thanh tiến độ
 // chia cho 60, trong khi khung TT04 chỉ có 8 tiêu chuẩn và 52 tiêu chí. Trả số
 // này từ máy chủ để mọi trang lấy chung một nguồn.
@@ -1048,7 +1048,7 @@ app.get('/api/report/data', async (req, res) => {
   const wsInfo = await one('SELECT name, type, law FROM workspaces WHERE id=$1', [wsId]);
   res.json({ school_info: si ? si.data : {}, standards, evidence: wsEvidence, kpi_data: wsKpi, latest_kpi: latestKpi,
     workspace: wsInfo || null,
-    // total_criteria trước đây gõ cứng 60, tức số của TT26. Đợt chương trình
+    // total_criteria trước đây gõ cứng 60, tức số của TT20. Đợt chương trình
     // đào tạo chỉ có 52, nên trường này là quả mìn chờ màn nào đó đọc phải.
     stats: { total_criteria: standards.reduce((a, s) => a + s.criteria.length, 0),
       assessed: wsAssessments.length,

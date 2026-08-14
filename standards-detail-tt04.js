@@ -5,7 +5,7 @@
 //   nguồn tên và toàn văn tiêu chí: Chương II, Điều 4 tới Điều 11 (điều khoản
 //   quy phạm), lấy qua standards-tt04.js.
 //
-// Cùng hình dạng với STANDARDS_DETAIL của TT26 nên mọi màn hình dùng lại được:
+// Cùng hình dạng với STANDARDS_DETAIL của TT20 nên mọi màn hình dùng lại được:
 //   short_name · full_name · requirements[] · suggested_evidence[{name,type,category}]
 //   · self_check_questions[] · placeholders{}
 //

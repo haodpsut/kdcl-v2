@@ -1,4 +1,8 @@
-// ─── Chi tiết 15 tiêu chuẩn / 60 tiêu chí TT26/2026/TT-BGDĐT (Phụ lục 2) ─────
+// ─── Chi tiết 15 tiêu chuẩn / 60 tiêu chí TT20/2026/TT-BGDĐT (Phụ lục 2) ─────
+// Thông tư số 20/2026/TT-BGDĐT ngày 31/3/2026, "Quy định về kiểm định chất
+// lượng cơ sở giáo dục đại học", hiệu lực 15/5/2026, thay thế TT 12/2017.
+// (Trước 14/8/2026 tệp này ghi nhầm số hiệu là 26/2026, vốn là thông tư về
+// chuẩn nghề nghiệp giảng viên đại học.)
 // Mỗi tiêu chí có:
 //   short_name         — tên ngắn cho UI tree
 //   full_name          — toàn văn tiêu chí (đầu mỗi ô tiêu chí trong PL2)

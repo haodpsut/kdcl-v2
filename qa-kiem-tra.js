@@ -22,6 +22,28 @@ const bao = (ten, dat, chiTiet) => {
 
 const MA04 = STANDARDS_TT04.flatMap((s) => s.criteria.map((c) => c.code));
 
+// Quét mã nguồn tìm chuỗi "TT26" sót lại. Bốn tệp dưới đây được phép chứa nó
+// vì chúng đang GIẢI THÍCH cú nhầm số hiệu, không phải dùng nó làm nhãn.
+const MIEN_TRU = ['qa-kiem-tra.js', 'README.md', 'standards-full-tt20.js', 'standards-detail.js'];
+function quetNguon(goc = __dirname) {
+  const fs = require('fs'), path = require('path');
+  const hit = []; let soFile = 0;
+  const di = (thuMuc) => {
+    for (const e of fs.readdirSync(thuMuc, { withFileTypes: true })) {
+      if (e.name === 'node_modules' || e.name === '.git' || e.name === 'uploads'
+        || e.name === '.docker-data' || e.name === 'sql') continue;
+      const p = path.join(thuMuc, e.name);
+      if (e.isDirectory()) { di(p); continue; }
+      if (!/\.(js|html|md|sql|tex)$/.test(e.name)) continue;
+      if (MIEN_TRU.includes(e.name)) continue;
+      soFile++;
+      if (fs.readFileSync(p, 'utf8').includes('TT26')) hit.push(path.relative(goc, p));
+    }
+  };
+  di(goc);
+  return { hit, soFile };
+}
+
 async function main() {
   const ws = await q('SELECT id, name, type FROM workspaces ORDER BY id');
   console.log(`\n━━ 1. ĐỢT KIỂM ĐỊNH ━━ ${ws.length} đợt`);
@@ -47,8 +69,21 @@ async function main() {
         + `${MA04.reduce((a, c) => a + STANDARDS_DETAIL_TT04[c].suggested_evidence.length, 0)} minh chứng gợi ý`);
   const DK = MA04.filter((c) => STANDARDS_DETAIL_TT04[c].dieu_kien);
   bao('đúng 10 tiêu chí điều kiện theo Điều 13', DK.length === 10, DK.join(' '));
-  bao('TT26 vẫn đủ 60 tiêu chí', Object.keys(STANDARDS_DETAIL).length === 60,
+  bao('TT20 vẫn đủ 60 tiêu chí', Object.keys(STANDARDS_DETAIL).length === 60,
     `${Object.keys(STANDARDS_DETAIL).length} tiêu chí`);
+  // Nhãn số hiệu: bộ tiêu chuẩn CSGD là Thông tư 20/2026, KHÔNG phải 26/2026
+  // (26/2026 là chuẩn nghề nghiệp giảng viên). Kiểm cả CSDL lẫn mã nguồn vì
+  // chuỗi hiện trên màn hình lấy từ cột law trong CSDL, sửa mã nguồn không đủ.
+  const nhanSai = await q("SELECT id, name, law FROM workspaces WHERE law LIKE '%TT26%'");
+  bao('nhãn thông tư trong CSDL không còn TT26', !nhanSai.length,
+    nhanSai.length ? nhanSai.map((w) => `${w.name}="${w.law}"`).join(', ')
+      : `${ws.length} đợt, nhãn: ${[...new Set(ws.map((w) => w.law))].join(' · ')}`);
+  const cs = await q("SELECT count(*)::int n FROM workspaces WHERE type='CSGD' AND law LIKE '%TT20%'");
+  bao('đợt CSGD gắn đúng TT20/2026', csgd.length === 0 || cs[0].n === csgd.length,
+    `${cs[0].n}/${csgd.length} đợt CSGD ghi TT20`);
+  const daQuet = quetNguon();
+  bao('mã nguồn không còn chuỗi TT26', !daQuet.hit.length,
+    daQuet.hit.length ? daQuet.hit.join(', ') : `đã soi ${daQuet.soFile} tệp`);
 
   console.log('\n━━ 3. MINH CHỨNG ━━');
   let ngoaiKhung = 0, saiKhai = 0, tongMC = 0, tongKhai = 0;

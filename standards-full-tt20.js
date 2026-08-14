@@ -1,15 +1,27 @@
-// ─── Toàn văn 60 tiêu chí của bộ TT26 (kiểm định cơ sở giáo dục) ────────────
+// ─── Toàn văn 60 tiêu chí của bộ TT20 (kiểm định cơ sở giáo dục) ────────────
+// Văn bản gốc: Thông tư số 20/2026/TT-BGDĐT ngày 31/3/2026 của Bộ trưởng Bộ
+// Giáo dục và Đào tạo, "Quy định về kiểm định chất lượng cơ sở giáo dục đại
+// học". Hiệu lực 15/5/2026, ký bởi Q. Bộ trưởng Hoàng Minh Sơn. Điều 52 thay
+// thế Thông tư 12/2017/TT-BGDĐT. Bộ tiêu chuẩn nằm ở Chương II, từ Điều 4.
+// Bản ký scan 122 trang: `kiem-dinh-chat-luong/thong tu.pdf`.
+//
+// ⚠️ Đừng nhầm với Thông tư 26/2026/TT-BGDĐT ngày 09/4/2026 "Quy định chuẩn
+// nghề nghiệp giảng viên đại học" (`kiem-dinh-chat-luong/26-bgddt.pdf`), một
+// văn bản khác hẳn. Hai bản được quét cùng mẻ ngày 09/4/2026 nên phần mềm
+// từng ghi nhầm nhãn là "TT26/2026" cho tới 14/8/2026.
+//
 // Bảng này trước nằm trong public/module2.html và chỉ trang đó dùng. Nay đưa về
 // phía máy chủ để bản in, phiếu Biểu 04 và báo cáo cùng lấy một nguồn.
 //
 // CẢNH BÁO cho người sửa sau: thứ tự tiêu chí ở đây khớp mảng STANDARDS trong
 // server.js, KHÔNG khớp standards-detail.js. Đối chiếu 60 tiêu chí thì 54 chỗ
-// có tên ngắn khác nhau giữa hai tệp đó, tức hai tệp đang đánh số tiêu chí TT26
-// theo hai thứ tự khác nhau. Đây là lỗi CÓ SẴN, chưa sửa, vì chưa đối chiếu
-// được với nguyên văn thông tư. Hệ quả: bảng chi tiết tiêu chí của đợt cơ sở
-// giáo dục có thể đang hiện yêu cầu và minh chứng gợi ý của một tiêu chí khác.
-// Đừng lấy standards-detail.js làm nguồn toàn văn cho tới khi đối chiếu xong.
-const TOAN_VAN_TT26 = {
+// có tên ngắn khác nhau giữa hai tệp đó, tức hai tệp đang đánh số tiêu chí TT20
+// theo hai thứ tự khác nhau. Đây là lỗi CÓ SẴN, CHƯA SỬA. Hệ quả: bảng chi
+// tiết tiêu chí của đợt cơ sở giáo dục có thể đang hiện yêu cầu và minh chứng
+// gợi ý của một tiêu chí khác. Đừng lấy standards-detail.js làm nguồn toàn văn
+// cho tới khi đối chiếu xong. Nguồn để đối chiếu nay đã có: Chương II của bản
+// ký nói trên, chứ không phải bản phụ lục Word rời.
+const TOAN_VAN_TT20 = {
   '1.1': 'Lãnh đạo CSĐT công bố tầm nhìn, sứ mạng đáp ứng nhu cầu các bên liên quan',
   '1.2': 'CSĐT có hệ thống quản trị theo Luật GDĐH đảm bảo trách nhiệm giải trình và minh bạch',
   '1.3': 'Lãnh đạo CSĐT thúc đẩy giá trị văn hóa, liêm chính học thuật và hành vi chuẩn mực',
@@ -72,4 +84,4 @@ const TOAN_VAN_TT26 = {
   '15.2': 'CSĐT có uy tín và vị thế tốt trên thị trường giáo dục',
 };
 
-module.exports = { TOAN_VAN_TT26 };
+module.exports = { TOAN_VAN_TT20 };

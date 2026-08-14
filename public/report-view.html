@@ -205,7 +205,7 @@ p  { font-size:11pt; line-height:1.6; margin-bottom:6pt; text-align:justify; }
 <script>
 const reportId = new URLSearchParams(location.search).get('id');
 
-// Mảng 15 tiêu chuẩn của TT26 từng được gõ cứng ở đây và dùng để dựng mục lục.
+// Mảng 15 tiêu chuẩn của TT20 từng được gõ cứng ở đây và dùng để dựng mục lục.
 // Hậu quả: báo cáo của một chương trình đào tạo có mục lục liệt kê 15 tiêu
 // chuẩn cơ sở giáo dục, còn ruột ngay sau đó là 8 tiêu chuẩn TT04. Mục lục và
 // ruột mâu thuẫn nhau trong cùng một văn bản đem nộp. Nay mục lục dựng từ
@@ -695,7 +695,7 @@ function buildSummaryParagraph(stats, standards) {
   const assessed = stats.assessed || 0;
   const dat      = stats.dat || 0;
   const khong    = stats.khong_dat || 0;
-  // Quy mô theo bộ tiêu chuẩn của đợt: TT26 là 15/60, TT04 là 8/52. Câu tóm tắt
+  // Quy mô theo bộ tiêu chuẩn của đợt: TT20 là 15/60, TT04 là 8/52. Câu tóm tắt
   // này in thẳng vào báo cáo tự đánh giá nộp ra ngoài nên sai số là sai văn bản.
   const soTC     = (standards || []).length || 15;
   const TONG     = (standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;

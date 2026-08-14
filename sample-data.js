@@ -382,7 +382,7 @@ async function main() {
   await q(`INSERT INTO reports(workspace_id,title,period,author,co_so_phap_ly,mo_ta_qua_trinh,mo_ta_csdt,tom_tat_ket_qua,ke_hoach_cai_tien)
     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
     [csgd, 'Báo cáo tự đánh giá cơ sở giáo dục chu kỳ 2026', '2021-2025', 'Hội đồng Tự đánh giá',
-     'Thông tư 26/2026/TT-BGDĐT; Quyết định thành lập Hội đồng Tự đánh giá của Nhà trường.',
+     'Thông tư 20/2026/TT-BGDĐT; Quyết định thành lập Hội đồng Tự đánh giá của Nhà trường.',
      'Nhà trường thành lập Hội đồng TĐG, xây dựng kế hoạch 24 tuần, thu thập và mã hóa minh chứng, đánh giá đầy đủ 15 tiêu chuẩn.',
      'Trường Đại học Kiến trúc Đà Nẵng là cơ sở đào tạo đa ngành khối kỹ thuật, kiến trúc và công nghệ thông tin.',
      'Phần lớn tiêu chí đạt yêu cầu; hệ thống bảo đảm chất lượng bên trong vận hành hiệu quả; một số tiêu chí cần bổ sung minh chứng.',

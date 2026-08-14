@@ -3,7 +3,7 @@
 // Nguồn: kiem-dinh-chat-luong/new/tt04-kdcl-p001-030.md và các tệp cùng bộ.
 //
 // Vì sao cần tệp này: trước đây MỌI đợt kiểm định đều chạy trên bộ 15 tiêu
-// chuẩn 60 tiêu chí của TT26, tức khung dành cho CƠ SỞ GIÁO DỤC. Ba đợt
+// chuẩn 60 tiêu chí của TT20, tức khung dành cho CƠ SỞ GIÁO DỤC. Ba đợt
 // chương trình đào tạo vì thế gắn minh chứng vào những địa chỉ không tồn tại
 // trong khung của mình, ví dụ tiêu chí 9.1 hay 11.1.
 //

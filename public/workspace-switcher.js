@@ -81,7 +81,7 @@
       // CTĐT đều đã có kế hoạch trong CSDL nhưng menu cũ không có lối vào, nên
       // dữ liệu nằm đó mà không ai tới được.
       // Đánh giá tiêu chí và Dashboard trước đây bị để ngoài menu này vì cả hai
-      // gõ cứng bộ 15 tiêu chuẩn 60 tiêu chí của TT26. Nay chúng lấy quy mô từ
+      // gõ cứng bộ 15 tiêu chuẩn 60 tiêu chí của TT20. Nay chúng lấy quy mô từ
       // bộ tiêu chuẩn của chính đợt đang mở nên chạy đúng với TT04, đưa vào.
       { icon: 'clipboard', label: 'Tự đánh giá', children: [
         { href: '/module2.html', icon: 'clipboard', label: 'Đánh giá tiêu chí (Biểu 04)' },
@@ -442,7 +442,7 @@
         <h3>Tạo đợt kiểm định mới</h3>
         <label>Loại đợt kiểm định</label>
         <select id="m-type">
-          <option value="CSGD">CSGD · Kiểm định Cơ sở Giáo dục (TT26/2026)</option>
+          <option value="CSGD">CSGD · Kiểm định Cơ sở Giáo dục (TT20/2026)</option>
           <option value="CTDT">CTĐT · Kiểm định Chương trình Đào tạo (TT04/2025)</option>
         </select>
         <label>Tên đợt kiểm định</label>

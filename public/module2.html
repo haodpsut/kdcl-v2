@@ -454,9 +454,9 @@ let currentTC = null;
 let currentAssessId = null;
 let selectedResult = 'CHUA';
 
-// Bảng 60 tên tiêu chí của TT26 từng được gõ cứng ở đây và dùng cho cả phiếu
+// Bảng 60 tên tiêu chí của TT20 từng được gõ cứng ở đây và dùng cho cả phiếu
 // Biểu 04 in ra giấy. Ở đợt chương trình đào tạo, 37 trên 52 mã trùng mã với
-// TT26 nên tra ra tên của khung KHÁC: bấm in tiêu chí 4.5 thì giấy ghi "Công
+// TT20 nên tra ra tên của khung KHÁC: bấm in tiêu chí 4.5 thì giấy ghi "Công
 // tác quản lý tài chính và cơ sở vật chất được cải tiến", trong khi màn hình
 // ngay sau lưng hiện đúng tên TT04. Màn hình đúng mà giấy sai là kiểu lỗi
 // người dùng không có cách nào tự phát hiện.
@@ -478,7 +478,7 @@ async function init() {
 
 // ── Stats ─────────────────────────────────────────────────────
 function renderStats(s) {
-  // Quy mô lấy theo bộ tiêu chuẩn của chính đợt đang mở: TT26 là 15/60, TT04 là
+  // Quy mô lấy theo bộ tiêu chuẩn của chính đợt đang mở: TT20 là 15/60, TT04 là
   // 8/52. Gõ cứng 60 khiến các đợt chương trình đào tạo hiện "chưa đánh giá 50"
   // trong khi thực tế còn 42, và thanh tiến độ chia sai mẫu số.
   const TONG = s.tong_tieu_chi || 60;

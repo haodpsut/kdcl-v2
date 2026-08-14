@@ -218,7 +218,7 @@ let radarChart = null;
 let kpiChart   = null;
 
 // Nhãn trục radar dựng từ chính bộ tiêu chuẩn của đợt đang mở. Trước đây đây là
-// mảng 15 tên gõ cứng của TT26, nên mở một đợt chương trình đào tạo là radar vẽ
+// mảng 15 tên gõ cứng của TT20, nên mở một đợt chương trình đào tạo là radar vẽ
 // 8 giá trị lên 15 trục mang tên tiêu chuẩn của khung khác.
 function nhanTruc(standards) {
   return (standards || []).map((std) => {
@@ -259,7 +259,7 @@ async function loadAll() {
 // ── Metrics ───────────────────────────────────────────────────────────────────
 function renderMetrics(rData, tdgList, surveyList, kpiList) {
   const s = rData.stats;
-  // Tổng tiêu chí lấy theo bộ của đợt đang mở (TT26: 60, TT04: 52).
+  // Tổng tiêu chí lấy theo bộ của đợt đang mở (TT20: 60, TT04: 52).
   const total = (rData.standards || []).reduce((a, x) => a + x.criteria.length, 0) || 60;
   const dat = s.dat, assessed = s.assessed;
   const datPct = Math.round(dat / total * 100);

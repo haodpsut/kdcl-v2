@@ -3,13 +3,13 @@
 //        docker exec kdcl-app node mock-ctdt-tt04.js --thu   (chỉ xem, không ghi)
 //
 // Vì sao cần: ba đợt kiểm định chương trình đào tạo trước đây gắn minh chứng,
-// phân công và phiếu đánh giá theo bộ 15 tiêu chuẩn 60 tiêu chí của TT26, tức
+// phân công và phiếu đánh giá theo bộ 15 tiêu chuẩn 60 tiêu chí của TT20, tức
 // khung dành cho CƠ SỞ GIÁO DỤC. Nhiều mã trong đó là địa chỉ KHÔNG TỒN TẠI
 // trong khung TT04, ví dụ 9.1, 11.1, 13.2. Có mã tồn tại ở cả hai khung nhưng
 // mang nghĩa khác hẳn, ví dụ 6.6.
 //
 // Không thể ánh xạ tự động từ khung này sang khung kia, vì "9.1 Cơ cấu và
-// chính sách bảo đảm chất lượng bên trong" của TT26 không có tiêu chí tương
+// chính sách bảo đảm chất lượng bên trong" của TT20 không có tiêu chí tương
 // đương nào trong TT04; gán bừa là bịa. Toàn bộ dữ liệu CTĐT hiện tại là dữ
 // liệu MẪU do các script trong kho này sinh ra, nên cách đúng là dựng lại theo
 // khung chuẩn thay vì cố ánh xạ.

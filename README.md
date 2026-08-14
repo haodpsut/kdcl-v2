@@ -1,8 +1,21 @@
 # KĐCLGD v2 — Hệ thống quản lý minh chứng kiểm định chất lượng
 
 Phần mềm quản lý **kiểm định chất lượng giáo dục (KĐCLGD)** cho Trường Đại học Kiến trúc Đà Nẵng.
-Hỗ trợ song song **kiểm định cơ sở giáo dục (CSGD — TT26)** và **chương trình đào tạo (CTĐT — TT04)**,
+Hỗ trợ song song **kiểm định cơ sở giáo dục (CSGD — TT20)** và **chương trình đào tạo (CTĐT — TT04)**,
 với quy trình **nộp – duyệt minh chứng theo đơn vị** để chuẩn bị đón đoàn đánh giá.
+
+**Căn cứ pháp lý của hai bộ tiêu chuẩn:**
+
+| Nhánh | Văn bản | Ngày ký | Hiệu lực | Quy mô |
+|---|---|---|---|---|
+| CSGD | **Thông tư 20/2026/TT-BGDĐT** — Quy định về kiểm định chất lượng cơ sở giáo dục đại học (thay thế TT 12/2017) | 31/3/2026 | 15/5/2026 | 15 tiêu chuẩn / 60 tiêu chí |
+| CTĐT | **Thông tư 04/2025/TT-BGDĐT** — Kiểm định chất lượng chương trình đào tạo các trình độ của giáo dục đại học | | 4/4/2025 | 8 tiêu chuẩn / 52 tiêu chí |
+
+> ⚠️ Tới 14/8/2026 phần mềm ghi nhầm nhãn nhánh CSGD là "TT26/2026". Thông tư
+> 26/2026/TT-BGDĐT ngày 09/4/2026 là văn bản về **chuẩn nghề nghiệp giảng viên
+> đại học**, không liên quan kiểm định. Nội dung bộ tiêu chuẩn trong phần mềm
+> vẫn đúng, chỉ nhãn số hiệu sai. Cơ sở dữ liệu đã có sẵn dữ liệu cũ thì chạy
+> `sql/2026-08-14-sua-so-hieu-tt20.sql`.
 
 > Bản v2: port từ bản v1 (lưu file JSON) sang **Express + PostgreSQL**, thêm **đăng nhập theo vai**,
 > **quy trình nộp/duyệt theo đơn vị** và đóng gói **Docker** để triển khai lên VPS.

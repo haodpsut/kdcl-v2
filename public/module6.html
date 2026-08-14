@@ -243,7 +243,7 @@ function renderDashboard() {
   if (!d) return;
   const s = d.stats;
   const ev = evCounts(d.evidence);
-  // Quy mô lấy từ chính bộ tiêu chuẩn của đợt (TT26: 60, TT04: 52), không gõ cứng.
+  // Quy mô lấy từ chính bộ tiêu chuẩn của đợt (TT20: 60, TT04: 52), không gõ cứng.
   const TONG = d.standards.reduce((a, x) => a + x.criteria.length, 0) || 60;
   const chua = TONG - s.assessed;
   // Nhóm này là tiêu chí ĐÃ CÓ PHIẾU nhưng ket_qua chưa kết luận, nên tên đúng là "Chưa kết luận".
